@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SpeedType Studio</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <img class="brand-mark" src="assets/typing-practice.svg" alt="">
+          <div>
+            <p class="eyebrow">Typing speed practice</p>
+            <h1>SpeedType Studio</h1>
+          </div>
+        </div>
+        <div class="storage-pill" id="storageStatus">Saved in this browser</div>
+      </header>
+
+      <section class="workbench" aria-label="Typing practice workspace">
+        <section class="typing-panel" aria-labelledby="practiceTitle">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Current drill</p>
+              <h2 id="practiceTitle">Build speed with your own text</h2>
+            </div>
+            <div class="mode-control" role="group" aria-label="Practice mode">
+              <button class="mode-button is-active" type="button" data-mode="paragraph" aria-pressed="true">Paragraph</button>
+              <button class="mode-button" type="button" data-mode="lines" aria-pressed="false">Lines</button>
+              <button class="mode-button" type="button" data-mode="words" aria-pressed="false">Words</button>
+            </div>
+          </div>
+
+          <div class="target-tools">
+            <label class="field-label" for="passageSelect">Text</label>
+            <select id="passageSelect"></select>
+            <button class="icon-button" id="randomButton" type="button" title="Pick another text" aria-label="Pick another text">↻</button>
+            <button class="icon-button danger" id="deleteButton" type="button" title="Delete selected saved text" aria-label="Delete selected saved text">×</button>
+          </div>
+
+          <div class="target-text" id="targetText" aria-label="Text to type"></div>
+
+          <label class="field-label" for="typingInput">Your typing</label>
+          <textarea id="typingInput" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="Start typing here..."></textarea>
+
+          <div class="action-row">
+            <button class="primary-button" id="restartButton" type="button">Restart</button>
+            <button class="secondary-button" id="pauseButton" type="button">Pause</button>
+            <button class="secondary-button" id="newTestButton" type="button">New test</button>
+            <span class="session-state" id="sessionState">Ready</span>
+          </div>
+        </section>
+
+        <aside class="stats-panel" aria-label="Typing statistics">
+          <div class="stat-grid">
+            <div class="stat">
+              <span class="stat-label">WPM</span>
+              <strong id="wpm">0</strong>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Accuracy</span>
+              <strong id="accuracy">100%</strong>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Errors</span>
+              <strong id="errors">0</strong>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Time Left</span>
+              <strong id="time">10:00</strong>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Words</span>
+              <strong id="wordTotal">0</strong>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Limit</span>
+              <strong id="sessionLimit">10m</strong>
+            </div>
+          </div>
+
+          <div class="progress-block">
+            <div class="progress-copy">
+              <span>Progress</span>
+              <strong id="progressText">0%</strong>
+            </div>
+            <div class="progress-track" aria-hidden="true">
+              <span id="progressBar"></span>
+            </div>
+          </div>
+
+          <div class="keyboard-map" aria-label="Current key map">
+            <div class="key-row">
+              <span data-key="Q">Q</span><span data-key="W">W</span><span data-key="E">E</span><span data-key="R">R</span><span data-key="T">T</span><span data-key="Y">Y</span><span data-key="U">U</span><span data-key="I">I</span><span data-key="O">O</span><span data-key="P">P</span>
+            </div>
+            <div class="key-row offset-one">
+              <span data-key="A">A</span><span data-key="S">S</span><span data-key="D">D</span><span data-key="F">F</span><span data-key="G">G</span><span data-key="H">H</span><span data-key="J">J</span><span data-key="K">K</span><span data-key="L">L</span>
+            </div>
+            <div class="key-row offset-two">
+              <span data-key="Z">Z</span><span data-key="X">X</span><span data-key="C">C</span><span data-key="V">V</span><span data-key="B">B</span><span data-key="N">N</span><span data-key="M">M</span>
+            </div>
+            <div class="key-row">
+              <span class="wide-key" data-key="SPACE">SPACE</span><span class="wide-key" data-key="ENTER">ENTER</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="library-panel" aria-labelledby="libraryTitle">
+        <div class="library-copy">
+          <p class="eyebrow">Your text library</p>
+          <h2 id="libraryTitle">Paste paragraphs, separate lines, or small words</h2>
+        </div>
+        <div class="editor-grid">
+          <div class="editor-fields">
+            <label class="field-label" for="customTitle">Title</label>
+            <input id="customTitle" type="text" maxlength="60" placeholder="Example: Home row words">
+            <label class="field-label" for="customText">Practice text</label>
+            <textarea id="customText" spellcheck="false" placeholder="Paste your paragraph, lines, or small words here..."></textarea>
+            <div class="action-row">
+              <button class="primary-button" id="saveCustomButton" type="button">Save text</button>
+              <button class="secondary-button" id="useDraftButton" type="button">Use draft now</button>
+            </div>
+          </div>
+          <div class="saved-list" id="savedList" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-note">
+      Custom texts stay on this device in browser storage.
+    </footer>
+
+    <div class="modal-backdrop" id="idleModal" role="dialog" aria-modal="true" aria-labelledby="idleTitle" hidden>
+      <div class="modal-card">
+        <p class="eyebrow">Auto pause</p>
+        <h2 id="idleTitle">Typing paused</h2>
+        <p>You stopped typing for 5 seconds, so the countdown is paused.</p>
+        <div class="action-row">
+          <button class="primary-button" id="resumeModalButton" type="button">Resume typing</button>
+          <button class="secondary-button" id="restartModalButton" type="button">Restart test</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
