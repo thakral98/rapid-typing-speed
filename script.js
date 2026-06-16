@@ -22,6 +22,8 @@ const INACTIVITY_MS = 5000;
 const LONG_TEXT_WORDS = 1000;
 const SHORT_SESSION_SECONDS = 10 * 60;
 const LONG_SESSION_SECONDS = 15 * 60;
+const PASSIVE_TYPING_KEYS = new Set(["Shift", "CapsLock"]);
+const NATIVE_CONTROL_SELECTOR = "#customTitle, #customText, #passageSelect, button";
 
 const state = {
   customPassages: [],
@@ -67,6 +69,7 @@ const els = {
   idleModal: document.querySelector("#idleModal"),
   resumeModalButton: document.querySelector("#resumeModalButton"),
   restartModalButton: document.querySelector("#restartModalButton"),
+  keystrokeEffects: document.querySelector("#keystrokeEffects"),
   keyCaps: Array.from(document.querySelectorAll("[data-key]"))
 };
 
@@ -284,6 +287,8 @@ function renderTargetText() {
   });
 
   els.targetText.replaceChildren(fragment);
+  keepCurrentCharacterInView();
+  lockTypingCaret();
 }
 
 function updateModeButtons() {
@@ -306,6 +311,7 @@ function resetSession(options = {}) {
   clearSessionTimers();
   els.typingInput.value = "";
   els.typingInput.disabled = false;
+  els.typingInput.readOnly = true;
   els.sessionState.textContent = options.message || "Ready";
   hideIdleModal();
   renderPassageSelect();
@@ -315,6 +321,7 @@ function resetSession(options = {}) {
   renderTargetText();
   updateStats();
   updateKeyboard();
+  lockTypingCaret();
   saveSettings();
 }
 
@@ -437,7 +444,7 @@ function resumeSession() {
   startCountdown();
   scheduleInactivityPause();
   updateStats();
-  els.typingInput.focus();
+  focusTypingInput();
 }
 
 function finishSession(message) {
@@ -491,7 +498,7 @@ function wordCount(text) {
   return (text.trim().match(/\S+/g) || []).length;
 }
 
-function handleTyping() {
+function handleTyping(effectKey = null) {
   if (!state.startedAt && els.typingInput.value.length) {
     state.startedAt = performance.now();
     els.sessionState.textContent = "Typing";
@@ -507,6 +514,170 @@ function handleTyping() {
   renderTargetText();
   updateStats();
   updateKeyboard();
+  syncTypingInputScroll();
+
+  if (effectKey !== null) {
+    showKeystrokeEffect(effectKey);
+  }
+}
+
+function handleTypingInputFallback() {
+  els.typingInput.value = els.typingInput.value.slice(0, state.currentText.length);
+  lockTypingCaret();
+  handleTyping();
+}
+
+function handlePracticeKeydown(event) {
+  if (shouldLetNativeControlHandle(event)) return;
+
+  if (event.metaKey || event.ctrlKey || event.altKey) {
+    blockTypingKey(event);
+    return;
+  }
+
+  if (PASSIVE_TYPING_KEYS.has(event.key)) {
+    blockTypingKey(event);
+    return;
+  }
+
+  if (state.paused || state.finishedAt || els.typingInput.disabled) {
+    blockTypingKey(event);
+    return;
+  }
+
+  if (event.key === "Enter") {
+    blockTypingKey(event);
+    appendTypingCharacter("\n", "Enter");
+    return;
+  }
+
+  if (isPrintableTypingKey(event.key)) {
+    blockTypingKey(event);
+    appendTypingCharacter(event.key, event.key);
+    return;
+  }
+
+  blockTypingKey(event);
+}
+
+function shouldLetNativeControlHandle(event) {
+  const target = event.target;
+
+  if (!target || typeof target.closest !== "function") return false;
+  if (target === els.typingInput) return false;
+  if (!els.idleModal.hidden && target.closest("#idleModal")) return true;
+
+  return Boolean(target.closest(NATIVE_CONTROL_SELECTOR));
+}
+
+function blockTypingKey(event) {
+  event.preventDefault();
+  event.stopPropagation();
+}
+
+function isPrintableTypingKey(key) {
+  return key.length === 1 && key >= " ";
+}
+
+function appendTypingCharacter(char, effectKey) {
+  if (els.typingInput.value.length >= state.currentText.length) return;
+
+  focusTypingInput();
+  els.typingInput.value = `${els.typingInput.value}${char}`.slice(0, state.currentText.length);
+  lockTypingCaret();
+  handleTyping(effectKey);
+}
+
+function focusTypingInput() {
+  if (els.typingInput.disabled) return;
+
+  try {
+    els.typingInput.focus({ preventScroll: true });
+  } catch {
+    els.typingInput.focus();
+  }
+
+  lockTypingCaret();
+}
+
+function lockTypingCaret() {
+  if (!els.typingInput || els.typingInput.disabled) return;
+
+  const end = els.typingInput.value.length;
+  try {
+    els.typingInput.setSelectionRange(end, end);
+  } catch {
+    // Some browsers refuse selection changes during blur/disable transitions.
+  }
+}
+
+function syncTypingInputScroll() {
+  els.typingInput.scrollTop = els.typingInput.scrollHeight;
+}
+
+function keepCurrentCharacterInView() {
+  const current = els.targetText.querySelector(".current") || els.targetText.lastElementChild;
+  if (!current) {
+    els.targetText.scrollTop = 0;
+    return;
+  }
+
+  const targetRect = els.targetText.getBoundingClientRect();
+  const currentRect = current.getBoundingClientRect();
+  const top = currentRect.top - targetRect.top + els.targetText.scrollTop;
+  const bottom = currentRect.bottom - targetRect.top + els.targetText.scrollTop;
+  const visibleTop = els.targetText.scrollTop;
+  const visibleBottom = visibleTop + els.targetText.clientHeight;
+  const lowerComfortLine = visibleTop + els.targetText.clientHeight * 0.72;
+  const upperComfortLine = visibleTop + els.targetText.clientHeight * 0.24;
+
+  if (bottom > lowerComfortLine) {
+    els.targetText.scrollTo({
+      top: Math.max(0, top - els.targetText.clientHeight * 0.38),
+      behavior: state.startedAt ? "smooth" : "auto"
+    });
+  } else if (top < upperComfortLine && visibleTop > 0) {
+    els.targetText.scrollTo({
+      top: Math.max(0, top - els.targetText.clientHeight * 0.24),
+      behavior: "smooth"
+    });
+  } else if (bottom > visibleBottom || top < visibleTop) {
+    els.targetText.scrollTop = Math.max(0, top - els.targetText.clientHeight * 0.38);
+  }
+}
+
+function showKeystrokeEffect(key) {
+  if (!els.keystrokeEffects) return;
+
+  const effect = document.createElement("span");
+  const rect = els.typingInput.getBoundingClientRect();
+  const safeWidth = Math.max(1, rect.width);
+  const x = rect.left + safeWidth * (0.2 + Math.random() * 0.6);
+  const y = rect.top + Math.min(rect.height * 0.5, 74);
+
+  effect.className = "key-pop";
+  effect.textContent = displayKeyForEffect(key);
+  effect.style.left = `${x}px`;
+  effect.style.top = `${y}px`;
+  effect.style.setProperty("--spin-x", `${-34 + Math.random() * 68}deg`);
+  effect.style.setProperty("--spin-y", `${-42 + Math.random() * 84}deg`);
+  effect.style.setProperty("--spin-z", `${-12 + Math.random() * 24}deg`);
+  effect.style.setProperty("--travel-x", `${-70 + Math.random() * 140}px`);
+  effect.style.setProperty("--hue", `${185 + Math.random() * 170}`);
+
+  els.keystrokeEffects.appendChild(effect);
+
+  while (els.keystrokeEffects.children.length > 32) {
+    els.keystrokeEffects.firstElementChild.remove();
+  }
+
+  effect.addEventListener("animationend", () => effect.remove(), { once: true });
+}
+
+function displayKeyForEffect(key) {
+  if (key === " ") return "Space";
+  if (key === "\n" || key === "Enter") return "Enter";
+  return key;
 }
 
 function updateKeyboard() {
@@ -521,7 +692,7 @@ function updateKeyboard() {
 function keyNameForChar(char) {
   if (char === " ") return "SPACE";
   if (char === "\n") return "ENTER";
-  return char.toUpperCase();
+  return /[a-z]/i.test(char) ? char.toUpperCase() : char;
 }
 
 function selectPassage(id) {
@@ -595,10 +766,22 @@ function pickRandomPassage() {
 }
 
 function bindEvents() {
-  els.typingInput.addEventListener("input", handleTyping);
+  document.addEventListener("keydown", handlePracticeKeydown, true);
+  els.targetText.addEventListener("click", focusTypingInput);
+  els.typingInput.addEventListener("beforeinput", blockTypingKey);
+  els.typingInput.addEventListener("paste", blockTypingKey);
+  els.typingInput.addEventListener("drop", blockTypingKey);
+  els.typingInput.addEventListener("cut", blockTypingKey);
+  els.typingInput.addEventListener("copy", blockTypingKey);
+  els.typingInput.addEventListener("input", handleTypingInputFallback);
+  els.typingInput.addEventListener("mousedown", (event) => {
+    event.preventDefault();
+    focusTypingInput();
+  });
+  els.typingInput.addEventListener("select", () => requestAnimationFrame(lockTypingCaret));
   els.restartButton.addEventListener("click", () => {
     resetSession({ message: "Restarted" });
-    els.typingInput.focus();
+    focusTypingInput();
   });
   els.pauseButton.addEventListener("click", () => {
     if (state.paused) {
@@ -609,12 +792,12 @@ function bindEvents() {
   });
   els.newTestButton.addEventListener("click", () => {
     resetSession({ message: "Ready" });
-    els.typingInput.focus();
+    focusTypingInput();
   });
   els.resumeModalButton.addEventListener("click", resumeSession);
   els.restartModalButton.addEventListener("click", () => {
     resetSession({ message: "Restarted" });
-    els.typingInput.focus();
+    focusTypingInput();
   });
   els.randomButton.addEventListener("click", pickRandomPassage);
   els.deleteButton.addEventListener("click", () => {
@@ -633,7 +816,7 @@ function bindEvents() {
     button.addEventListener("click", () => {
       state.activeMode = button.dataset.mode;
       resetSession({ message: "Mode changed" });
-      els.typingInput.focus();
+      focusTypingInput();
     });
   });
 }
