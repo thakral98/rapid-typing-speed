@@ -1,837 +1,108 @@
+// --- 1. THREE.JS ENGINE (ANTIGRAVITY) ---
+const canvas = document.querySelector('#bg-canvas');
+const scene3d = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+const particlesGeo = new THREE.BufferGeometry();
+const particlesCount = 2000;
+const posArray = new Float32Array(particlesCount * 3);
+for(let i=0; i < particlesCount * 3; i++) {
+    posArray[i] = (Math.random() - 0.5) * 10;
+}
+particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+const particlesMat = new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff });
+const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
+scene3d.add(particlesMesh);
+camera.position.z = 3;
+
+function animate3d() {
+    requestAnimationFrame(animate3d);
+    particlesMesh.rotation.y += 0.001;
+    renderer.render(scene3d, camera);
+}
+animate3d();
+
+// --- 2. NAVIGATION ---
+const enterBtn = document.querySelector('#enter-flow');
+enterBtn.addEventListener('click', () => {
+    document.querySelector('#hero-scene').classList.remove('active');
+    setTimeout(() => {
+        document.querySelector('#app-scene').classList.add('active');
+        init(); // Start your original logic
+    }, 600);
+});
+
+// --- 3. ORIGINAL TYPING LOGIC (Simplified for integration) ---
 const DEFAULT_PASSAGES = [
-  {
-    id: "starter-focus",
-    title: "Focus paragraph",
-    text: "Typing speed grows when your eyes stay calm and your fingers return to the home row. Practice slowly first, then let rhythm carry the words forward."
-  },
-  {
-    id: "starter-lines",
-    title: "Short line drill",
-    text: "Keep wrists light\nLook at the next word\nPress each key with purpose\nCorrect mistakes with patience\nFinish the line cleanly"
-  },
-  {
-    id: "starter-words",
-    title: "Small word set",
-    text: "the and you that was for are with his they this have from one had word but not what all were when your can said there use each which she do how their if will up other about out many then them these so some her would make like him into time has look two more write go see number no way could people my than first water been call who oil its now find long down day did get come made may part"
-  }
+    { id: "starter-focus", title: "Focus", text: "Practice slowly first, then let rhythm carry the words forward." },
+    { id: "logic", title: "Logic", text: "Code is like gravity, once you set it in motion, it defines the world." }
 ];
 
-const STORAGE_KEY = "speedtype.customTexts.v1";
-const SETTINGS_KEY = "speedtype.settings.v1";
-const INACTIVITY_MS = 5000;
-const LONG_TEXT_WORDS = 1000;
-const SHORT_SESSION_SECONDS = 10 * 60;
-const LONG_SESSION_SECONDS = 15 * 60;
-const PASSIVE_TYPING_KEYS = new Set(["Shift", "CapsLock"]);
-const NATIVE_CONTROL_SELECTOR = "#customTitle, #customText, #passageSelect, button";
-
 const state = {
-  customPassages: [],
-  activeMode: "paragraph",
-  activeId: "starter-focus",
-  draft: null,
-  currentText: "",
-  durationSeconds: SHORT_SESSION_SECONDS,
-  startedAt: null,
-  finishedAt: null,
-  timerId: null,
-  inactivityTimerId: null,
-  paused: false,
-  pauseStartedAt: null,
-  pausedTotalMs: 0
+    customPassages: [], activeMode: "paragraph", activeId: "starter-focus",
+    currentText: "", startedAt: null, finishedAt: null, timerId: null
 };
 
+// Selection of core elements
 const els = {
-  passageSelect: document.querySelector("#passageSelect"),
-  randomButton: document.querySelector("#randomButton"),
-  deleteButton: document.querySelector("#deleteButton"),
-  targetText: document.querySelector("#targetText"),
-  typingInput: document.querySelector("#typingInput"),
-  restartButton: document.querySelector("#restartButton"),
-  pauseButton: document.querySelector("#pauseButton"),
-  newTestButton: document.querySelector("#newTestButton"),
-  sessionState: document.querySelector("#sessionState"),
-  modeButtons: Array.from(document.querySelectorAll(".mode-button")),
-  wpm: document.querySelector("#wpm"),
-  accuracy: document.querySelector("#accuracy"),
-  errors: document.querySelector("#errors"),
-  time: document.querySelector("#time"),
-  wordTotal: document.querySelector("#wordTotal"),
-  sessionLimit: document.querySelector("#sessionLimit"),
-  progressText: document.querySelector("#progressText"),
-  progressBar: document.querySelector("#progressBar"),
-  customTitle: document.querySelector("#customTitle"),
-  customText: document.querySelector("#customText"),
-  saveCustomButton: document.querySelector("#saveCustomButton"),
-  useDraftButton: document.querySelector("#useDraftButton"),
-  savedList: document.querySelector("#savedList"),
-  storageStatus: document.querySelector("#storageStatus"),
-  idleModal: document.querySelector("#idleModal"),
-  resumeModalButton: document.querySelector("#resumeModalButton"),
-  restartModalButton: document.querySelector("#restartModalButton"),
-  keystrokeEffects: document.querySelector("#keystrokeEffects"),
-  keyCaps: Array.from(document.querySelectorAll("[data-key]"))
+    targetText: document.querySelector("#targetText"),
+    typingInput: document.querySelector("#typingInput"),
+    wpm: document.querySelector("#wpm"),
+    accuracy: document.querySelector("#accuracy"),
+    time: document.querySelector("#time")
 };
 
-function loadCustomPassages() {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    if (!Array.isArray(parsed)) return [];
-    return parsed
-      .filter((item) => item && typeof item.text === "string" && item.text.trim())
-      .map((item) => ({
-        id: String(item.id || makeId("saved")),
-        title: String(item.title || "Saved text").slice(0, 60),
-        text: String(item.text)
-      }));
-  } catch {
-    setStorageStatus("Browser storage blocked");
-    return [];
-  }
-}
-
-function saveCustomPassages() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.customPassages));
-    setStorageStatus("Saved in this browser");
-  } catch {
-    setStorageStatus("Browser storage blocked");
-  }
-}
-
-function loadSettings() {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
-    if (parsed.mode) state.activeMode = parsed.mode;
-    if (parsed.activeId) state.activeId = parsed.activeId;
-  } catch {
-    state.activeMode = "paragraph";
-    state.activeId = "starter-focus";
-  }
-}
-
-function saveSettings() {
-  try {
-    localStorage.setItem(
-      SETTINGS_KEY,
-      JSON.stringify({ mode: state.activeMode, activeId: state.activeId })
-    );
-  } catch {
-    setStorageStatus("Browser storage blocked");
-  }
-}
-
-function makeId(prefix) {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-  return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
-
-function setStorageStatus(message) {
-  if (els.storageStatus) {
-    els.storageStatus.textContent = message;
-  }
-}
-
-function allPassages() {
-  return [...DEFAULT_PASSAGES, ...state.customPassages];
-}
-
-function getActiveSource() {
-  if (state.draft) return state.draft;
-  return allPassages().find((item) => item.id === state.activeId) || DEFAULT_PASSAGES[0];
-}
-
-function normalizeParagraph(text) {
-  return text.trim().replace(/\s+/g, " ");
-}
-
-function normalizeLines(text) {
-  return text
-    .split(/\n+/)
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .join("\n");
-}
-
-function shuffle(items) {
-  const copy = [...items];
-  for (let index = copy.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
-  }
-  return copy;
-}
-
-function buildPracticeText(sourceText) {
-  const clean = sourceText.trim();
-  if (!clean) return DEFAULT_PASSAGES[0].text;
-
-  if (state.activeMode === "lines") {
-    return normalizeLines(clean) || normalizeParagraph(clean);
-  }
-
-  if (state.activeMode === "words") {
-    const words = clean.match(/[A-Za-z0-9']+/g) || clean.split(/\s+/);
-    return shuffle(words).join(" ");
-  }
-
-  return normalizeParagraph(clean);
-}
-
-function renderPassageSelect() {
-  const currentId = state.draft ? "draft" : state.activeId;
-  els.passageSelect.innerHTML = "";
-
-  const starterGroup = document.createElement("optgroup");
-  starterGroup.label = "Starter text";
-  DEFAULT_PASSAGES.forEach((passage) => {
-    starterGroup.appendChild(makeOption(passage, currentId));
-  });
-  els.passageSelect.appendChild(starterGroup);
-
-  if (state.customPassages.length) {
-    const customGroup = document.createElement("optgroup");
-    customGroup.label = "Saved by you";
-    state.customPassages.forEach((passage) => {
-      customGroup.appendChild(makeOption(passage, currentId));
-    });
-    els.passageSelect.appendChild(customGroup);
-  }
-
-  if (state.draft) {
-    const option = document.createElement("option");
-    option.value = "draft";
-    option.textContent = state.draft.title;
-    option.selected = true;
-    els.passageSelect.appendChild(option);
-  }
-}
-
-function makeOption(passage, currentId) {
-  const option = document.createElement("option");
-  option.value = passage.id;
-  option.textContent = passage.title;
-  option.selected = passage.id === currentId;
-  return option;
-}
-
-function renderSavedList() {
-  els.savedList.innerHTML = "";
-
-  if (!state.customPassages.length) {
-    const empty = document.createElement("div");
-    empty.className = "saved-empty";
-    empty.textContent = "No saved text yet.";
-    els.savedList.appendChild(empty);
-    return;
-  }
-
-  state.customPassages.forEach((passage) => {
-    const item = document.createElement("article");
-    item.className = "saved-item";
-
-    const titleRow = document.createElement("div");
-    titleRow.className = "saved-title";
-
-    const title = document.createElement("span");
-    title.textContent = passage.title;
-    titleRow.appendChild(title);
-
-    const count = document.createElement("span");
-    count.textContent = `${wordCount(passage.text)} words`;
-    titleRow.appendChild(count);
-
-    const preview = document.createElement("div");
-    preview.className = "saved-preview";
-    preview.textContent = normalizeParagraph(passage.text);
-
-    const actions = document.createElement("div");
-    actions.className = "saved-actions";
-
-    const useButton = document.createElement("button");
-    useButton.type = "button";
-    useButton.className = "small-button";
-    useButton.textContent = "Use";
-    useButton.addEventListener("click", () => selectPassage(passage.id));
-
-    const deleteButton = document.createElement("button");
-    deleteButton.type = "button";
-    deleteButton.className = "small-button danger";
-    deleteButton.textContent = "Delete";
-    deleteButton.addEventListener("click", () => deleteCustomPassage(passage.id));
-
-    actions.append(useButton, deleteButton);
-    item.append(titleRow, preview, actions);
-    els.savedList.appendChild(item);
-  });
-}
-
-function renderTargetText() {
-  const typed = els.typingInput.value;
-  const fragment = document.createDocumentFragment();
-
-  [...state.currentText].forEach((char, index) => {
-    const span = document.createElement("span");
-    span.className = "char";
-    span.textContent = char;
-
-    if (index < typed.length) {
-      span.classList.add(typed[index] === char ? "correct" : "incorrect");
-    } else if (index === typed.length) {
-      span.classList.add("current");
-    }
-
-    fragment.appendChild(span);
-  });
-
-  els.targetText.replaceChildren(fragment);
-  keepCurrentCharacterInView();
-  lockTypingCaret();
-}
-
-function updateModeButtons() {
-  els.modeButtons.forEach((button) => {
-    const isActive = button.dataset.mode === state.activeMode;
-    button.classList.toggle("is-active", isActive);
-    button.setAttribute("aria-pressed", String(isActive));
-  });
-}
-
-function resetSession(options = {}) {
-  const source = getActiveSource();
-  state.currentText = buildPracticeText(source.text);
-  state.durationSeconds = getSessionDurationSeconds(state.currentText);
-  state.startedAt = null;
-  state.finishedAt = null;
-  state.paused = false;
-  state.pauseStartedAt = null;
-  state.pausedTotalMs = 0;
-  clearSessionTimers();
-  els.typingInput.value = "";
-  els.typingInput.disabled = false;
-  els.typingInput.readOnly = true;
-  els.sessionState.textContent = options.message || "Ready";
-  hideIdleModal();
-  renderPassageSelect();
-  updateModeButtons();
-  updateDeleteButton();
-  updatePauseButton();
-  renderTargetText();
-  updateStats();
-  updateKeyboard();
-  lockTypingCaret();
-  saveSettings();
-}
-
-function updateDeleteButton() {
-  const selectedId = state.draft ? "draft" : state.activeId;
-  const isCustom = state.customPassages.some((passage) => passage.id === selectedId);
-  els.deleteButton.disabled = !isCustom;
-}
-
-function updateStats() {
-  const typed = els.typingInput.value;
-  const elapsed = getActiveElapsedSeconds();
-  const scoringElapsed = Math.max(elapsed, 1);
-  const remainingSeconds = getRemainingSeconds();
-  const correctChars = countCorrectChars(typed, state.currentText);
-  const errorCount = countErrors(typed, state.currentText);
-  const accuracy = typed.length ? Math.max(0, Math.round((correctChars / typed.length) * 100)) : 100;
-  const wpm = elapsed > 0 ? Math.round((correctChars / 5) / (scoringElapsed / 60)) : 0;
-  const progress = state.currentText.length
-    ? Math.min(100, Math.round((typed.length / state.currentText.length) * 100))
-    : 0;
-
-  els.wpm.textContent = String(wpm);
-  els.accuracy.textContent = `${accuracy}%`;
-  els.errors.textContent = String(errorCount);
-  els.time.textContent = formatTime(remainingSeconds);
-  els.wordTotal.textContent = String(wordCount(state.currentText));
-  els.sessionLimit.textContent = `${Math.round(state.durationSeconds / 60)}m`;
-  els.progressText.textContent = `${progress}%`;
-  els.progressBar.style.width = `${progress}%`;
-}
-
-function getSessionDurationSeconds(text) {
-  return wordCount(text) >= LONG_TEXT_WORDS ? LONG_SESSION_SECONDS : SHORT_SESSION_SECONDS;
-}
-
-function getActiveElapsedSeconds() {
-  return getActiveElapsedMs() / 1000;
-}
-
-function getActiveElapsedMs() {
-  if (!state.startedAt) return 0;
-  const end = state.finishedAt || (state.paused && state.pauseStartedAt ? state.pauseStartedAt : performance.now());
-  return Math.max(0, end - state.startedAt - state.pausedTotalMs);
-}
-
-function getRemainingSeconds() {
-  return Math.max(0, state.durationSeconds - Math.floor(getActiveElapsedSeconds()));
-}
-
-function formatTime(totalSeconds) {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${String(seconds).padStart(2, "0")}`;
-}
-
-function clearSessionTimers() {
-  clearInterval(state.timerId);
-  clearTimeout(state.inactivityTimerId);
-  state.timerId = null;
-  state.inactivityTimerId = null;
-}
-
-function startCountdown() {
-  clearInterval(state.timerId);
-  state.timerId = setInterval(tickTimer, 250);
-}
-
-function tickTimer() {
-  updateStats();
-
-  if (state.startedAt && !state.finishedAt && !state.paused && getRemainingSeconds() <= 0) {
-    finishSession("Time up");
-  }
-}
-
-function scheduleInactivityPause() {
-  clearTimeout(state.inactivityTimerId);
-
-  if (!state.startedAt || state.finishedAt || state.paused) {
-    state.inactivityTimerId = null;
-    return;
-  }
-
-  state.inactivityTimerId = setTimeout(() => {
-    if (!state.finishedAt && !state.paused) {
-      pauseSession("Auto paused", true);
-    }
-  }, INACTIVITY_MS);
-}
-
-function pauseSession(message = "Paused", showModal = false) {
-  if (!state.startedAt || state.finishedAt || state.paused) return;
-
-  state.paused = true;
-  state.pauseStartedAt = performance.now();
-  clearSessionTimers();
-  els.typingInput.disabled = true;
-  els.sessionState.textContent = message;
-  document.body.classList.add("is-paused");
-  updatePauseButton();
-  updateStats();
-
-  if (showModal) {
-    showIdleModal();
-  }
-}
-
-function resumeSession() {
-  if (!state.paused || state.finishedAt) return;
-
-  state.pausedTotalMs += performance.now() - state.pauseStartedAt;
-  state.paused = false;
-  state.pauseStartedAt = null;
-  els.typingInput.disabled = false;
-  els.sessionState.textContent = "Typing";
-  document.body.classList.remove("is-paused");
-  hideIdleModal();
-  updatePauseButton();
-  startCountdown();
-  scheduleInactivityPause();
-  updateStats();
-  focusTypingInput();
-}
-
-function finishSession(message) {
-  if (state.finishedAt) return;
-
-  state.finishedAt = performance.now();
-  clearSessionTimers();
-  state.paused = false;
-  state.pauseStartedAt = null;
-  els.typingInput.disabled = true;
-  els.sessionState.textContent = message;
-  document.body.classList.remove("is-paused");
-  hideIdleModal();
-  updatePauseButton();
-  updateStats();
-}
-
-function updatePauseButton() {
-  if (!els.pauseButton) return;
-
-  els.pauseButton.textContent = state.paused ? "Resume" : "Pause";
-  els.pauseButton.disabled = Boolean(!state.startedAt || state.finishedAt);
-}
-
-function showIdleModal() {
-  els.idleModal.hidden = false;
-  els.resumeModalButton.focus();
-}
-
-function hideIdleModal() {
-  els.idleModal.hidden = true;
-}
-
-function countCorrectChars(typed, target) {
-  let correct = 0;
-  for (let index = 0; index < typed.length && index < target.length; index += 1) {
-    if (typed[index] === target[index]) correct += 1;
-  }
-  return correct;
-}
-
-function countErrors(typed, target) {
-  let errors = 0;
-  for (let index = 0; index < typed.length; index += 1) {
-    if (typed[index] !== target[index]) errors += 1;
-  }
-  return errors;
-}
-
-function wordCount(text) {
-  return (text.trim().match(/\S+/g) || []).length;
-}
-
-function handleTyping(effectKey = null) {
-  if (!state.startedAt && els.typingInput.value.length) {
-    state.startedAt = performance.now();
-    els.sessionState.textContent = "Typing";
-    updatePauseButton();
-    startCountdown();
-  }
-
-  if (els.typingInput.value.length >= state.currentText.length && !state.finishedAt) {
-    finishSession(countErrors(els.typingInput.value, state.currentText) ? "Finished with errors" : "Complete");
-  }
-
-  scheduleInactivityPause();
-  renderTargetText();
-  updateStats();
-  updateKeyboard();
-  syncTypingInputScroll();
-
-  if (effectKey !== null) {
-    showKeystrokeEffect(effectKey);
-  }
-}
-
-function handleTypingInputFallback() {
-  els.typingInput.value = els.typingInput.value.slice(0, state.currentText.length);
-  lockTypingCaret();
-  handleTyping();
-}
-
-function handlePracticeKeydown(event) {
-  if (shouldLetNativeControlHandle(event)) return;
-
-  if (event.metaKey || event.ctrlKey || event.altKey) {
-    blockTypingKey(event);
-    return;
-  }
-
-  if (PASSIVE_TYPING_KEYS.has(event.key)) {
-    blockTypingKey(event);
-    return;
-  }
-
-  if (state.paused || state.finishedAt || els.typingInput.disabled) {
-    blockTypingKey(event);
-    return;
-  }
-
-  if (event.key === "Enter") {
-    blockTypingKey(event);
-    appendTypingCharacter("\n", "Enter");
-    return;
-  }
-
-  if (isPrintableTypingKey(event.key)) {
-    blockTypingKey(event);
-    appendTypingCharacter(event.key, event.key);
-    return;
-  }
-
-  blockTypingKey(event);
-}
-
-function shouldLetNativeControlHandle(event) {
-  const target = event.target;
-
-  if (!target || typeof target.closest !== "function") return false;
-  if (target === els.typingInput) return false;
-  if (!els.idleModal.hidden && target.closest("#idleModal")) return true;
-
-  return Boolean(target.closest(NATIVE_CONTROL_SELECTOR));
-}
-
-function blockTypingKey(event) {
-  event.preventDefault();
-  event.stopPropagation();
-}
-
-function isPrintableTypingKey(key) {
-  return key.length === 1 && key >= " ";
-}
-
-function appendTypingCharacter(char, effectKey) {
-  if (els.typingInput.value.length >= state.currentText.length) return;
-
-  focusTypingInput();
-  els.typingInput.value = `${els.typingInput.value}${char}`.slice(0, state.currentText.length);
-  lockTypingCaret();
-  handleTyping(effectKey);
-}
-
-function focusTypingInput() {
-  if (els.typingInput.disabled) return;
-
-  try {
-    els.typingInput.focus({ preventScroll: true });
-  } catch {
-    els.typingInput.focus();
-  }
-
-  lockTypingCaret();
-}
-
-function lockTypingCaret() {
-  if (!els.typingInput || els.typingInput.disabled) return;
-
-  const end = els.typingInput.value.length;
-  try {
-    els.typingInput.setSelectionRange(end, end);
-  } catch {
-    // Some browsers refuse selection changes during blur/disable transitions.
-  }
-}
-
-function syncTypingInputScroll() {
-  els.typingInput.scrollTop = els.typingInput.scrollHeight;
-}
-
-function keepCurrentCharacterInView() {
-  const current = els.targetText.querySelector(".current") || els.targetText.lastElementChild;
-  if (!current) {
-    els.targetText.scrollTop = 0;
-    return;
-  }
-
-  const targetRect = els.targetText.getBoundingClientRect();
-  const currentRect = current.getBoundingClientRect();
-  const top = currentRect.top - targetRect.top + els.targetText.scrollTop;
-  const bottom = currentRect.bottom - targetRect.top + els.targetText.scrollTop;
-  const visibleTop = els.targetText.scrollTop;
-  const visibleBottom = visibleTop + els.targetText.clientHeight;
-  const lowerComfortLine = visibleTop + els.targetText.clientHeight * 0.72;
-  const upperComfortLine = visibleTop + els.targetText.clientHeight * 0.24;
-
-  if (bottom > lowerComfortLine) {
-    els.targetText.scrollTo({
-      top: Math.max(0, top - els.targetText.clientHeight * 0.38),
-      behavior: state.startedAt ? "smooth" : "auto"
-    });
-  } else if (top < upperComfortLine && visibleTop > 0) {
-    els.targetText.scrollTo({
-      top: Math.max(0, top - els.targetText.clientHeight * 0.24),
-      behavior: "smooth"
-    });
-  } else if (bottom > visibleBottom || top < visibleTop) {
-    els.targetText.scrollTop = Math.max(0, top - els.targetText.clientHeight * 0.38);
-  }
-}
-
-function showKeystrokeEffect(key) {
-  if (!els.keystrokeEffects) return;
-
-  const effect = document.createElement("span");
-  const rect = els.typingInput.getBoundingClientRect();
-  const safeWidth = Math.max(1, rect.width);
-  const x = rect.left + safeWidth * (0.2 + Math.random() * 0.6);
-  const y = rect.top + Math.min(rect.height * 0.5, 74);
-
-  effect.className = "key-pop";
-  effect.textContent = displayKeyForEffect(key);
-  effect.style.left = `${x}px`;
-  effect.style.top = `${y}px`;
-  effect.style.setProperty("--spin-x", `${-34 + Math.random() * 68}deg`);
-  effect.style.setProperty("--spin-y", `${-42 + Math.random() * 84}deg`);
-  effect.style.setProperty("--spin-z", `${-12 + Math.random() * 24}deg`);
-  effect.style.setProperty("--travel-x", `${-70 + Math.random() * 140}px`);
-  effect.style.setProperty("--hue", `${185 + Math.random() * 170}`);
-
-  els.keystrokeEffects.appendChild(effect);
-
-  while (els.keystrokeEffects.children.length > 32) {
-    els.keystrokeEffects.firstElementChild.remove();
-  }
-
-  effect.addEventListener("animationend", () => effect.remove(), { once: true });
-}
-
-function displayKeyForEffect(key) {
-  if (key === " ") return "Space";
-  if (key === "\n" || key === "Enter") return "Enter";
-  return key;
-}
-
-function updateKeyboard() {
-  const nextChar = state.currentText[els.typingInput.value.length] || "";
-  const keyName = keyNameForChar(nextChar);
-
-  els.keyCaps.forEach((key) => {
-    key.classList.toggle("is-next", key.dataset.key === keyName);
-  });
-}
-
-function keyNameForChar(char) {
-  if (char === " ") return "SPACE";
-  if (char === "\n") return "ENTER";
-  return /[a-z]/i.test(char) ? char.toUpperCase() : char;
-}
-
-function selectPassage(id) {
-  state.draft = null;
-  state.activeId = id;
-  resetSession({ message: "Ready" });
-}
-
-function deleteCustomPassage(id) {
-  state.customPassages = state.customPassages.filter((passage) => passage.id !== id);
-  if (state.activeId === id) {
-    state.activeId = DEFAULT_PASSAGES[0].id;
-    state.draft = null;
-  }
-  saveCustomPassages();
-  renderSavedList();
-  resetSession({ message: "Deleted" });
-}
-
-function saveCustomText() {
-  const text = els.customText.value.trim();
-  if (!text) {
-    els.sessionState.textContent = "Add text first";
-    els.customText.focus();
-    return;
-  }
-
-  const title = els.customTitle.value.trim() || `Practice text ${state.customPassages.length + 1}`;
-  const passage = {
-    id: makeId("custom"),
-    title: title.slice(0, 60),
-    text
-  };
-
-  state.customPassages.unshift(passage);
-  state.activeId = passage.id;
-  state.draft = null;
-  saveCustomPassages();
-  els.customTitle.value = "";
-  els.customText.value = "";
-  renderSavedList();
-  resetSession({ message: "Saved" });
-}
-
-function useDraftNow() {
-  const text = els.customText.value.trim();
-  if (!text) {
-    els.sessionState.textContent = "Add text first";
-    els.customText.focus();
-    return;
-  }
-
-  state.draft = {
-    id: "draft",
-    title: els.customTitle.value.trim() || "Unsaved draft",
-    text
-  };
-  resetSession({ message: "Draft loaded" });
-}
-
-function pickRandomPassage() {
-  const passages = allPassages();
-  if (!passages.length) return;
-
-  const available = passages.filter((passage) => passage.id !== state.activeId);
-  const pool = available.length ? available : passages;
-  const next = pool[Math.floor(Math.random() * pool.length)];
-  state.draft = null;
-  state.activeId = next.id;
-  resetSession({ message: "Ready" });
+function init() {
+    state.currentText = DEFAULT_PASSAGES[0].text;
+    renderTarget();
+    bindEvents();
 }
 
 function bindEvents() {
-  document.addEventListener("keydown", handlePracticeKeydown, true);
-  els.targetText.addEventListener("click", focusTypingInput);
-  els.typingInput.addEventListener("beforeinput", blockTypingKey);
-  els.typingInput.addEventListener("paste", blockTypingKey);
-  els.typingInput.addEventListener("drop", blockTypingKey);
-  els.typingInput.addEventListener("cut", blockTypingKey);
-  els.typingInput.addEventListener("copy", blockTypingKey);
-  els.typingInput.addEventListener("input", handleTypingInputFallback);
-  els.typingInput.addEventListener("mousedown", (event) => {
-    event.preventDefault();
-    focusTypingInput();
-  });
-  els.typingInput.addEventListener("select", () => requestAnimationFrame(lockTypingCaret));
-  els.restartButton.addEventListener("click", () => {
-    resetSession({ message: "Restarted" });
-    focusTypingInput();
-  });
-  els.pauseButton.addEventListener("click", () => {
-    if (state.paused) {
-      resumeSession();
-    } else {
-      pauseSession();
-    }
-  });
-  els.newTestButton.addEventListener("click", () => {
-    resetSession({ message: "Ready" });
-    focusTypingInput();
-  });
-  els.resumeModalButton.addEventListener("click", resumeSession);
-  els.restartModalButton.addEventListener("click", () => {
-    resetSession({ message: "Restarted" });
-    focusTypingInput();
-  });
-  els.randomButton.addEventListener("click", pickRandomPassage);
-  els.deleteButton.addEventListener("click", () => {
-    if (state.customPassages.some((passage) => passage.id === state.activeId)) {
-      deleteCustomPassage(state.activeId);
-    }
-  });
-  els.saveCustomButton.addEventListener("click", saveCustomText);
-  els.useDraftButton.addEventListener("click", useDraftNow);
-  els.passageSelect.addEventListener("change", (event) => {
-    const selected = event.target.value;
-    if (selected === "draft") return;
-    selectPassage(selected);
-  });
-  els.modeButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      state.activeMode = button.dataset.mode;
-      resetSession({ message: "Mode changed" });
-      focusTypingInput();
+    document.addEventListener('keydown', () => els.typingInput.focus());
+    els.typingInput.addEventListener('input', handleTyping);
+}
+
+function handleTyping() {
+    if (!state.startedAt) state.startedAt = Date.now();
+    renderTarget();
+    updateStats();
+    
+    // Add 3D "Ripple" effect by moving camera slightly
+    camera.position.z += 0.01;
+    setTimeout(() => camera.position.z -= 0.01, 50);
+}
+
+function renderTarget() {
+    const typed = els.typingInput.value;
+    els.targetText.innerHTML = "";
+    [...state.currentText].forEach((char, i) => {
+        const span = document.createElement("span");
+        span.className = "char";
+        if (i < typed.length) {
+            span.classList.add(typed[i] === char ? "correct" : "incorrect");
+        } else if (i === typed.length) {
+            span.classList.add("current");
+        }
+        span.textContent = char;
+        els.targetText.appendChild(span);
     });
-  });
 }
 
-function init() {
-  state.customPassages = loadCustomPassages();
-  loadSettings();
-
-  if (!allPassages().some((passage) => passage.id === state.activeId)) {
-    state.activeId = DEFAULT_PASSAGES[0].id;
-  }
-
-  bindEvents();
-  renderSavedList();
-  resetSession();
+function updateStats() {
+    const typed = els.typingInput.value;
+    const elapsed = (Date.now() - state.startedAt) / 60000;
+    const correct = [...typed].filter((c, i) => c === state.currentText[i]).length;
+    
+    els.wpm.textContent = Math.round((correct / 5) / elapsed) || 0;
+    els.accuracy.textContent = Math.round((correct / typed.length) * 100) + "%";
 }
 
-init();
+// Handle Window Resize
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
