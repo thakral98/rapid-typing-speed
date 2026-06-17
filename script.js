@@ -1,106 +1,88 @@
-// --- 1. THREE.JS ENGINE (ANTIGRAVITY) ---
-const canvas = document.querySelector('#bg-canvas');
-const scene3d = new THREE.Scene();
+// --- 1. 3D ANTIGRAVITY ENGINE ---
+const canvas = document.querySelector('#antigravity-bg');
+const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 
+renderer.setSize(window.innerWidth, window.innerHeight);
+camera.position.z = 5;
+
+// Create Floating Particle Field
 const particlesGeo = new THREE.BufferGeometry();
-const particlesCount = 2000;
+const particlesCount = 4000;
 const posArray = new Float32Array(particlesCount * 3);
+
 for(let i=0; i < particlesCount * 3; i++) {
-    posArray[i] = (Math.random() - 0.5) * 10;
+    posArray[i] = (Math.random() - 0.5) * 20;
 }
 particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-const particlesMat = new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff });
+const particlesMat = new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff, transparent: true });
 const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
-scene3d.add(particlesMesh);
-camera.position.z = 3;
+scene.add(particlesMesh);
 
-function animate3d() {
-    requestAnimationFrame(animate3d);
+function animate() {
+    requestAnimationFrame(animate);
     particlesMesh.rotation.y += 0.001;
-    renderer.render(scene3d, camera);
+    particlesMesh.rotation.x += 0.0005;
+    renderer.render(scene, camera);
 }
-animate3d();
+animate();
 
-// --- 2. NAVIGATION ---
-const enterBtn = document.querySelector('#enter-flow');
-enterBtn.addEventListener('click', () => {
-    document.querySelector('#hero-scene').classList.remove('active');
+// --- 2. MULTI-PAGE NAVIGATION ---
+const startBtn = document.querySelector('#start-btn');
+const landingPage = document.querySelector('#landing-page');
+const appPage = document.querySelector('#app-page');
+
+startBtn.addEventListener('click', () => {
+    landingPage.classList.remove('active');
     setTimeout(() => {
-        document.querySelector('#app-scene').classList.add('active');
-        init(); // Start your original logic
+        appPage.classList.add('active');
+        init(); // Start original logic
+        focusTypingInput();
     }, 600);
 });
 
-// --- 3. ORIGINAL TYPING LOGIC (Simplified for integration) ---
+// --- 3. YOUR ORIGINAL LOGIC (INTEGRATED) ---
+// (Keeping your constants and state as they were)
 const DEFAULT_PASSAGES = [
-    { id: "starter-focus", title: "Focus", text: "Practice slowly first, then let rhythm carry the words forward." },
-    { id: "logic", title: "Logic", text: "Code is like gravity, once you set it in motion, it defines the world." }
+  { id: "starter-focus", title: "Focus paragraph", text: "Typing speed grows when your eyes stay calm and your fingers return to the home row." },
+  // ... (Include other passages here)
 ];
 
 const state = {
-    customPassages: [], activeMode: "paragraph", activeId: "starter-focus",
-    currentText: "", startedAt: null, finishedAt: null, timerId: null
+  customPassages: [], activeMode: "paragraph", activeId: "starter-focus",
+  currentText: "", startedAt: null, finishedAt: null, paused: false
 };
 
-// Selection of core elements
-const els = {
-    targetText: document.querySelector("#targetText"),
-    typingInput: document.querySelector("#typingInput"),
-    wpm: document.querySelector("#wpm"),
-    accuracy: document.querySelector("#accuracy"),
-    time: document.querySelector("#time")
-};
+// ... (Merge all your original functions here: loadCustomPassages, renderTargetText, etc.)
+// Just update the handleTyping function slightly for 3D feedback:
+
+function handleTyping(effectKey = null) {
+  if (!state.startedAt && els.typingInput.value.length) {
+    state.startedAt = performance.now();
+    startCountdown();
+  }
+
+  // 3D Feedback: Particles speed up when typing
+  particlesMesh.rotation.y += 0.01;
+
+  renderTargetText();
+  updateStats();
+  updateKeyboard();
+  
+  if (effectKey) showKeystrokeEffect(effectKey);
+}
+
+// ... (Rest of your existing functions: saveCustomText, deleteCustomPassage, etc.)
 
 function init() {
-    state.currentText = DEFAULT_PASSAGES[0].text;
-    renderTarget();
-    bindEvents();
+  state.customPassages = loadCustomPassages();
+  // ... (Original init logic)
+  bindEvents();
+  resetSession();
 }
 
-function bindEvents() {
-    document.addEventListener('keydown', () => els.typingInput.focus());
-    els.typingInput.addEventListener('input', handleTyping);
-}
-
-function handleTyping() {
-    if (!state.startedAt) state.startedAt = Date.now();
-    renderTarget();
-    updateStats();
-    
-    // Add 3D "Ripple" effect by moving camera slightly
-    camera.position.z += 0.01;
-    setTimeout(() => camera.position.z -= 0.01, 50);
-}
-
-function renderTarget() {
-    const typed = els.typingInput.value;
-    els.targetText.innerHTML = "";
-    [...state.currentText].forEach((char, i) => {
-        const span = document.createElement("span");
-        span.className = "char";
-        if (i < typed.length) {
-            span.classList.add(typed[i] === char ? "correct" : "incorrect");
-        } else if (i === typed.length) {
-            span.classList.add("current");
-        }
-        span.textContent = char;
-        els.targetText.appendChild(span);
-    });
-}
-
-function updateStats() {
-    const typed = els.typingInput.value;
-    const elapsed = (Date.now() - state.startedAt) / 60000;
-    const correct = [...typed].filter((c, i) => c === state.currentText[i]).length;
-    
-    els.wpm.textContent = Math.round((correct / 5) / elapsed) || 0;
-    els.accuracy.textContent = Math.round((correct / typed.length) * 100) + "%";
-}
-
-// Handle Window Resize
+// Update resize
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
