@@ -1,18 +1,38 @@
 const DEFAULT_PASSAGES = [
   {
-    id: "starter-focus",
-    title: "Focus paragraph",
-    text: "Typing speed grows when your eyes stay calm and your fingers return to the home row. Practice slowly first, then let rhythm carry the words forward."
+    id: "home-row",
+    title: "Home Row Practice",
+    text: "as sa ad da af fa ag ga ah ha aj ja ak ka al la sd ds sf fs sg gs sh hs sj js sk ks sl ls df fd dg gd dh hd dj jd dk kd dl ld fg gf fh hf fj jf fk kf fl lf gh hg gj jg gk kg gl lg asd sdf dfg fgh ghj hjk jkl lkj kjh jhg hgf gfd fds dsa saf afg agh ahj ajk akl sla slk skj sjh shg asd sda das afd fda dag gah haj ajl lkj sdf dfs fsd sdg dgh ghk hkj kjl jla las ask skd kdf dfg fgj asdf sdfg dfgh fghj ghjk hjkl lkjh kjhg jhgf hgfd gfds fdsa safg afgh fghk ghkl askl sklj kljh ljhg adfg dfgh fghj ghjk shjk hjka jkas kasd sdfg dfgs fgsh gshj ahjk hjkl jkla klas asdf sdaf dafg afgh lkja kjas jasd asdg fghk ghkj hkjl kjla sdfh dfhj fhjk hjkl aghj ghjk hjka jkal slkj lkjh kjhg jhgf asdfg sdfgh dfghj fghjk ghjkl lkjhg kjhgf jhgfd hgfds gfdsa safgh afghj fghjk ghjkl hjkla jklas klasd lasdf asdfh sdfhj dfhjk fhjkl hjkla jklad aghjk ghjkl hjkls jklsa skljh kljhg ljhgf jhgfd adfgh dfghj fghjk ghjkl shjkl hjkla jklaf klafd asdfh sdfhj dfhjk fhjkl aghjk ghjka hjkas jkasd sdfgh dfghk fghkl ghklj ahjkl hjkla jklas klasd slkjh lkjhg kjhgf jhgfa"
   },
   {
-    id: "starter-lines",
-    title: "Short line drill",
-    text: "Keep wrists light\nLook at the next word\nPress each key with purpose\nCorrect mistakes with patience\nFinish the line cleanly"
+    id: "top-row",
+    title: "Top Row Practice",
+    text: "ag fds ja sf lal ljf gadjh dfhs js hgak hfsa gsf jg hdhhf sdlf kjg haf hj sfhf jkdgd llg jhfdl sasdd sjjkl lasl hsgj kag lsg dhd hk sh fafs ks dkl glj lfg hklks fsh lf asa sah kfld fkjfs jh jkasa hsfff djdgk skl al jkk jad ajgkg lkdfg ala aakl als ssf sfasj gfhf jdgk saks dhsf gdkl lalg dg sl ggf fglk asjg ah gdk lassd hl jda hahf shl dfddj dh fgdsj kf khg faf hgsgh lhasg gas hhjls fgaja hjs hsgl jhjg fjj gjl gg jhk kflkd gl sfgf daa ksk fjkjf asj dlk kd llhkl lkdkk gks fghh dd jdf jj lkja jja kahgj llfkf jkaj jdkd jd dagjh khh gjgsk la fsaa fad dks kgh sdg jfsfs sahl hslha ksjhk jdl lkkj hfsg fkjha hdkfh hggl fj lfkkk sg jfg kllh lhhkg gfsf sldf kgl dgal gaa dksa kkkh agk sj saddg fs fljkk jgas fgs fdl da kkgaf gksf fjsl dgd ad gksk jgll ksajh asfa adkl gdjks hjhhs hjk jlak hg sjla jaflh kafgl gkk af gla sfsks jkkf ldjfl sgj lgag kdkl hhllj hffjf ahkjj kad sksl adjds ghjsh hklas gfs sskdg gh jdfl dddsj kdf gkgak"
   },
   {
-    id: "starter-words",
-    title: "Small word set",
-    text: "the and you that was for are with his they this have from one had word but not what all were when your can said there use each which she do how their if will up other about out many then them these so some her would make like him into time has look two more write go see number no way could people my than first water been call who oil its now find long down day did get come made may part"
+    id: "bottom-row",
+    title: "Bottom Row Practice",
+    text: "zx xz zc cz zv vz zb bz zn nz zm mz xc cx xv vx xb bx xn nx xm mx cv vc cb bc cn nc cm mc vb bv vn nv vm mv bn nb bm mb nm mn zxc xcv cvb vbn bnm mnb nbv bvc vcx cxz zcv cvn vnm nmb mbv bvc vcx zxb xbn bnm nmv mvc vcx cxz zcn cnv nvb vbm bmx mxc xcz zxm xmn mnb nbv bvc zxcv xcvb cvbn vbnm bnmv nmvb mvbc vbcx bcxz zcvb cvbn vbnm bnmx nmxc mxcv xcvz zxcv xcvn cvnm vnmb nmbv mbvc bvcx zxbn xbnm bnmv nmvc mvcx vcxz zcnv cnvb nvbm vbmx bmxc mxcz zxcvb xcvbn cvbnm vbnmv bnmvb nmvbc mvbcx vbcxz zcvbn cvbnm vbnmx bnmxc nmxcv mxcvb xcvbz zxcvn xcvnm cvnmb vnmbv nmbvc mbvcx bvcxz zxbnm xbnmv bnmvc nmvcx mvcxz vcxzb zcnvb cnvbm nvbmx vbmxc bmxcz zxcvb xcvbn cvbnm vbnmv bnmvb nmvbc mvbcx vbcxz zcvbn cvbnm vbnmx bnmxc nmxcv mxcvb xcvbz zxcvn xcvnm cvnmb vnmbv nmbvc mbvcx bvcxz zxbnm xbnmv bnmvc nmvcx mvcxz vcxzb zcnvb cnvbm nvbmx vbmxc bmxcz zxc xcv cvb vbn bnm zcv cvn vnm nmb mbv zxb xbn bnm nmv mvc zcn cnv nvb vbm bmx zxm xmn mnb nbv bvc"
+  },
+  {
+    id: "extreme-left",
+    title: "Extreme Left Practice",
+    text: "qw wq qa aq qs sq qz zq qx xq wa aw ws sw wz zw wx xw as sa az za ax xa sz zs sx xs zx xz qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qaw aws wsz szx zxa xaq qsa saz sax qaz qax qzx zxa wax was waz wax wsx szx zxa asq sqw qwa was saz azx zxs sxq qwas wasz wasx wazx aszx qaws awsz wszx szxa qasz aszx szxq zxqa qwaz wazx azxq zxqw qwax waxs axsz xszq qwsz wszx szxq zxqw wasz aszx szxw zxwa qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qw qa qs qz qx wa ws wz wx as az ax sz sx zx qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qwas wasz aszx szxq zxqa qwasz waszx aszxq szxqw zxqwa"
+  },
+  {
+    id: "extreme-right",
+    title: "Extreme Right Practice",
+    text: "op po ok ko ol lo on no om mo pk kp pl lp pn np pm mp kl lk kn nk km mk ln nl lm ml nm mn opk pkl kln lnm nmo mol lok kop opl plk lkn knm nmp mpo pol olk lkp kpn pnm nml mlk lko kop opn pnk nkl klm lmn mno nop opkl pkln klnm lnmo nmop mopl oplk plkn lknm knmo nmol molk olkp lkpn kpnm pnml nmlk mlko lkop kopn opnk pnkl nklm klmn lmno mnop opkm pkmn kmnl mnlo nlop lopk opkln pklnm klnmo lnmop nmopl moplk oplkn plknm lknmo knmop nmopk mopkl opkln pklnm klnmp lnmpk nmpol mpolk polkn olknm lknmp knmpl nmplo mplok plokn loknp oknpl knplm nplmo plmok lmokp mokpl okpln kplnm plnmo lnmok opkln pklnm klnmo lnmop nmopl moplk oplkn plknm lknmo knmop nmopk mopkl opklm pklmn klmno lmnop mnopk nopkl opnkl pnklo nklom klomp lompk ompkl oplmn plmno lmnop mnopl noplm oplmk plmko lmkop mkopl koplm oplkn plkno lknop knopl noplk polkm olkmp lkmpo kmpol mpolk op ol ok on om pk pl pn pm kl kn km ln lm nm opk pkl kln lnm nmo opl plk lkn knm nmp opkl pkln klnm lnmo nmop opkln pklnm klnmo lnmop nmopl"
+  },
+  {
+    id: "mid",
+    title: "Mid Keys Practice",
+    text: "rt tr ry yr rf fr rg gr rh hr rc cr rv vr rb br ty yt tf ft tg gt th ht tc ct tv vt tb bt yf fy yg gy yh hy yc cy yv vy yb by fg gf fh hf fc cf fv vf fb bf gh hg gc cg gv vg gb bg hc ch hv vh hb bh cv vc cb bc vb bv rty tyf yfg fgh ghc hcv cvb bvc vch chg hgf gfy fyt ytr try ryg ygh ghv hvb vbc bch chf hfg fgr grt rtf tfg fgh ghb hbc bcv cvf vfg fgy gyr ryt ryf yfg fgc gcv cvb vbh bhg hgf gfr frt rtf tfh fhc hcv cvb vbh bhc hcg cgf gfy gfr frt rtf tfh fhc hcv cvb vbh bhc hcg cgf gfy fyr rtyf tyfg yfgh fghc ghcv hcvb cvbh vbhc bhcg hcgf cgfy gfyr fyrt yrtf rtfg tfgh fghb ghbc hbcv bcvf cvfg vfgy fgyr gytr tryg rygh yghv ghvb hvbc vbch bchf chfg hfgr fgrt rtfh tfhc fhcv hcvb cvbh bhcg hcgf cgfy gfyr rtyfg tyfgh yfghc fghcv ghcvb hcvbh cvbhc vbhcg bhcgf hcgfy cgfyr gfyrt fyrty yrtyf rtyfg tyfgh yfghb fghbc ghbcv hbcvf bcvfg cvfgy vfgyr fgytr gytry trygh ryghv yghvb ghvbc hvbch vbchf bchfg chfgr hfgrt rtfhc tfhcv fhcvb hcvbh cvbhc vbhcg bhcgf hcgfy cgfyr rt ry rf rg rh rc rv rb ty tf tg th tc tv tb yf yg yh yc yv yb fg fh fc fv fb gh gc gv gb hc hv hb cv cb vb rty tyf yfg fgh ghc hcv cvb try ryg ygh ghv hvb vbc rtyf tyfg yfgh c ghcv hcvb rtyfg tyfgh yfghc fghcv ghcvb"
+  },
+  {
+    id: "paragraph",
+    title: "Paragraph Practice",
+    text: "The ostensibly tranquil metropolis concealed an undercurrent of ineffable complexity, where magniloquent politicians promulgated grandiose doctrines while clandestine factions maneuvered with astonishing dexterity through labyrinthine networks of influence. Amid this intricate milieu, an erudite scholar embarked upon an arduous intellectual odyssey, determined to elucidate the enigmatic mechanisms that governed societal transformation. His perspicacious observations revealed that prosperity was often predicated not merely upon material abundance but upon the cultivation of resilience, sagacity, and an unwavering commitment to ethical conduct. Nevertheless, pervasive avarice and obdurate self-interest frequently undermined collective aspirations, engendering discord, disenchantment, and an atmosphere of palpable uncertainty. The scholar encountered innumerable individuals whose lives epitomized paradoxical contrasts: some exhibited extraordinary munificence despite their meager circumstances, whereas others, endowed with prodigious wealth, remained conspicuously parsimonious and spiritually impoverished. As he traversed bustling marketplaces, venerable libraries, and remote hamlets, he discerned a recurring pattern of human behavior characterized by both remarkable ingenuity and lamentable shortsightedness. In academic circles, interminable debates concerning epistemological frameworks often devolved into pedantic disputes, obscuring the substantive issues they purported to address. Conversely, among artisans and laborers, practical wisdom frequently emerged through quotidian experience rather than formal instruction. Fascinated by these dichotomies, the scholar meticulously documented every nuance, compiling a comprehensive treatise replete with incisive analyses and cogent arguments. His manuscript contended that civilizations attain genuine eminence not through coercive dominance or ostentatious displays of power but through the harmonious integration of innovation, justice, and cultural vitality. Yet he also acknowledged the fragility of such achievements, emphasizing how complacency, dogmatism, and institutional inertia could precipitate precipitous decline. Throughout his journey, he witnessed episodes of extraordinary fortitude during times of adversity. Communities devastated by calamity displayed indomitable perseverance, reconstructing their livelihoods with admirable determination despite formidable obstacles. These experiences reinforced his conviction that the human spirit possesses a remarkable capacity for adaptation, transcending even the most deleterious circumstances. However, he remained acutely aware of the pernicious effects of misinformation, demagoguery, and ideological extremism, all of which threatened to erode social cohesion and rational discourse. Consequently, he advocated for a pedagogical paradigm that prioritized critical thinking, intellectual humility, and empirical inquiry over unquestioning adherence to orthodoxy. As years elapsed, his reputation expanded considerably, attracting both fervent admirers and vehement detractors. While supporters lauded his erudition and visionary insights, critics denounced his conclusions as overly idealistic or impracticable. Undeterred by such opposition, he continued refining his theories, convinced that the pursuit of truth necessitated rigorous scrutiny and perpetual revision. Ultimately, his work achieved enduring significance, inspiring subsequent generations to examine prevailing assumptions with greater discernment and courage. The legacy he bequeathed was neither a rigid doctrine nor an immutable blueprint but rather an exhortation to embrace intellectual curiosity, moral integrity, and constructive dialogue. In an era increasingly defined by volatility and fragmentation, his message retained profound relevance, reminding humanity that wisdom emerges not from certitude alone but from the willingness to confront ambiguity, challenge preconceptions, and engage earnestly with the complexities of existence."
   }
 ];
 
@@ -28,7 +48,7 @@ const NATIVE_CONTROL_SELECTOR = "#customTitle, #customText, #passageSelect, butt
 const state = {
   customPassages: [],
   activeMode: "paragraph",
-  activeId: "starter-focus",
+  activeId: "paragraph",
   draft: null,
   currentText: "",
   durationSeconds: SHORT_SESSION_SECONDS,
@@ -106,7 +126,7 @@ function loadSettings() {
     if (parsed.activeId) state.activeId = parsed.activeId;
   } catch {
     state.activeMode = "paragraph";
-    state.activeId = "starter-focus";
+    state.activeId = "paragraph";
   }
 }
 
@@ -818,12 +838,32 @@ function pickRandomPassage() {
 function initNavigation() {
   const navLinks = document.querySelectorAll('.nav-link');
   const pageViews = document.querySelectorAll('.page-view');
+  const startBtn = document.getElementById('start-training-btn');
+  const drillModal = document.getElementById('drillSelectorModal');
+  const closeDrillBtn = document.getElementById('closeDrillSelectorButton');
+  const drillCards = document.querySelectorAll('.drill-card-btn');
+
+  function openDrillSelector() {
+    if (drillModal) {
+      drillModal.classList.add('active');
+    }
+  }
+
+  function closeDrillSelector() {
+    if (drillModal) {
+      drillModal.classList.remove('active');
+    }
+  }
 
   navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const targetPageId = link.getAttribute('href').substring(1);
-      switchPage(targetPageId);
+      if (targetPageId === 'practice') {
+        openDrillSelector();
+      } else {
+        switchPage(targetPageId);
+      }
     });
   });
 
@@ -835,20 +875,35 @@ function initNavigation() {
       if (href.startsWith('#')) {
         e.preventDefault();
         const targetPageId = href.substring(1);
-        switchPage(targetPageId);
+        if (targetPageId === 'practice') {
+          openDrillSelector();
+        } else {
+          switchPage(targetPageId);
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
   });
 
-  // Start Training button in Hero
-  const startBtn = document.getElementById('start-training-btn');
   if (startBtn) {
     startBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      switchPage('practice');
+      openDrillSelector();
     });
   }
+
+  if (closeDrillBtn) {
+    closeDrillBtn.addEventListener('click', closeDrillSelector);
+  }
+
+  drillCards.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const drillId = btn.dataset.drillId;
+      closeDrillSelector();
+      selectPassage(drillId);
+      switchPage('practice');
+    });
+  });
 
   // Explore Features button in Hero
   const exploreBtn = document.getElementById('explore-features-btn');
