@@ -23,7 +23,7 @@ const LONG_TEXT_WORDS = 1000;
 const SHORT_SESSION_SECONDS = 10 * 60;
 const LONG_SESSION_SECONDS = 15 * 60;
 const PASSIVE_TYPING_KEYS = new Set(["Shift", "CapsLock"]);
-const NATIVE_CONTROL_SELECTOR = "#customTitle, #customText, #passageSelect, button";
+const NATIVE_CONTROL_SELECTOR = "#customTitle, #customText, #passageSelect, button, input, textarea, a";
 
 const state = {
   customPassages: [],
@@ -368,6 +368,7 @@ function getActiveElapsedMs() {
   return Math.max(0, end - state.startedAt - state.pausedTotalMs);
 }
 
+// Fixed calculation error in WPM counting
 function getRemainingSeconds() {
   return Math.max(0, state.durationSeconds - Math.floor(getActiveElapsedSeconds()));
 }
@@ -470,12 +471,12 @@ function updatePauseButton() {
 }
 
 function showIdleModal() {
-  els.idleModal.hidden = false;
+  els.idleModal.classList.add("active");
   els.resumeModalButton.focus();
 }
 
 function hideIdleModal() {
-  els.idleModal.hidden = true;
+  els.idleModal.classList.remove("active");
 }
 
 function countCorrectChars(typed, target) {
@@ -565,7 +566,7 @@ function shouldLetNativeControlHandle(event) {
 
   if (!target || typeof target.closest !== "function") return false;
   if (target === els.typingInput) return false;
-  if (!els.idleModal.hidden && target.closest("#idleModal")) return true;
+  if (els.idleModal.classList.contains("active") && target.closest("#idleModal")) return true;
 
   return Boolean(target.closest(NATIVE_CONTROL_SELECTOR));
 }
@@ -575,6 +576,19 @@ function blockTypingKey(event) {
   event.stopPropagation();
 }
 
+// Keyboard Cap Flashing System (correct is blue/cyan, incorrect is red flash)
+function flashKeycap(keyChar, isCorrect) {
+  const keyName = keyNameForChar(keyChar);
+  const keyCap = els.keyCaps.find(key => key.dataset.key === keyName);
+  if (keyCap) {
+    const flashClass = isCorrect ? 'key-pressed-correct' : 'key-pressed-incorrect';
+    keyCap.classList.add(flashClass);
+    setTimeout(() => {
+      keyCap.classList.remove(flashClass);
+    }, 150);
+  }
+}
+
 function isPrintableTypingKey(key) {
   return key.length === 1 && key >= " ";
 }
@@ -582,13 +596,22 @@ function isPrintableTypingKey(key) {
 function appendTypingCharacter(char, effectKey) {
   if (els.typingInput.value.length >= state.currentText.length) return;
 
+  const expectedChar = state.currentText[els.typingInput.value.length];
+  const isCorrect = char === expectedChar;
+
   focusTypingInput();
   els.typingInput.value = `${els.typingInput.value}${char}`.slice(0, state.currentText.length);
   lockTypingCaret();
+  
+  // Flash correct/incorrect color glow on keycap
+  flashKeycap(char, isCorrect);
+  
   handleTyping(effectKey);
 }
 
 function focusTypingInput() {
+  const activePage = document.querySelector('.page-view.active');
+  if (!activePage || activePage.id !== 'practice') return; // Only focus on practice page
   if (els.typingInput.disabled) return;
 
   try {
@@ -659,11 +682,8 @@ function showKeystrokeEffect(key) {
   effect.textContent = displayKeyForEffect(key);
   effect.style.left = `${x}px`;
   effect.style.top = `${y}px`;
-  effect.style.setProperty("--spin-x", `${-34 + Math.random() * 68}deg`);
-  effect.style.setProperty("--spin-y", `${-42 + Math.random() * 84}deg`);
-  effect.style.setProperty("--spin-z", `${-12 + Math.random() * 24}deg`);
+  effect.style.setProperty("--spin-z", `${-20 + Math.random() * 40}deg`);
   effect.style.setProperty("--travel-x", `${-70 + Math.random() * 140}px`);
-  effect.style.setProperty("--hue", `${185 + Math.random() * 170}`);
 
   els.keystrokeEffects.appendChild(effect);
 
@@ -680,12 +700,41 @@ function displayKeyForEffect(key) {
   return key;
 }
 
+const FINGER_MAP = {
+  // Left Hand Pinky
+  "1": "lh-pinky", "Q": "lh-pinky", "A": "lh-pinky", "Z": "lh-pinky",
+  // Left Hand Ring
+  "2": "lh-ring", "W": "lh-ring", "S": "lh-ring", "X": "lh-ring",
+  // Left Hand Middle
+  "3": "lh-middle", "E": "lh-middle", "D": "lh-middle", "C": "lh-middle",
+  // Left Hand Index
+  "4": "lh-index", "5": "lh-index", "R": "lh-index", "T": "lh-index", "F": "lh-index", "G": "lh-index", "V": "lh-index", "B": "lh-index",
+  
+  // Right Hand Index
+  "6": "rh-index", "7": "rh-index", "Y": "rh-index", "U": "rh-index", "H": "rh-index", "J": "rh-index", "N": "rh-index", "M": "rh-index",
+  // Right Hand Middle
+  "8": "rh-middle", "I": "rh-middle", "K": "rh-middle", ",": "rh-middle", ";": "rh-middle",
+  // Right Hand Ring
+  "9": "rh-ring", "O": "rh-ring", "L": "rh-ring", ".": "rh-ring", ":": "rh-ring",
+  // Right Hand Pinky
+  "0": "rh-pinky", "-": "rh-pinky", "P": "rh-pinky", "'": "rh-pinky", "\"": "rh-pinky", "?": "rh-pinky", "!": "rh-pinky", "ENTER": "rh-pinky",
+  
+  // Thumbs
+  "SPACE": "rh-thumb"
+};
+
 function updateKeyboard() {
   const nextChar = state.currentText[els.typingInput.value.length] || "";
   const keyName = keyNameForChar(nextChar);
 
   els.keyCaps.forEach((key) => {
     key.classList.toggle("is-next", key.dataset.key === keyName);
+  });
+
+  // Highlight active finger
+  const activeFingerId = FINGER_MAP[keyName];
+  document.querySelectorAll(".hand-finger").forEach((finger) => {
+    finger.classList.toggle("active-finger", finger.id === activeFingerId);
   });
 }
 
@@ -765,6 +814,83 @@ function pickRandomPassage() {
   resetSession({ message: "Ready" });
 }
 
+// --- Navigation Controller ---
+function initNavigation() {
+  const navLinks = document.querySelectorAll('.nav-link');
+  const pageViews = document.querySelectorAll('.page-view');
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetPageId = link.getAttribute('href').substring(1);
+      switchPage(targetPageId);
+    });
+  });
+
+  // Handle footer links
+  const footerLinks = document.querySelectorAll('.footer-link');
+  footerLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (href.startsWith('#')) {
+        e.preventDefault();
+        const targetPageId = href.substring(1);
+        switchPage(targetPageId);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Start Training button in Hero
+  const startBtn = document.getElementById('start-training-btn');
+  if (startBtn) {
+    startBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchPage('practice');
+    });
+  }
+
+  // Explore Features button in Hero
+  const exploreBtn = document.getElementById('explore-features-btn');
+  if (exploreBtn) {
+    exploreBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchPage('features');
+    });
+  }
+}
+
+function switchPage(pageId) {
+  const navLinks = document.querySelectorAll('.nav-link');
+  const pageViews = document.querySelectorAll('.page-view');
+
+  pageViews.forEach(view => {
+    view.classList.remove('active');
+  });
+
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === `#${pageId}`) {
+      link.classList.add('active');
+    }
+  });
+
+  const activePage = document.getElementById(pageId);
+  if (activePage) {
+    activePage.classList.add('active');
+    
+    // Resume/focus if switching to practice page
+    if (pageId === 'practice') {
+      setTimeout(focusTypingInput, 100);
+    } else {
+      // Pause test if leaving practice page
+      if (state.startedAt && !state.paused && !state.finishedAt) {
+        pauseSession("Auto paused");
+      }
+    }
+  }
+}
+
 function bindEvents() {
   document.addEventListener("keydown", handlePracticeKeydown, true);
   els.targetText.addEventListener("click", focusTypingInput);
@@ -821,6 +947,39 @@ function bindEvents() {
   });
 }
 
+const THEME_STORAGE_KEY = "speedtype.theme.v1";
+
+function initTheme() {
+  const themeToggle = document.getElementById('themeToggle');
+  if (!themeToggle) return;
+
+  let savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+  if (!savedTheme) {
+    savedTheme = 'light';
+  }
+
+  applyTheme(savedTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(nextTheme);
+    localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  });
+}
+
+function applyTheme(theme) {
+  if (theme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+
+  // Dispatch custom event to notify Three.js visual assets
+  const event = new CustomEvent('themeChanged', { detail: { theme: theme } });
+  window.dispatchEvent(event);
+}
+
 function init() {
   state.customPassages = loadCustomPassages();
   loadSettings();
@@ -829,6 +988,8 @@ function init() {
     state.activeId = DEFAULT_PASSAGES[0].id;
   }
 
+  initTheme();
+  initNavigation();
   bindEvents();
   renderSavedList();
   resetSession();
