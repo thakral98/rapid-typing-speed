@@ -15,78 +15,90 @@ body {
   overflow: hidden;
 }
 
-#bg-canvas {
+#antigravity-bg {
   position: fixed;
   top: 0; left: 0; z-index: -1;
 }
 
-/* Scene Handling */
-.scene {
+/* Page View Transitions */
+.view {
   position: absolute;
-  width: 100%; height: 100vh;
-  display: flex; align-items: center; justify-content: center;
+  width: 100%; min-height: 100vh;
+  display: flex; flex-direction: column;
   transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0; pointer-events: none;
+  transform: scale(1.1);
 }
-.scene.active { opacity: 1; pointer-events: all; }
 
-/* Landing Styles */
-.hero-content { text-align: center; max-width: 800px; }
+.view.active {
+  opacity: 1; pointer-events: all; transform: scale(1);
+}
+
+/* Landing Page Hero */
+.hero-container {
+  text-align: center; margin: auto; max-width: 800px; padding: 20px;
+}
+
+.hero-logo {
+  width: 120px; filter: drop-shadow(0 0 20px var(--teal));
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
 .glitch-text {
-  font-size: 5rem; font-weight: 900; margin: 0;
+  font-size: 5rem; font-weight: 900; letter-spacing: -2px;
   background: linear-gradient(to right, #fff, var(--teal));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
+
 .modern-btn {
   background: transparent; border: 1px solid var(--teal); color: var(--teal);
   padding: 20px 50px; font-weight: 900; letter-spacing: 2px; cursor: pointer;
-  transition: 0.3s; margin-top: 30px;
-}
-.modern-btn:hover { background: var(--teal); color: black; box-shadow: 0 0 50px rgba(0,242,255,0.4); }
-
-.info-grid {
-    display: flex; gap: 20px; justify-content: center; margin-top: 40px;
-}
-.info-card {
-    background: var(--glass); padding: 15px; border-radius: 10px; border: 1px solid var(--border);
+  transition: 0.4s; margin-top: 30px; box-shadow: 0 0 20px rgba(0,242,255,0.1);
 }
 
-/* App Styles (Glassmorphism) */
-.app-shell {
-  width: min(1200px, 95vw);
-  height: 85vh;
-  padding: 30px;
-  overflow-y: auto;
-  border-radius: 24px;
-  backdrop-filter: blur(20px);
+.modern-btn:hover {
+  background: var(--teal); color: black; box-shadow: 0 0 50px rgba(0,242,255,0.4);
+}
+
+/* Glass UI Elements */
+.glass {
   background: var(--glass);
+  backdrop-filter: blur(20px);
   border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 25px;
 }
 
-.typing-panel, .stats-panel, .library-panel {
-  background: rgba(0,0,0,0.2);
-  border-radius: 15px; padding: 20px;
-  border: 1px solid var(--border);
+.app-shell {
+  padding: 40px; overflow-y: auto; height: 100vh;
+}
+
+.workbench {
+  display: grid; grid-template-columns: 1fr 350px; gap: 20px;
 }
 
 .target-text {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid var(--border);
-  font-family: monospace; font-size: 1.4rem;
-  padding: 20px; min-height: 200px; line-height: 1.6;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem; line-height: 1.8;
+  color: rgba(255,255,255,0.4); min-height: 250px;
 }
+
+.char.correct { color: var(--teal); text-shadow: 0 0 10px var(--teal); }
+.char.incorrect { background: rgba(255, 75, 75, 0.3); color: #ff4b4b; }
+.char.current { border-left: 2px solid var(--teal); animation: blink 0.8s infinite; }
 
 #typingInput {
-  width: 100%; height: 80px; background: transparent;
-  border: 1px solid var(--teal); color: white; padding: 15px; font-size: 1.2rem;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  color: white; width: 100%; height: 100px; border-radius: 10px; padding: 20px;
 }
 
-.char.correct { color: var(--teal); text-shadow: 0 0 8px var(--teal); }
-.char.incorrect { background: rgba(255, 75, 75, 0.4); }
-.char.current { border-left: 2px solid var(--teal); animation: pulse 0.8s infinite; }
+.stat { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 15px; text-align: center; }
+.stat strong { font-size: 2.2rem; display: block; color: var(--teal); }
 
-.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.stat { background: var(--glass); padding: 15px; text-align: center; border-radius: 10px; }
-.stat strong { font-size: 2rem; display: block; color: var(--teal); }
-
-@keyframes pulse { 50% { opacity: 0; } }
+/* Key Highlights */
+.key-row span.is-next {
+  background: var(--teal); color: black; transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,242,255,0.3);
+}
