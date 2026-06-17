@@ -1,123 +1,115 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SpeedType Studio | Antigravity</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Three.js for 3D Effects -->
+    <!-- Three.js for 3D Antigravity Effects -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    <!-- Persistent 3D Background -->
-    <canvas id="bg-canvas"></canvas>
+    <!-- 3D Background Canvas -->
+    <canvas id="antigravity-bg"></canvas>
 
-    <!-- PAGE 1: LANDING & INFO -->
-    <section id="hero-scene" class="scene active">
-        <div class="hero-content">
+    <!-- PAGE 1: THE LANDING (Intro & Info) -->
+    <section id="landing-page" class="view active">
+        <div class="hero-container">
+            <img class="hero-logo" src="speedtype-logo.png" alt="Logo">
             <p class="eyebrow">Zero-G Typing Experience</p>
-            <h1 class="glitch-text">Rapid Typing Speed</h1>
+            <h1 class="glitch-text" data-text="SpeedType Studio">SpeedType Studio</h1>
             <p class="hero-description">
                 Experience typing in a digital vacuum. Master your finger flow, 
-                track your velocity in real-time, and break the limits of standard keyboard interaction.
+                track your velocity in real-time, and break the limits of standard interaction.
             </p>
-            <div class="info-grid">
-                <div class="info-card">
-                    <span>3D Feedback</span>
-                    <p>Visual ripples for every keypress.</p>
-                </div>
-                <div class="info-card">
-                    <span>Analytics</span>
-                    <p>Track WPM and Accuracy live.</p>
-                </div>
+            <div class="features-row">
+                <div class="feat-card"><span>3D Feedback</span></div>
+                <div class="feat-card"><span>Local Storage</span></div>
+                <div class="feat-card"><span>Ghost Typist</span></div>
             </div>
-            <button id="enter-flow" class="modern-btn">ENTER THE VORTEX</button>
+            <button id="start-btn" class="modern-btn">INITIATE FLOW</button>
         </div>
     </section>
 
-    <!-- PAGE 2: THE APP (Your original logic) -->
-    <main id="app-scene" class="scene">
-        <div class="app-shell glass">
-            <header class="topbar">
-                <div class="brand">
-                    <div class="brand-copy">
-                        <p class="eyebrow">Typing speed practice</p>
-                        <div class="brand-title-line">
-                            <h1>SpeedType Studio</h1>
-                        </div>
+    <!-- PAGE 2: THE WORKBENCH (Your Original App) -->
+    <main id="app-page" class="app-shell view">
+        <header class="topbar glass">
+            <div class="brand">
+                <img class="brand-mark" src="speedtype-logo.png" alt="logo">
+                <h1>SpeedType Studio</h1>
+            </div>
+            <div class="storage-pill" id="storageStatus">Ready</div>
+            <button class="exit-btn" onclick="location.reload()">Esc</button>
+        </header>
+
+        <section class="workbench">
+            <section class="typing-panel glass">
+                <div class="panel-header">
+                    <div class="mode-control">
+                        <button class="mode-button is-active" data-mode="paragraph">Paragraph</button>
+                        <button class="mode-button" data-mode="lines">Lines</button>
+                        <button class="mode-button" data-mode="words">Words</button>
                     </div>
+                    <span class="session-state" id="sessionState">Ready</span>
                 </div>
-                <div class="storage-pill" id="storageStatus">Ready</div>
-                <button class="back-to-home" onclick="location.reload()">Esc</button>
-            </header>
 
-            <section class="workbench">
-                <section class="typing-panel">
-                    <div class="panel-header">
-                        <div class="mode-control" role="group">
-                            <button class="mode-button is-active" data-mode="paragraph">Paragraph</button>
-                            <button class="mode-button" data-mode="lines">Lines</button>
-                            <button class="mode-button" data-mode="words">Words</button>
-                        </div>
-                    </div>
+                <div class="target-tools">
+                    <select id="passageSelect" class="glass-select"></select>
+                    <button class="icon-button" id="randomButton">↻</button>
+                    <button class="icon-button danger" id="deleteButton">×</button>
+                </div>
 
-                    <div class="target-tools">
-                        <select id="passageSelect"></select>
-                        <button class="icon-button" id="randomButton">↻</button>
-                        <button class="icon-button danger" id="deleteButton">×</button>
-                    </div>
+                <div class="target-text" id="targetText"></div>
+                <textarea id="typingInput" spellcheck="false" autocomplete="off" inputmode="none" readonly placeholder="Type here..."></textarea>
 
-                    <div class="target-text" id="targetText"></div>
-                    
-                    <textarea id="typingInput" spellcheck="false" autocomplete="off" inputmode="none" readonly placeholder="Start typing here..."></textarea>
-
-                    <div class="action-row">
-                        <button class="primary-button" id="restartButton">Restart</button>
-                        <button class="secondary-button" id="pauseButton">Pause</button>
-                        <span class="session-state" id="sessionState">Ready</span>
-                    </div>
-                </section>
-
-                <aside class="stats-panel">
-                    <div class="stat-grid">
-                        <div class="stat"><span class="stat-label">WPM</span><strong id="wpm">0</strong></div>
-                        <div class="stat"><span class="stat-label">Accuracy</span><strong id="accuracy">100%</strong></div>
-                        <div class="stat"><span class="stat-label">Time</span><strong id="time">10:00</strong></div>
-                    </div>
-                    <div class="progress-block">
-                        <div class="progress-track"><span id="progressBar"></span></div>
-                    </div>
-                    
-                    <!-- Keyboard Visualizer -->
-                    <div class="keyboard-map" id="kbMap">
-                        <!-- Keys will be highlighted via script -->
-                    </div>
-                </aside>
-            </section>
-
-            <section class="library-panel">
-                <h2>Custom Library</h2>
-                <div class="editor-grid">
-                    <div class="editor-fields">
-                        <input id="customTitle" type="text" placeholder="Title">
-                        <textarea id="customText" placeholder="Paste text here..."></textarea>
-                        <button class="primary-button" id="saveCustomButton">Save</button>
-                    </div>
-                    <div class="saved-list" id="savedList"></div>
+                <div class="action-row">
+                    <button class="primary-button" id="restartButton">Restart</button>
+                    <button class="secondary-button" id="pauseButton">Pause</button>
                 </div>
             </section>
-        </div>
+
+            <aside class="stats-panel glass">
+                <div class="stat-grid">
+                    <div class="stat"><span class="stat-label">WPM</span><strong id="wpm">0</strong></div>
+                    <div class="stat"><span class="stat-label">ACC</span><strong id="accuracy">100%</strong></div>
+                    <div class="stat"><span class="stat-label">ERR</span><strong id="errors">0</strong></div>
+                    <div class="stat"><span class="stat-label">TIME</span><strong id="time">10:00</strong></div>
+                </div>
+                <div class="progress-block">
+                    <div class="progress-track"><span id="progressBar"></span></div>
+                </div>
+                <!-- Keyboard Visualizer -->
+                <div class="keyboard-map glass" id="kbMap">
+                    <!-- Rows generated in script or keep existing structure -->
+                    <div class="key-row"><span data-key="Q">Q</span><span data-key="W">W</span><span data-key="E">E</span><span data-key="R">R</span><span data-key="T">T</span><span data-key="Y">Y</span><span data-key="U">U</span><span data-key="I">I</span><span data-key="O">O</span><span data-key="P">P</span></div>
+                    <div class="key-row"><span data-key="A">A</span><span data-key="S">S</span><span data-key="D">D</span><span data-key="F">F</span><span data-key="G">G</span><span data-key="H">H</span><span data-key="J">J</span><span data-key="K">K</span><span data-key="L">L</span></div>
+                    <div class="key-row"><span data-key="Z">Z</span><span data-key="X">X</span><span data-key="C">C</span><span data-key="V">V</span><span data-key="B">B</span><span data-key="N">N</span><span data-key="M">M</span></div>
+                    <div class="key-row"><span class="wide-key" data-key="SPACE">SPACE</span></div>
+                </div>
+            </aside>
+        </section>
+
+        <section class="library-panel glass">
+            <h2>Custom Library</h2>
+            <div class="editor-grid">
+                <div class="editor-fields">
+                    <input id="customTitle" type="text" placeholder="Title" class="glass-input">
+                    <textarea id="customText" placeholder="Paste your text here..." class="glass-input"></textarea>
+                    <button class="primary-button" id="saveCustomButton">Save Text</button>
+                </div>
+                <div class="saved-list" id="savedList"></div>
+            </div>
+        </section>
     </main>
 
-    <!-- Modals & Overlays -->
     <div class="modal-backdrop" id="idleModal" hidden>
-        <div class="modal-card">
-            <h2>Typing Paused</h2>
+        <div class="modal-card glass">
+            <h2>Paused</h2>
             <button class="primary-button" id="resumeModalButton">Resume</button>
         </div>
     </div>
-    <div class="keystroke-effects" id="keystrokeEffects"></div>
 
+    <div class="keystroke-effects" id="keystrokeEffects"></div>
     <script src="script.js"></script>
 </body>
 </html>
