@@ -318,7 +318,7 @@ body {
 }
 
 .nav-link:hover, .nav-link.active {
-  color: var(--text-primary);
+  color: var(--text-secondary);
   background: var(--glass-bg-hover);
 }
 
@@ -469,7 +469,7 @@ body {
 .keyboard-guide-card {
   position: relative;
   width: 100%;
-  max-width: 680px; /* Fits desktop requirements */
+  max-width: 680px;
   border-radius: 20px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -612,7 +612,7 @@ body {
   width: 100%;
   background: linear-gradient(to top, var(--secondary-color), var(--primary-color));
   border-radius: 6px 6px 0 0;
-  height: 0; /* Animated dynamically with JS */
+  height: 0;
   box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
   transition: height 1s ease-out;
 }
@@ -1705,6 +1705,64 @@ select:disabled, input:disabled, textarea:disabled {
 .timeline-desc {
   color: var(--text-secondary);
   font-size: 0.95rem;
+}
+
+/* Training Selector Grid and Cards */
+.drill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.drill-card-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--btn-secondary-bg);
+  border: 1px solid var(--btn-secondary-border);
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: var(--transition-smooth);
+}
+
+.drill-card-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-color);
+  background: var(--glass-bg-hover);
+  box-shadow: 0 8px 20px var(--primary-glow);
+}
+
+.drill-icon {
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  background: rgba(0, 229, 255, 0.08);
+  border-radius: 8px;
+}
+
+.drill-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drill-info strong {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.drill-info span {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
 }
 
 /* ==========================================================================
