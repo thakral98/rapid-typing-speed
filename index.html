@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SpeedType Studio - Master Typing. Enter Flow State.</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=2.0">
     
     <!-- Three.js & GSAP CDNs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -58,7 +58,6 @@
         </nav>
 
         <div class="topbar-actions" style="display: flex; align-items: center; gap: 12px;">
-          <div class="storage-pill" id="storageStatus">Saved in this browser</div>
           <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
             <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
             <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -603,6 +602,70 @@
         </div>
       </div>
 
+      <!-- MODAL BACKDROP / DRILL SELECTOR -->
+      <div class="modal-backdrop" id="drillSelectorModal" role="dialog" aria-modal="true" aria-labelledby="drillTitle">
+        <div class="modal-card" style="max-width: 760px; padding: 28px;">
+          <span class="eyebrow" style="color: var(--primary-color);">TRAINING SELECTOR</span>
+          <h2 id="drillTitle" style="margin-bottom: 20px;">Choose Your Practice Focus</h2>
+          
+          <div class="drill-grid">
+            <button class="drill-card-btn glass-panel" data-drill-id="home-row" type="button">
+              <span class="drill-icon">🏠</span>
+              <div class="drill-info">
+                <strong>Home Row</strong>
+                <span>A, S, D, F, G, H, J, K, L</span>
+              </div>
+            </button>
+            <button class="drill-card-btn glass-panel" data-drill-id="top-row" type="button">
+              <span class="drill-icon">⬆️</span>
+              <div class="drill-info">
+                <strong>Top Row</strong>
+                <span>Q, W, E, R, T, Y, U, I, O, P</span>
+              </div>
+            </button>
+            <button class="drill-card-btn glass-panel" data-drill-id="bottom-row" type="button">
+              <span class="drill-icon">⬇️</span>
+              <div class="drill-info">
+                <strong>Bottom Row</strong>
+                <span>Z, X, C, V, B, N, M</span>
+              </div>
+            </button>
+            <button class="drill-card-btn glass-panel" data-drill-id="extreme-left" type="button">
+              <span class="drill-icon">👈</span>
+              <div class="drill-info">
+                <strong>Extreme Left</strong>
+                <span>Q, W, E, A, S, Z, X</span>
+              </div>
+            </button>
+            <button class="drill-card-btn glass-panel" data-drill-id="extreme-right" type="button">
+              <span class="drill-icon">👉</span>
+              <div class="drill-info">
+                <strong>Extreme Right</strong>
+                <span>Y, U, I, O, P, H, J, K, L...</span>
+              </div>
+            </button>
+            <button class="drill-card-btn glass-panel" data-drill-id="mid" type="button">
+              <span class="drill-icon">🎯</span>
+              <div class="drill-info">
+                <strong>Mid Keys</strong>
+                <span>T, Y, G, H, B, N</span>
+              </div>
+            </button>
+            <button class="drill-card-btn glass-panel" data-drill-id="paragraph" type="button" style="grid-column: 1 / -1;">
+              <span class="drill-icon">📝</span>
+              <div class="drill-info">
+                <strong>Paragraph (Default)</strong>
+                <span>Real-world paragraphs, complex transitions</span>
+              </div>
+            </button>
+          </div>
+          
+          <div class="action-row" style="margin-top: 24px; justify-content: center;">
+            <button class="btn btn-secondary" id="closeDrillSelectorButton" type="button">Cancel</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Keystroke effects canvas-like container -->
       <div class="keystroke-effects" id="keystrokeEffects" aria-hidden="true"></div>
 
@@ -623,7 +686,7 @@
     </main>
 
     <!-- Visual animations and typing integrations -->
-    <script src="3d-effects.js"></script>
-    <script src="script.js"></script>
+    <script src="3d-effects.js?v=2.0"></script>
+    <script src="script.js?v=2.0"></script>
   </body>
 </html>
