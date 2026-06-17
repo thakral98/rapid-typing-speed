@@ -3,158 +3,627 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SpeedType Studio</title>
+    <title>SpeedType Studio - Master Typing. Enter Flow State.</title>
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Three.js & GSAP CDNs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   </head>
   <body>
+    <!-- 3D Water Ripple Background Container -->
+    <div id="water-background-container"></div>
+
+    <!-- Background overlay gradients -->
+    <div class="gradient-overlay"></div>
+
     <main class="app-shell">
+      <!-- NAVIGATION TOPBAR -->
       <header class="topbar">
-        <div class="brand">
+        <a href="#home" class="brand">
+          <svg class="brand-mark" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100" height="100" rx="22" fill="url(#logo-grad)" />
+            <rect x="15" y="25" width="70" height="50" rx="10" stroke="rgba(255,255,255,0.8)" stroke-width="4" />
+            <!-- Space Bar -->
+            <rect x="35" y="60" width="30" height="6" rx="3" fill="#FFFFFF" />
+            <!-- Keyboard Keys -->
+            <rect x="25" y="37" width="8" height="8" rx="2" fill="rgba(255,255,255,0.8)" />
+            <rect x="37" y="37" width="8" height="8" rx="2" fill="rgba(255,255,255,0.8)" />
+            <rect x="49" y="37" width="8" height="8" rx="2" fill="rgba(255,255,255,0.8)" />
+            <rect x="61" y="37" width="8" height="8" rx="2" fill="rgba(255,255,255,0.8)" />
+            <rect x="30" y="49" width="8" height="8" rx="2" fill="rgba(255,255,255,0.8)" />
+            <rect x="42" y="49" width="8" height="8" rx="2" fill="rgba(255,255,255,0.8)" />
+            <rect x="54" y="49" width="8" height="8" rx="2" fill="rgba(255,255,255,0.8)" />
+            <rect x="66" y="49" width="8" height="8" rx="2" fill="rgba(255,255,255,0.8)" />
+            <defs>
+              <linearGradient id="logo-grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#00E5FF" />
+                <stop offset="1" stop-color="#7B61FF" />
+              </linearGradient>
+            </defs>
+          </svg>
           <div class="brand-copy">
-            <p class="eyebrow">Typing speed practice</p>
-            <div class="brand-title-line">
-              <img class="brand-mark" src="assets/speedtype-logo.png" alt="Typing speed test logo">
-              <h1>SpeedType Studio</h1>
-            </div>
+            <p class="eyebrow">SpeedType Studio</p>
+            <h1>SpeedType Studio</h1>
           </div>
+        </a>
+        
+        <nav class="nav-links">
+          <a href="#home" class="nav-link active">Home</a>
+          <a href="#practice" class="nav-link">Practice</a>
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#leaderboard" class="nav-link">Leaderboard</a>
+          <a href="#about" class="nav-link">About</a>
+        </nav>
+
+        <div class="topbar-actions" style="display: flex; align-items: center; gap: 12px;">
+          <div class="storage-pill" id="storageStatus">Saved in this browser</div>
+          <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </button>
         </div>
-        <div class="storage-pill" id="storageStatus">Saved in this browser</div>
       </header>
 
-      <section class="workbench" aria-label="Typing practice workspace">
-        <section class="typing-panel" aria-labelledby="practiceTitle">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Current drill</p>
-              <h2 id="practiceTitle">Build speed with your own text</h2>
-            </div>
-            <div class="mode-control" role="group" aria-label="Practice mode">
-              <button class="mode-button is-active" type="button" data-mode="paragraph" aria-pressed="true">Paragraph</button>
-              <button class="mode-button" type="button" data-mode="lines" aria-pressed="false">Lines</button>
-              <button class="mode-button" type="button" data-mode="words" aria-pressed="false">Words</button>
+      <!-- ====================================================================
+           1. HOME PAGE VIEW
+           ==================================================================== -->
+      <section id="home" class="page-view active">
+        <!-- Hero Section -->
+        <div class="hero-section">
+          <div class="hero-content">
+            <span class="hero-badge">VISIONARY TYPING PLATFORM</span>
+            <h2 class="hero-title">Master Typing.<br>Enter Flow State.</h2>
+            <p class="hero-subtitle">Train speed, accuracy, and absolute focus with a premium, immersive typing environment designed for modern developers and writers.</p>
+            <div class="hero-actions">
+              <a href="#practice" id="start-training-btn" class="btn btn-primary">
+                Start Training
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+              <a href="#features" id="explore-features-btn" class="btn btn-secondary">Explore Features</a>
             </div>
           </div>
-
-          <div class="target-tools">
-            <label class="field-label" for="passageSelect">Text</label>
-            <select id="passageSelect"></select>
-            <button class="icon-button" id="randomButton" type="button" title="Pick another text" aria-label="Pick another text">↻</button>
-            <button class="icon-button danger" id="deleteButton" type="button" title="Delete selected saved text" aria-label="Delete selected saved text">×</button>
+          <div class="hero-canvas-container" id="hero-canvas-container">
+            <div class="keyboard-guide-card">
+              <div class="reflection-overlay"></div>
+              <img src="assets/keyboard-guide-light.png" alt="Touch typing keyboard guide" class="keyboard-guide-img light-only" loading="lazy">
+              <img src="assets/keyboard-guide-dark.png" alt="Touch typing keyboard guide" class="keyboard-guide-img dark-only" loading="lazy">
+            </div>
           </div>
+        </div>
 
-          <div class="target-text" id="targetText" aria-label="Text to type"></div>
 
-          <label class="field-label" for="typingInput">Your typing</label>
-          <textarea id="typingInput" spellcheck="false" autocomplete="off" autocapitalize="off" inputmode="none" readonly placeholder="Start typing here..."></textarea>
 
-          <div class="action-row">
-            <button class="primary-button" id="restartButton" type="button">Restart</button>
-            <button class="secondary-button" id="pauseButton" type="button">Pause</button>
-            <button class="secondary-button" id="newTestButton" type="button">New test</button>
-            <span class="session-state" id="sessionState">Ready</span>
+        <!-- 3D Typing Universe -->
+        <div class="universe-section">
+          <div class="section-header">
+            <span class="eyebrow">IMMERSION SPACE</span>
+            <h3 class="section-title">The 3D Typing Universe</h3>
+            <p class="section-subtitle">A floating constellation of letters reacting dynamically to your presence. Feel the gravity of rhythm.</p>
+          </div>
+          <div class="universe-canvas-container" id="universe-canvas-container">
+            <!-- Three.js letter-sphere canvas loaded here -->
+          </div>
+        </div>
+
+        <!-- Live Performance Visualization -->
+        <div class="dashboard-section">
+          <div class="section-header">
+            <span class="eyebrow">REAL-TIME TELEMETRY</span>
+            <h3 class="section-title">Live Performance Dashboard</h3>
+            <p class="section-subtitle">Track typing telemetry through futuristic 3D graphs, response speeds, and accuracy rates.</p>
+          </div>
+          <div class="dashboard-grid">
+            <div class="mock-analytics-card glass-panel">
+              <span class="eyebrow">SESSION HISTORY</span>
+              <h4 style="font-family: var(--font-heading);">Last 8 Test Runs</h4>
+              <div class="mock-chart-container">
+                <div class="chart-bar-wrapper">
+                  <div class="chart-bar" data-height="45%"></div>
+                  <span class="chart-label">Run 1</span>
+                </div>
+                <div class="chart-bar-wrapper">
+                  <div class="chart-bar" data-height="55%"></div>
+                  <span class="chart-label">Run 2</span>
+                </div>
+                <div class="chart-bar-wrapper">
+                  <div class="chart-bar" data-height="50%"></div>
+                  <span class="chart-label">Run 3</span>
+                </div>
+                <div class="chart-bar-wrapper">
+                  <div class="chart-bar" data-height="70%"></div>
+                  <span class="chart-label">Run 4</span>
+                </div>
+                <div class="chart-bar-wrapper">
+                  <div class="chart-bar" data-height="65%"></div>
+                  <span class="chart-label">Run 5</span>
+                </div>
+                <div class="chart-bar-wrapper">
+                  <div class="chart-bar" data-height="85%"></div>
+                  <span class="chart-label">Run 6</span>
+                </div>
+                <div class="chart-bar-wrapper">
+                  <div class="chart-bar" data-height="80%"></div>
+                  <span class="chart-label">Run 7</span>
+                </div>
+                <div class="chart-bar-wrapper">
+                  <div class="chart-bar" data-height="95%"></div>
+                  <span class="chart-label">Run 8</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mock-analytics-card glass-panel">
+              <span class="eyebrow">METRIC TARGETS</span>
+              <h4 style="font-family: var(--font-heading);">Flow Precision Indexes</h4>
+              <div class="accuracy-ring-container">
+                <div class="ring-card">
+                  <svg viewBox="0 0 36 36" class="circular-chart">
+                    <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="circle circle-primary" stroke-dasharray="98, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <text x="18" y="20.35" class="ring-percentage">98%</text>
+                  </svg>
+                  <span class="chart-label">Avg. Accuracy</span>
+                </div>
+                <div class="ring-card">
+                  <svg viewBox="0 0 36 36" class="circular-chart">
+                    <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="circle circle-secondary" stroke-dasharray="85, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <text x="18" y="20.35" class="ring-percentage">85</text>
+                  </svg>
+                  <span class="chart-label">Peak WPM</span>
+                </div>
+                <div class="ring-card">
+                  <svg viewBox="0 0 36 36" class="circular-chart">
+                    <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="circle circle-success" stroke-dasharray="92, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <text x="18" y="20.35" class="ring-percentage">92%</text>
+                  </svg>
+                  <span class="chart-label">Key Stability</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Why SpeedType Studio -->
+        <div class="why-section">
+          <div class="section-header">
+            <span class="eyebrow">ENGINEERING DETAILS</span>
+            <h3 class="section-title">Why SpeedType Studio</h3>
+            <p class="section-subtitle">Experience a paradigm shift in performance, visuals, and typing analytics.</p>
+          </div>
+          <div class="why-grid">
+            <div class="feature-card glass-panel">
+              <div class="feature-icon-container">📚</div>
+              <h3>Smart Text Library</h3>
+              <p>Organize texts, lines, or custom words. Local storage saves drills directly onto your machine.</p>
+            </div>
+            <div class="feature-card glass-panel">
+              <div class="feature-icon-container">📊</div>
+              <h3>Advanced Analytics</h3>
+              <p>Track metrics, speeds, and mistake ratios in real time with high-fidelity telemetry gauges.</p>
+            </div>
+            <div class="feature-card glass-panel">
+              <div class="feature-icon-container">⚙️</div>
+              <h3>Custom Practice</h3>
+              <p>Configure custom timers, sessions, word sets, and paragraphs to suit your learning speed.</p>
+            </div>
+            <div class="feature-card glass-panel">
+              <div class="feature-icon-container">🎯</div>
+              <h3>Anti-Cheat System</h3>
+              <p>Keystroke events and inputs are double-verified to prevent clipboard injection and macro abuse.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Infinite Typing Tunnel -->
+        <div class="tunnel-section">
+          <div class="section-header">
+            <span class="eyebrow">THE VOID</span>
+            <h3 class="section-title">Infinite Typing Tunnel</h3>
+            <p class="section-subtitle">Travel through a data tunnel made of flying words. Scroll to accelerate through the flow state.</p>
+          </div>
+          <div class="tunnel-container" id="tunnel-container">
+            <!-- Three.js flying word tunnel loaded here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           2. PRACTICE PAGE VIEW
+           ==================================================================== -->
+      <section id="practice" class="page-view">
+        <div class="workbench">
+          <!-- Left side: Challenge Panel -->
+          <section class="typing-panel glass-panel" aria-labelledby="practiceTitle">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">ACTIVE PRACTICE DRILL</p>
+                <h2 id="practiceTitle" style="font-family: var(--font-heading); font-size: 1.5rem; margin-top: 4px;">Build speed with your own text</h2>
+              </div>
+              <div class="mode-control" role="group" aria-label="Practice mode">
+                <button class="mode-button is-active" type="button" data-mode="paragraph" aria-pressed="true">Paragraph</button>
+                <button class="mode-button" type="button" data-mode="lines" aria-pressed="false">Lines</button>
+                <button class="mode-button" type="button" data-mode="words" aria-pressed="false">Words</button>
+              </div>
+            </div>
+
+            <div class="target-tools">
+              <label class="field-label" for="passageSelect">Active Passage</label>
+              <select id="passageSelect"></select>
+              <button class="icon-button" id="randomButton" type="button" title="Pick another text" aria-label="Pick another text">↻</button>
+              <button class="icon-button danger" id="deleteButton" type="button" title="Delete selected saved text" aria-label="Delete selected saved text">×</button>
+            </div>
+
+            <!-- Target typing text display -->
+            <div class="target-text" id="targetText" aria-label="Text to type"></div>
+
+            <!-- Blocked input textarea -->
+            <label class="field-label" for="typingInput">Your Keystrokes</label>
+            <textarea id="typingInput" spellcheck="false" autocomplete="off" autocapitalize="off" inputmode="none" readonly placeholder="Start typing here..."></textarea>
+
+            <div class="action-row">
+              <div class="btn-control-group">
+                <button class="btn btn-primary" id="restartButton" type="button">Restart</button>
+                <button class="btn btn-secondary" id="pauseButton" type="button">Pause</button>
+                <button class="btn btn-secondary" id="newTestButton" type="button">New test</button>
+              </div>
+              <span class="session-state" id="sessionState">Ready</span>
+            </div>
+          </section>
+
+          <!-- Right side: Real-time Stats & Virtual Keyboard -->
+          <aside class="stats-panel" aria-label="Typing statistics">
+            <div class="glass-panel" style="padding: 24px;">
+              <h3 class="stats-panel-header">Telemetry</h3>
+              <div class="stat-grid" style="margin-top: 16px;">
+                <div class="stat">
+                  <span class="stat-label">WPM</span>
+                  <strong id="wpm">0</strong>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Accuracy</span>
+                  <strong id="accuracy">100%</strong>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Errors</span>
+                  <strong id="errors">0</strong>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Time Left</span>
+                  <strong id="time">10:00</strong>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Words</span>
+                  <strong id="wordTotal">0</strong>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Limit</span>
+                  <strong id="sessionLimit">10m</strong>
+                </div>
+              </div>
+
+              <div class="progress-block" style="margin-top: 24px;">
+                <div class="progress-copy">
+                  <span>Session Progress</span>
+                  <strong id="progressText">0%</strong>
+                </div>
+                <div class="progress-track" aria-hidden="true">
+                  <span id="progressBar"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Virtual Layout Keyboard -->
+            <div class="keyboard-map glass-panel" aria-label="Current key map">
+              <div class="key-row number-row">
+                <span class="f-pinky" data-key="1">1</span><span class="f-ring" data-key="2">2</span><span class="f-middle" data-key="3">3</span><span class="f-index" data-key="4">4</span><span class="f-index" data-key="5">5</span><span class="f-index" data-key="6">6</span><span class="f-index" data-key="7">7</span><span class="f-middle" data-key="8">8</span><span class="f-ring" data-key="9">9</span><span class="f-pinky" data-key="0">0</span>
+              </div>
+              <div class="key-row">
+                <span class="f-pinky" data-key="Q">Q</span><span class="f-ring" data-key="W">W</span><span class="f-middle" data-key="E">E</span><span class="f-index" data-key="R">R</span><span class="f-index" data-key="T">T</span><span class="f-index" data-key="Y">Y</span><span class="f-index" data-key="U">U</span><span class="f-middle" data-key="I">I</span><span class="f-ring" data-key="O">O</span><span class="f-pinky" data-key="P">P</span>
+              </div>
+              <div class="key-row offset-one">
+                <span class="f-pinky" data-key="A">A</span><span class="f-ring" data-key="S">S</span><span class="f-middle" data-key="D">D</span><span class="f-index" data-key="F">F</span><span class="f-index" data-key="G">G</span><span class="f-index" data-key="H">H</span><span class="f-index" data-key="J">J</span><span class="f-middle" data-key="K">K</span><span class="f-ring" data-key="L">L</span>
+              </div>
+              <div class="key-row offset-two">
+                <span class="f-pinky" data-key="Z">Z</span><span class="f-ring" data-key="X">X</span><span class="f-middle" data-key="C">C</span><span class="f-index" data-key="V">V</span><span class="f-index" data-key="B">B</span><span class="f-index" data-key="N">N</span><span class="f-index" data-key="M">M</span>
+              </div>
+              <div class="key-row symbol-row">
+                <span class="f-middle" data-key=",">,</span><span class="f-ring" data-key=".">.</span><span class="f-middle" data-key=";">;</span><span class="f-ring" data-key=":">:</span><span class="f-pinky" data-key="'">'</span><span class="f-pinky" data-key="&quot;">"</span><span class="f-pinky" data-key="?">?</span><span class="f-pinky" data-key="!">!</span><span class="f-pinky" data-key="-">-</span>
+              </div>
+              <div class="key-row">
+                <span class="wide-key f-thumb" data-key="SPACE">SPACE</span><span class="wide-key f-pinky" data-key="ENTER">ENTER</span>
+              </div>
+            </div>
+
+            <!-- Hand Guide Visualization (Modern, Transparent HUD) -->
+            <div class="hands-container" aria-hidden="true">
+              <span class="hands-label">Finger Positioning Guide</span>
+              <svg class="hands-svg" viewBox="0 0 360 120" width="100%" height="120" xmlns="http://www.w3.org/2000/svg">
+                <g class="left-hand" stroke="var(--text-muted)" stroke-width="2" fill="none" opacity="0.85">
+                  <!-- Palm wireframe -->
+                  <path d="M 68,115 C 68,115 70,85 60,80 C 50,75 52,78 52,78 L 70,68 L 88,65 L 106,68 L 116,92 C 116,92 110,110 102,115 Z" fill="rgba(255, 255, 255, 0.01)" stroke="var(--glass-border)"/>
+                  <!-- Left Pinky -->
+                  <path id="lh-pinky" class="hand-finger f-pinky-target" d="M 55,75 L 50,48" stroke-linecap="round" stroke-width="9"/>
+                  <!-- Left Ring -->
+                  <path id="lh-ring" class="hand-finger f-ring-target" d="M 70,68 L 67,34" stroke-linecap="round" stroke-width="9"/>
+                  <!-- Left Middle -->
+                  <path id="lh-middle" class="hand-finger f-middle-target" d="M 88,65 L 88,28" stroke-linecap="round" stroke-width="9"/>
+                  <!-- Left Index -->
+                  <path id="lh-index" class="hand-finger f-index-target" d="M 106,68 L 109,36" stroke-linecap="round" stroke-width="9"/>
+                  <!-- Left Thumb -->
+                  <path id="lh-thumb" class="hand-finger f-thumb-target" d="M 116,92 L 132,78" stroke-linecap="round" stroke-width="9"/>
+                </g>
+                <g class="right-hand" stroke="var(--text-muted)" stroke-width="2" fill="none" opacity="0.85">
+                  <!-- Palm wireframe -->
+                  <path d="M 292,115 C 292,115 290,85 300,80 C 310,75 308,78 308,78 L 290,68 L 272,65 L 254,68 L 244,92 C 244,92 250,110 258,115 Z" fill="rgba(255, 255, 255, 0.01)" stroke="var(--glass-border)"/>
+                  <!-- Right Thumb -->
+                  <path id="rh-thumb" class="hand-finger f-thumb-target" d="M 244,92 L 228,78" stroke-linecap="round" stroke-width="9"/>
+                  <!-- Right Index -->
+                  <path id="rh-index" class="hand-finger f-index-target" d="M 254,68 L 251,36" stroke-linecap="round" stroke-width="9"/>
+                  <!-- Right Middle -->
+                  <path id="rh-middle" class="hand-finger f-middle-target" d="M 272,65 L 272,28" stroke-linecap="round" stroke-width="9"/>
+                  <!-- Right Ring -->
+                  <path id="rh-ring" class="hand-finger f-ring-target" d="M 290,68 L 293,34" stroke-linecap="round" stroke-width="9"/>
+                  <!-- Right Pinky -->
+                  <path id="rh-pinky" class="hand-finger f-pinky-target" d="M 305,75 L 310,48" stroke-linecap="round" stroke-width="9"/>
+                </g>
+              </svg>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Custom texts panel -->
+        <section class="library-panel glass-panel" aria-labelledby="libraryTitle">
+          <div class="library-copy">
+            <p class="eyebrow">YOUR TEXT LIBRARY</p>
+            <h2 id="libraryTitle" style="font-family: var(--font-heading); margin-top: 4px;">Paste paragraphs, separate lines, or small words</h2>
+          </div>
+          <div class="editor-grid">
+            <div class="editor-fields">
+              <label class="field-label" for="customTitle">Passage Title</label>
+              <input id="customTitle" type="text" maxlength="60" placeholder="Example: JavaScript interview code snippets">
+              <label class="field-label" for="customText">Practice Text Content</label>
+              <textarea id="customText" spellcheck="false" placeholder="Paste your custom paragraph, line sets, or word sequences here..."></textarea>
+              <div class="action-row">
+                <button class="btn btn-primary" id="saveCustomButton" type="button">Save Text</button>
+                <button class="btn btn-secondary" id="useDraftButton" type="button">Use Draft Now</button>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <label class="field-label">Saved Custom Texts</label>
+              <div class="saved-list" id="savedList" aria-live="polite"></div>
+            </div>
           </div>
         </section>
-
-        <aside class="stats-panel" aria-label="Typing statistics">
-          <div class="stat-grid">
-            <div class="stat">
-              <span class="stat-label">WPM</span>
-              <strong id="wpm">0</strong>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Accuracy</span>
-              <strong id="accuracy">100%</strong>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Errors</span>
-              <strong id="errors">0</strong>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Time Left</span>
-              <strong id="time">10:00</strong>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Words</span>
-              <strong id="wordTotal">0</strong>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Limit</span>
-              <strong id="sessionLimit">10m</strong>
-            </div>
-          </div>
-
-          <div class="progress-block">
-            <div class="progress-copy">
-              <span>Progress</span>
-              <strong id="progressText">0%</strong>
-            </div>
-            <div class="progress-track" aria-hidden="true">
-              <span id="progressBar"></span>
-            </div>
-          </div>
-
-          <div class="keyboard-map" aria-label="Current key map">
-            <div class="key-row number-row">
-              <span data-key="1">1</span><span data-key="2">2</span><span data-key="3">3</span><span data-key="4">4</span><span data-key="5">5</span><span data-key="6">6</span><span data-key="7">7</span><span data-key="8">8</span><span data-key="9">9</span><span data-key="0">0</span>
-            </div>
-            <div class="key-row">
-              <span data-key="Q">Q</span><span data-key="W">W</span><span data-key="E">E</span><span data-key="R">R</span><span data-key="T">T</span><span data-key="Y">Y</span><span data-key="U">U</span><span data-key="I">I</span><span data-key="O">O</span><span data-key="P">P</span>
-            </div>
-            <div class="key-row offset-one">
-              <span data-key="A">A</span><span data-key="S">S</span><span data-key="D">D</span><span data-key="F">F</span><span data-key="G">G</span><span data-key="H">H</span><span data-key="J">J</span><span data-key="K">K</span><span data-key="L">L</span>
-            </div>
-            <div class="key-row offset-two">
-              <span data-key="Z">Z</span><span data-key="X">X</span><span data-key="C">C</span><span data-key="V">V</span><span data-key="B">B</span><span data-key="N">N</span><span data-key="M">M</span>
-            </div>
-            <div class="key-row symbol-row">
-              <span data-key=",">,</span><span data-key=".">.</span><span data-key=";">;</span><span data-key=":">:</span><span data-key="'">'</span><span data-key="&quot;">"</span><span data-key="?">?</span><span data-key="!">!</span><span data-key="-">-</span>
-            </div>
-            <div class="key-row">
-              <span class="wide-key" data-key="SPACE">SPACE</span><span class="wide-key" data-key="ENTER">ENTER</span>
-            </div>
-          </div>
-        </aside>
       </section>
 
-      <section class="library-panel" aria-labelledby="libraryTitle">
-        <div class="library-copy">
-          <p class="eyebrow">Your text library</p>
-          <h2 id="libraryTitle">Paste paragraphs, separate lines, or small words</h2>
-        </div>
-        <div class="editor-grid">
-          <div class="editor-fields">
-            <label class="field-label" for="customTitle">Title</label>
-            <input id="customTitle" type="text" maxlength="60" placeholder="Example: Home row words">
-            <label class="field-label" for="customText">Practice text</label>
-            <textarea id="customText" spellcheck="false" placeholder="Paste your paragraph, lines, or small words here..."></textarea>
-            <div class="action-row">
-              <button class="primary-button" id="saveCustomButton" type="button">Save text</button>
-              <button class="secondary-button" id="useDraftButton" type="button">Use draft now</button>
+
+
+      <!-- ====================================================================
+           3. FEATURES PAGE VIEW
+           ==================================================================== -->
+      <section id="features" class="page-view">
+        <div class="features-section">
+          <div class="section-header">
+            <span class="eyebrow">STUDIO SUITE</span>
+            <h3 class="section-title">Core System Features</h3>
+            <p class="section-subtitle">A deep dive into the engineering mechanics powering SpeedType Studio.</p>
+          </div>
+          
+          <div class="features-storytelling">
+            <!-- Row 1 -->
+            <div class="feature-row">
+              <div class="feature-visual">
+                <div class="feature-visual-icon">📊</div>
+              </div>
+              <div class="feature-desc">
+                <span class="eyebrow">TELEMETRY</span>
+                <h3>Typing Analytics</h3>
+                <p>Track metrics, average speeds, error counts, and character logs in real time. Visual accuracy gauges help maintain keyboard positioning guidelines.</p>
+              </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="feature-row">
+              <div class="feature-visual">
+                <div class="feature-visual-icon">🔒</div>
+              </div>
+              <div class="feature-desc">
+                <span class="eyebrow">PROTECTION</span>
+                <h3>Focus Key Lock</h3>
+                <p>Our typing core locks standard system keys to keep your typing inputs uninterrupted. No clipboard insertions or accidental key shortcuts interfere with tests.</p>
+              </div>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="feature-row">
+              <div class="feature-visual">
+                <div class="feature-visual-icon">🤖</div>
+              </div>
+              <div class="feature-desc">
+                <span class="eyebrow">INTELLIGENCE</span>
+                <h3>AI Performance Coach</h3>
+                <p>Future iterations will feature an AI performance evaluator analyzing specific finger speeds, transitions, and delay cycles, suggesting corrective drills.</p>
+              </div>
             </div>
           </div>
-          <div class="saved-list" id="savedList" aria-live="polite"></div>
         </div>
       </section>
-    </main>
 
-    <footer class="site-note">
-      Custom texts stay on this device in browser storage.
-    </footer>
+      <!-- ====================================================================
+           4. LEADERBOARD PAGE VIEW
+           ==================================================================== -->
+      <section id="leaderboard" class="page-view">
+        <div class="leaderboard-section">
+          <div class="section-header">
+            <span class="eyebrow">HIGH PRECISION LEAGUE</span>
+            <h3 class="section-title">World Leaderboards</h3>
+            <p class="section-subtitle">Real-time standings of global typing precision and raw speeds.</p>
+          </div>
 
-    <div class="modal-backdrop" id="idleModal" role="dialog" aria-modal="true" aria-labelledby="idleTitle" hidden>
-      <div class="modal-card">
-        <p class="eyebrow">Auto pause</p>
-        <h2 id="idleTitle">Typing paused</h2>
-        <p>You stopped typing for 5 seconds, so the countdown is paused.</p>
-        <div class="action-row">
-          <button class="primary-button" id="resumeModalButton" type="button">Resume typing</button>
-          <button class="secondary-button" id="restartModalButton" type="button">Restart test</button>
+          <div class="leaderboard-cards">
+            <!-- Rank 2 -->
+            <div class="top-player-card glass-panel rank-2">
+              <div class="rank-badge">2</div>
+              <div class="player-avatar">🥈</div>
+              <div class="player-name">Lovelace.Dev</div>
+              <div class="player-wpm">138 WPM</div>
+              <div class="player-accuracy">99.2% Accuracy</div>
+            </div>
+
+            <!-- Rank 1 -->
+            <div class="top-player-card glass-panel rank-1">
+              <div class="rank-badge">1</div>
+              <div class="player-avatar">👑</div>
+              <div class="player-name">FlowTypist_x0</div>
+              <div class="player-wpm">152 WPM</div>
+              <div class="player-accuracy">99.8% Accuracy</div>
+            </div>
+
+            <!-- Rank 3 -->
+            <div class="top-player-card glass-panel rank-3">
+              <div class="rank-badge">3</div>
+              <div class="player-avatar">🥉</div>
+              <div class="player-name">Woz_KeyStroke</div>
+              <div class="player-wpm">124 WPM</div>
+              <div class="player-accuracy">98.5% Accuracy</div>
+            </div>
+          </div>
+
+          <div class="leaderboard-table-container glass-panel">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>User</th>
+                  <th>Speed</th>
+                  <th>Accuracy</th>
+                  <th>Platform Key</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="table-rank">#4</td>
+                  <td>
+                    <div class="table-user">
+                      <span class="table-avatar">💻</span>
+                      <span>neerajtomar</span>
+                    </div>
+                  </td>
+                  <td class="table-wpm">118 WPM</td>
+                  <td>98.2%</td>
+                  <td style="color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.8rem;">sp_9A4f2...</td>
+                </tr>
+                <tr>
+                  <td class="table-rank">#5</td>
+                  <td>
+                    <div class="table-user">
+                      <span class="table-avatar">⚡</span>
+                      <span>antigravity</span>
+                    </div>
+                  </td>
+                  <td class="table-wpm">112 WPM</td>
+                  <td>99.0%</td>
+                  <td style="color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.8rem;">sp_ff620...</td>
+                </tr>
+                <tr>
+                  <td class="table-rank">#6</td>
+                  <td>
+                    <div class="table-user">
+                      <span class="table-avatar">🚀</span>
+                      <span>keybr_fan</span>
+                    </div>
+                  </td>
+                  <td class="table-wpm">105 WPM</td>
+                  <td>97.6%</td>
+                  <td style="color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.8rem;">sp_441ba...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           5. ABOUT PAGE VIEW
+           ==================================================================== -->
+      <section id="about" class="page-view">
+        <div class="about-section">
+          <div class="section-header">
+            <span class="eyebrow">OUR CORE PRINCIPLE</span>
+            <h3 class="section-title">Immersive Mastery</h3>
+            <p class="section-subtitle">Building the most visual, responsive, and robust typing interface on the internet.</p>
+          </div>
+
+          <div class="about-story">
+            <div class="about-text">
+              <h3>Enter the Flow State</h3>
+              <p>Typing is not merely a method of typing characters. It is the bandwidth between human thought processes and digital logic. At SpeedType Studio, we build layouts and telemetry graphs that help you lock out external noise and focus on key rhythm.</p>
+              <p>We leverage hardware acceleration, WebGL particle systems, and native layout features to construct typing feedback that mimics flow state focus.</p>
+            </div>
+            
+            <div class="about-timeline">
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">Q1 2026</div>
+                <div class="timeline-title">Project Conception</div>
+                <div class="timeline-desc">Initial creation of the key-locking system and client-side storage frameworks.</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">Q2 2026</div>
+                <div class="timeline-title">SpeedType Studio 3D Upgrade</div>
+                <div class="timeline-dot" style="border-color: var(--primary-color);"></div>
+                <div class="timeline-desc">Migrated standard HTML controls to a glassmorphic 3D experience featuring Three.js orbiting systems.</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">Q3 2026</div>
+                <div class="timeline-title">AI Integration & APIs</div>
+                <div class="timeline-desc">Deployment of real-time diagnostic advisors suggesting customized corrective character drills.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODAL BACKDROP / IDLE PAUSE -->
+      <div class="modal-backdrop" id="idleModal" role="dialog" aria-modal="true" aria-labelledby="idleTitle">
+        <div class="modal-card">
+          <span class="eyebrow" style="color: var(--secondary-color);">AUTO PAUSE</span>
+          <h2 id="idleTitle">Typing Paused</h2>
+          <p>You have been inactive for 5 seconds. Countdowns and stats are paused to protect your averages.</p>
+          <div class="action-row">
+            <button class="btn btn-primary" id="resumeModalButton" type="button">Resume Typing</button>
+            <button class="btn btn-secondary" id="restartModalButton" type="button">Restart Test</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="keystroke-effects" id="keystrokeEffects" aria-hidden="true"></div>
+      <!-- Keystroke effects canvas-like container -->
+      <div class="keystroke-effects" id="keystrokeEffects" aria-hidden="true"></div>
 
+      <!-- FOOTER -->
+      <footer class="site-note">
+        <div class="footer-content">
+          <span class="footer-brand">SpeedType Studio</span>
+          <div class="footer-links">
+            <a href="#home" class="footer-link">Home</a>
+            <a href="#practice" class="footer-link">Practice</a>
+            <a href="#features" class="footer-link">Features</a>
+            <a href="#leaderboard" class="footer-link">Leaderboard</a>
+            <a href="#about" class="footer-link">About</a>
+          </div>
+        </div>
+        <p>Custom texts stay on this device in browser storage. Built for high-fidelity performance.</p>
+      </footer>
+    </main>
+
+    <!-- Visual animations and typing integrations -->
+    <script src="3d-effects.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
