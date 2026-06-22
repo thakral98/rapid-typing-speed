@@ -58,7 +58,8 @@ const state = {
   inactivityTimerId: null,
   paused: false,
   pauseStartedAt: null,
-  pausedTotalMs: 0
+  pausedTotalMs: 0,
+  currentUser: null
 };
 
 const els = {
@@ -90,7 +91,61 @@ const els = {
   resumeModalButton: document.querySelector("#resumeModalButton"),
   restartModalButton: document.querySelector("#restartModalButton"),
   keystrokeEffects: document.querySelector("#keystrokeEffects"),
-  keyCaps: Array.from(document.querySelectorAll("[data-key]"))
+  keyCaps: Array.from(document.querySelectorAll("[data-key]")),
+
+  googleSignInBtn: document.querySelector("#googleSignInBtn"),
+  userProfileWidget: document.querySelector("#userProfileWidget"),
+  userMenuTrigger: document.querySelector("#userMenuTrigger"),
+  userDropdownMenu: document.querySelector("#userDropdownMenu"),
+  usernameDisplay: document.querySelector("#usernameDisplay"),
+  userAvatar: document.querySelector("#userAvatar"),
+  menuUsername: document.querySelector("#menuUsername"),
+  menuEmail: document.querySelector("#menuEmail"),
+  googleSignOutBtn: document.querySelector("#googleSignOutBtn"),
+  
+  dbProfileAvatar: document.querySelector("#dbProfileAvatar"),
+  dbProfileName: document.querySelector("#dbProfileName"),
+  dbProfileEmail: document.querySelector("#dbProfileEmail"),
+  dbAuthStatusBadge: document.querySelector("#dbAuthStatusBadge"),
+  
+  dbPeakWpm: document.querySelector("#dbPeakWpm"),
+  dbAvgWpm: document.querySelector("#dbAvgWpm"),
+  dbAvgAccuracy: document.querySelector("#dbAvgAccuracy"),
+  dbTotalRaces: document.querySelector("#dbTotalRaces"),
+  dbChartContainer: document.querySelector("#dbChartContainer"),
+  dbHistoryTable: document.querySelector("#dbHistoryTable"),
+  dbHistoryBody: document.querySelector("#dbHistoryBody"),
+  clearHistoryBtn: document.querySelector("#clearHistoryBtn"),
+  
+  leaderboardAuthCallout: document.querySelector("#leaderboardAuthCallout"),
+  leaderboardSignInBtn: document.querySelector("#leaderboardSignInBtn"),
+  leaderboardRank1Card: document.querySelector("#leaderboardRank1Card"),
+  leaderboardRank1Avatar: document.querySelector("#leaderboardRank1Avatar"),
+  leaderboardRank1Name: document.querySelector("#leaderboardRank1Name"),
+  leaderboardRank1Wpm: document.querySelector("#leaderboardRank1Wpm"),
+  leaderboardRank1Accuracy: document.querySelector("#leaderboardRank1Accuracy"),
+  
+  leaderboardRank2Card: document.querySelector("#leaderboardRank2Card"),
+  leaderboardRank2Avatar: document.querySelector("#leaderboardRank2Avatar"),
+  leaderboardRank2Name: document.querySelector("#leaderboardRank2Name"),
+  leaderboardRank2Wpm: document.querySelector("#leaderboardRank2Wpm"),
+  leaderboardRank2Accuracy: document.querySelector("#leaderboardRank2Accuracy"),
+  
+  leaderboardRank3Card: document.querySelector("#leaderboardRank3Card"),
+  leaderboardRank3Avatar: document.querySelector("#leaderboardRank3Avatar"),
+  leaderboardRank3Name: document.querySelector("#leaderboardRank3Name"),
+  leaderboardRank3Wpm: document.querySelector("#leaderboardRank3Wpm"),
+  leaderboardRank3Accuracy: document.querySelector("#leaderboardRank3Accuracy"),
+  
+  leaderboardTableBody: document.querySelector("#leaderboardTableBody"),
+  
+  homeAvgAccuracyRing: document.querySelector("#homeAvgAccuracyRing"),
+  homeAvgAccuracyText: document.querySelector("#homeAvgAccuracyText"),
+  homePeakWpmRing: document.querySelector("#homePeakWpmRing"),
+  homePeakWpmText: document.querySelector("#homePeakWpmText"),
+  homeStabilityRing: document.querySelector("#homeStabilityRing"),
+  homeStabilityText: document.querySelector("#homeStabilityText"),
+  homeChartContainer: document.querySelector("#homeChartContainer")
 };
 
 function loadCustomPassages() {
@@ -481,6 +536,18 @@ function finishSession(message) {
   hideIdleModal();
   updatePauseButton();
   updateStats();
+
+  if (message === "Complete" || message === "Finished with errors" || message === "Time up") {
+    const typed = els.typingInput.value;
+    const elapsed = getActiveElapsedSeconds();
+    const scoringElapsed = Math.max(elapsed, 1);
+    const correctChars = countCorrectChars(typed, state.currentText);
+    const errorCount = countErrors(typed, state.currentText);
+    const accuracy = typed.length ? Math.max(0, Math.round((correctChars / typed.length) * 100)) : 100;
+    const wpm = elapsed > 0 ? Math.round((correctChars / 5) / (scoringElapsed / 60)) : 0;
+    
+    saveRun(wpm, accuracy, errorCount);
+  }
 }
 
 function updatePauseButton() {
@@ -834,6 +901,554 @@ function pickRandomPassage() {
   resetSession({ message: "Ready" });
 }
 
+// --- Supabase, Telemetry, and Leaderboard Integrations ---
+let supabaseClient = null;
+
+const MOCK_LEADERBOARD = [
+  {
+    rank: 1,
+    username: "FlowTypist_x0",
+    avatar_url: "👑",
+    wpm: 152,
+    accuracy: 99.8,
+    platform_key: "sp_mock_1"
+  },
+  {
+    rank: 2,
+    username: "Lovelace.Dev",
+    avatar_url: "🥈",
+    wpm: 138,
+    accuracy: 99.2,
+    platform_key: "sp_mock_2"
+  },
+  {
+    rank: 3,
+    username: "Woz_KeyStroke",
+    avatar_url: "🥉",
+    wpm: 124,
+    accuracy: 98.5,
+    platform_key: "sp_mock_3"
+  },
+  {
+    rank: 4,
+    username: "Qwertist",
+    avatar_url: "👤",
+    wpm: 115,
+    accuracy: 97.8,
+    platform_key: "sp_mock_4"
+  },
+  {
+    rank: 5,
+    username: "KeyGlitch",
+    avatar_url: "👤",
+    wpm: 108,
+    accuracy: 96.4,
+    platform_key: "sp_mock_5"
+  }
+];
+
+function initSupabase() {
+  if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONFIG.anonKey) {
+    try {
+      const { createClient } = supabase;
+      if (typeof createClient === 'function') {
+        supabaseClient = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+        console.log("Supabase successfully initialized.");
+      } else {
+        console.warn("Supabase library loaded but createClient is not a function. Running in offline fallback.");
+      }
+    } catch (err) {
+      console.error("Failed to initialize Supabase:", err);
+    }
+  } else {
+    console.log("Supabase config is empty or invalid. Running in offline fallback.");
+  }
+}
+
+function listenToAuthChanges() {
+  if (!supabaseClient) {
+    updateAuthUI(null);
+    return;
+  }
+
+  supabaseClient.auth.onAuthStateChange(async (event, session) => {
+    console.log("Auth state change event:", event);
+    const user = session ? session.user : null;
+    
+    if (user) {
+      state.currentUser = user;
+      updateAuthUI(user);
+      
+      try {
+        const username = user.user_metadata.full_name || user.user_metadata.name || user.email.split('@')[0] || 'User';
+        const avatar_url = user.user_metadata.avatar_url || '';
+        
+        await supabaseClient
+          .from('profiles')
+          .upsert({
+            id: user.id,
+            username: username,
+            avatar_url: avatar_url,
+            updated_at: new Date().toISOString()
+          });
+      } catch (err) {
+        console.error("Error syncing profile metadata:", err);
+      }
+    } else {
+      state.currentUser = null;
+      updateAuthUI(null);
+    }
+    
+    const activeView = document.querySelector('.page-view.active');
+    if (activeView) {
+      if (activeView.id === 'dashboard') {
+        updateDashboardTelemetry();
+      } else if (activeView.id === 'leaderboard') {
+        updateLeaderboards();
+      } else if (activeView.id === 'home') {
+        updateHomeTelemetry();
+      }
+    }
+  });
+}
+
+function updateAuthUI(user) {
+  if (user) {
+    if (els.googleSignInBtn) els.googleSignInBtn.style.display = 'none';
+    if (els.userProfileWidget) els.userProfileWidget.style.display = 'block';
+    
+    const displayName = user.user_metadata.full_name || user.user_metadata.name || user.email.split('@')[0] || 'User';
+    if (els.usernameDisplay) els.usernameDisplay.textContent = displayName;
+    if (els.menuUsername) els.menuUsername.textContent = displayName;
+    if (els.menuEmail) els.menuEmail.textContent = user.email;
+    
+    const avatarUrl = user.user_metadata.avatar_url || 'assets/keyboard-guide-light.png';
+    if (els.userAvatar) els.userAvatar.src = avatarUrl;
+    
+    if (els.dbProfileAvatar) els.dbProfileAvatar.src = avatarUrl;
+    if (els.dbProfileName) els.dbProfileName.textContent = displayName;
+    if (els.dbProfileEmail) els.dbProfileEmail.textContent = user.email;
+    
+    if (els.dbAuthStatusBadge) {
+      els.dbAuthStatusBadge.textContent = 'Cloud Verified';
+      els.dbAuthStatusBadge.className = 'profile-status-badge authenticated-badge';
+    }
+  } else {
+    if (els.googleSignInBtn) els.googleSignInBtn.style.display = 'flex';
+    if (els.userProfileWidget) els.userProfileWidget.style.display = 'none';
+    
+    if (els.dbProfileAvatar) els.dbProfileAvatar.src = 'assets/keyboard-guide-light.png';
+    if (els.dbProfileName) els.dbProfileName.textContent = 'Guest User';
+    if (els.dbProfileEmail) els.dbProfileEmail.textContent = 'Not signed in';
+    
+    if (els.dbAuthStatusBadge) {
+      els.dbAuthStatusBadge.textContent = 'Offline Mode';
+      els.dbAuthStatusBadge.className = 'profile-status-badge anonymous-badge';
+    }
+  }
+}
+
+async function signInWithGoogle() {
+  if (!supabaseClient) {
+    alert("Supabase is not configured. Google Sign-In is unavailable.");
+    return;
+  }
+  try {
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin
+      }
+    });
+    if (error) throw error;
+  } catch (err) {
+    console.error("Google sign-in error:", err);
+    alert("Sign-in failed: " + err.message);
+  }
+}
+
+async function signOut() {
+  if (!supabaseClient) return;
+  try {
+    const { error } = await supabaseClient.auth.signOut();
+    if (error) throw error;
+    if (els.userDropdownMenu) els.userDropdownMenu.style.display = 'none';
+  } catch (err) {
+    console.error("Sign-out error:", err);
+  }
+}
+
+async function getRecentRuns() {
+  if (supabaseClient && state.currentUser) {
+    try {
+      const { data, error } = await supabaseClient
+        .from('typing_runs')
+        .select('*')
+        .eq('user_id', state.currentUser.id)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.error("Error retrieving runs from database:", err);
+    }
+  }
+  
+  try {
+    const local = localStorage.getItem("speedtype.runs.v2");
+    return local ? JSON.parse(local) : [];
+  } catch (err) {
+    console.error("Error reading fallback local runs:", err);
+    return [];
+  }
+}
+
+async function saveRun(wpm, accuracy, errors) {
+  const mode = state.activeMode;
+  const passageTitle = getActiveSource().title;
+  
+  if (supabaseClient && state.currentUser) {
+    try {
+      const { error } = await supabaseClient
+        .from('typing_runs')
+        .insert({
+          user_id: state.currentUser.id,
+          wpm: parseInt(wpm),
+          accuracy: parseFloat(accuracy),
+          errors: parseInt(errors),
+          mode: mode,
+          passage_title: passageTitle
+        });
+      if (error) throw error;
+      console.log("Run saved to database.");
+    } catch (err) {
+      console.error("Error saving run to database, using local storage:", err);
+      saveRunToLocal(wpm, accuracy, errors, mode, passageTitle);
+    }
+  } else {
+    saveRunToLocal(wpm, accuracy, errors, mode, passageTitle);
+  }
+  
+  updateHomeTelemetry();
+}
+
+function saveRunToLocal(wpm, accuracy, errors, mode, passageTitle) {
+  try {
+    const local = localStorage.getItem("speedtype.runs.v2");
+    const runs = local ? JSON.parse(local) : [];
+    runs.unshift({
+      id: makeId("run"),
+      wpm: parseInt(wpm),
+      accuracy: parseFloat(accuracy),
+      errors: parseInt(errors),
+      mode: mode,
+      passage_title: passageTitle,
+      created_at: new Date().toISOString()
+    });
+    if (runs.length > 50) {
+      runs.length = 50;
+    }
+    localStorage.setItem("speedtype.runs.v2", JSON.stringify(runs));
+    console.log("Run saved to local storage fallback.");
+  } catch (err) {
+    console.error("Failed to save run locally:", err);
+  }
+}
+
+async function clearRunsHistory() {
+  if (confirm("Are you sure you want to clear your entire typing history? This action cannot be undone.")) {
+    if (supabaseClient && state.currentUser) {
+      try {
+        const { error } = await supabaseClient
+          .from('typing_runs')
+          .delete()
+          .eq('user_id', state.currentUser.id);
+        if (error) {
+          console.warn("Could not delete from database. Cleared local fallback storage instead.", error);
+        }
+      } catch (err) {
+        console.error("Error clearing database runs:", err);
+      }
+    }
+    
+    try {
+      localStorage.removeItem("speedtype.runs.v2");
+    } catch (err) {
+      console.error("Failed to clear local runs:", err);
+    }
+    
+    const activeView = document.querySelector('.page-view.active');
+    if (activeView && activeView.id === 'dashboard') {
+      updateDashboardTelemetry();
+    }
+    updateHomeTelemetry();
+  }
+}
+
+function calculateTelemetryStats(runs) {
+  if (!runs || !runs.length) {
+    return { peakWpm: 0, avgWpm: 0, avgAccuracy: 0, totalRaces: 0, stability: 100 };
+  }
+  const peakWpm = Math.max(...runs.map(r => r.wpm));
+  const totalWpm = runs.reduce((sum, r) => sum + r.wpm, 0);
+  const avgWpm = Math.round(totalWpm / runs.length);
+  const totalAccuracy = runs.reduce((sum, r) => sum + parseFloat(r.accuracy), 0);
+  const avgAccuracy = Math.round(totalAccuracy / runs.length);
+  const totalErrors = runs.reduce((sum, r) => sum + r.errors, 0);
+  const avgErrors = totalErrors / runs.length;
+  const stability = Math.max(0, 100 - Math.round(avgErrors));
+  return {
+    peakWpm,
+    avgWpm,
+    avgAccuracy,
+    totalRaces: runs.length,
+    stability
+  };
+}
+
+function setSvgRingValue(ringElement, textElement, value, maxVal = 100, isPercentage = true) {
+  if (!ringElement) return;
+  const percent = Math.min(100, Math.max(0, Math.round((value / maxVal) * 100)));
+  ringElement.setAttribute("stroke-dasharray", `${percent}, 100`);
+  if (textElement) {
+    textElement.textContent = isPercentage ? `${value}%` : `${value}`;
+  }
+}
+
+function updateBarChart(containerElement, runs) {
+  if (!containerElement) return;
+  const wrappers = containerElement.querySelectorAll(".chart-bar-wrapper");
+  if (!wrappers || wrappers.length === 0) return;
+  
+  const last8 = runs.slice(0, 8).reverse();
+  const maxWpm = Math.max(100, ...last8.map(r => r.wpm));
+  
+  for (let i = 0; i < wrappers.length; i++) {
+    const bar = wrappers[i].querySelector(".chart-bar");
+    const label = wrappers[i].querySelector(".chart-label");
+    
+    if (i < last8.length) {
+      const run = last8[i];
+      const percent = Math.min(100, Math.max(5, Math.round((run.wpm / maxWpm) * 100)));
+      if (bar) {
+        bar.style.height = `${percent}%`;
+        bar.setAttribute("title", `${run.wpm} WPM (${run.accuracy}% Acc)`);
+      }
+      if (label) {
+        label.textContent = `${run.wpm}`;
+      }
+    } else {
+      if (bar) {
+        bar.style.height = "0%";
+        bar.removeAttribute("title");
+      }
+      if (label) {
+        label.textContent = "-";
+      }
+    }
+  }
+}
+
+async function updateHomeTelemetry() {
+  const runs = await getRecentRuns();
+  const stats = calculateTelemetryStats(runs);
+  
+  setSvgRingValue(els.homeAvgAccuracyRing, els.homeAvgAccuracyText, stats.avgAccuracy, 100, true);
+  setSvgRingValue(els.homePeakWpmRing, els.homePeakWpmText, stats.peakWpm, 150, false);
+  setSvgRingValue(els.homeStabilityRing, els.homeStabilityText, stats.stability, 100, true);
+  
+  updateBarChart(els.homeChartContainer, runs);
+}
+
+async function updateDashboardTelemetry() {
+  const runs = await getRecentRuns();
+  const stats = calculateTelemetryStats(runs);
+  
+  if (els.dbPeakWpm) els.dbPeakWpm.textContent = String(stats.peakWpm);
+  if (els.dbAvgWpm) els.dbAvgWpm.textContent = String(stats.avgWpm);
+  if (els.dbAvgAccuracy) els.dbAvgAccuracy.textContent = `${stats.avgAccuracy}%`;
+  if (els.dbTotalRaces) els.dbTotalRaces.textContent = String(stats.totalRaces);
+  
+  updateBarChart(els.dbChartContainer, runs);
+  
+  if (els.dbHistoryBody) {
+    els.dbHistoryBody.innerHTML = "";
+    
+    if (runs.length === 0) {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px 0;">No races completed yet. Go to Practice to start!</td>`;
+      els.dbHistoryBody.appendChild(row);
+    } else {
+      runs.forEach(run => {
+        const row = document.createElement("tr");
+        let dateStr = "Unknown";
+        if (run.created_at) {
+          try {
+            const date = new Date(run.created_at);
+            dateStr = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ", " +
+                      date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: true });
+          } catch (e) {
+            console.error("Error formatting date:", e);
+          }
+        }
+        
+        row.innerHTML = `
+          <td>${dateStr}</td>
+          <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${run.passage_title}">${run.passage_title}</td>
+          <td><strong style="color: var(--primary-color);">${run.wpm}</strong> WPM</td>
+          <td>${run.accuracy}%</td>
+          <td>${run.errors}</td>
+        `;
+        els.dbHistoryBody.appendChild(row);
+      });
+    }
+  }
+}
+
+async function updateLeaderboards() {
+  if (els.leaderboardTableBody) {
+    els.leaderboardTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px 0;">Loading leaderboards...</td></tr>`;
+  }
+  
+  let boardData = [];
+  let isSupabaseLoaded = false;
+  
+  if (supabaseClient && state.currentUser) {
+    if (els.leaderboardAuthCallout) els.leaderboardAuthCallout.style.display = 'none';
+  } else {
+    if (els.leaderboardAuthCallout) els.leaderboardAuthCallout.style.display = 'flex';
+  }
+
+  if (supabaseClient) {
+    try {
+      const { data, error } = await supabaseClient
+        .from('typing_runs')
+        .select(`
+          id,
+          wpm,
+          accuracy,
+          errors,
+          created_at,
+          user_id,
+          profiles:user_id (
+            username,
+            avatar_url
+          )
+        `)
+        .order('wpm', { ascending: false });
+        
+      if (error) throw error;
+      
+      if (data) {
+        const seenUsers = new Set();
+        const topRuns = [];
+        data.forEach(run => {
+          if (run.user_id && !seenUsers.has(run.user_id)) {
+            seenUsers.add(run.user_id);
+            topRuns.push(run);
+          }
+        });
+        
+        boardData = topRuns.map((run, index) => {
+          const profile = run.profiles || {};
+          return {
+            rank: index + 1,
+            username: profile.username || "Anonymous Typist",
+            avatar_url: profile.avatar_url || "👤",
+            wpm: run.wpm,
+            accuracy: run.accuracy,
+            platform_key: `sp_${run.user_id.substring(0, 8)}...`
+          };
+        });
+        isSupabaseLoaded = true;
+      }
+    } catch (err) {
+      console.error("Error loading leaderboards from database:", err);
+    }
+  }
+  
+  if (!isSupabaseLoaded) {
+    boardData = MOCK_LEADERBOARD;
+  }
+  
+  const rank1Player = boardData.find(p => p.rank === 1);
+  const rank2Player = boardData.find(p => p.rank === 2);
+  const rank3Player = boardData.find(p => p.rank === 3);
+  
+  if (els.leaderboardRank1Card) {
+    if (rank1Player) {
+      els.leaderboardRank1Card.style.display = "flex";
+      renderRankCard(rank1Player, els.leaderboardRank1Avatar, els.leaderboardRank1Name, els.leaderboardRank1Wpm, els.leaderboardRank1Accuracy);
+    } else {
+      els.leaderboardRank1Card.style.display = "none";
+    }
+  }
+  
+  if (els.leaderboardRank2Card) {
+    if (rank2Player) {
+      els.leaderboardRank2Card.style.display = "flex";
+      renderRankCard(rank2Player, els.leaderboardRank2Avatar, els.leaderboardRank2Name, els.leaderboardRank2Wpm, els.leaderboardRank2Accuracy);
+    } else {
+      els.leaderboardRank2Card.style.display = "none";
+    }
+  }
+  
+  if (els.leaderboardRank3Card) {
+    if (rank3Player) {
+      els.leaderboardRank3Card.style.display = "flex";
+      renderRankCard(rank3Player, els.leaderboardRank3Avatar, els.leaderboardRank3Name, els.leaderboardRank3Wpm, els.leaderboardRank3Accuracy);
+    } else {
+      els.leaderboardRank3Card.style.display = "none";
+    }
+  }
+  
+  if (els.leaderboardTableBody) {
+    els.leaderboardTableBody.innerHTML = "";
+    
+    if (boardData.length === 0) {
+      els.leaderboardTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px 0;">No scores submitted yet.</td></tr>`;
+    } else {
+      boardData.forEach(player => {
+        const row = document.createElement("tr");
+        let avatarHTML = `<span style="font-size: 1.2rem;">👤</span>`;
+        if (player.avatar_url) {
+          if (player.avatar_url.startsWith("http")) {
+            avatarHTML = `<img src="${player.avatar_url}" class="table-avatar-img" alt="${player.username}">`;
+          } else {
+            avatarHTML = `<span style="font-size: 1.2rem;">${player.avatar_url}</span>`;
+          }
+        }
+        
+        row.innerHTML = `
+          <td><strong style="color: var(--text-muted);">#${player.rank}</strong></td>
+          <td>
+            <div class="table-user">
+              ${avatarHTML}
+              <span>${player.username}</span>
+            </div>
+          </td>
+          <td><strong style="color: var(--primary-color);">${player.wpm}</strong> WPM</td>
+          <td>${player.accuracy}%</td>
+          <td><code style="font-size: 0.8rem; opacity: 0.7;">${player.platform_key}</code></td>
+        `;
+        els.leaderboardTableBody.appendChild(row);
+      });
+    }
+  }
+}
+
+function renderRankCard(player, avatarEl, nameEl, wpmEl, accuracyEl) {
+  if (avatarEl) {
+    if (player.avatar_url && player.avatar_url.startsWith("http")) {
+      avatarEl.innerHTML = `<img src="${player.avatar_url}" class="table-avatar-img" style="width: 48px; height: 48px;" alt="${player.username}">`;
+    } else {
+      avatarEl.textContent = player.avatar_url || "👤";
+    }
+  }
+  if (nameEl) nameEl.textContent = player.username;
+  if (wpmEl) wpmEl.textContent = `${player.wpm} WPM`;
+  if (accuracyEl) accuracyEl.textContent = `${player.accuracy}% Accuracy`;
+}
+
 // --- Navigation Controller ---
 function initNavigation() {
   const navLinks = document.querySelectorAll('.nav-link');
@@ -943,6 +1558,14 @@ function switchPage(pageId) {
         pauseSession("Auto paused");
       }
     }
+
+    if (pageId === 'home') {
+      updateHomeTelemetry();
+    } else if (pageId === 'dashboard') {
+      updateDashboardTelemetry();
+    } else if (pageId === 'leaderboard') {
+      updateLeaderboards();
+    }
   }
 }
 
@@ -1000,6 +1623,35 @@ function bindEvents() {
       focusTypingInput();
     });
   });
+
+  if (els.googleSignInBtn) {
+    els.googleSignInBtn.addEventListener("click", signInWithGoogle);
+  }
+  if (els.googleSignOutBtn) {
+    els.googleSignOutBtn.addEventListener("click", signOut);
+  }
+  if (els.leaderboardSignInBtn) {
+    els.leaderboardSignInBtn.addEventListener("click", signInWithGoogle);
+  }
+  if (els.clearHistoryBtn) {
+    els.clearHistoryBtn.addEventListener("click", clearRunsHistory);
+  }
+
+  if (els.userMenuTrigger && els.userDropdownMenu) {
+    els.userMenuTrigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isVisible = els.userDropdownMenu.style.display === "flex";
+      els.userDropdownMenu.style.display = isVisible ? "none" : "flex";
+      els.userMenuTrigger.setAttribute("aria-expanded", String(!isVisible));
+    });
+
+    document.addEventListener("click", (e) => {
+      if (els.userDropdownMenu.style.display === "flex" && !els.userProfileWidget.contains(e.target)) {
+        els.userDropdownMenu.style.display = "none";
+        els.userMenuTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
 }
 
 const THEME_STORAGE_KEY = "speedtype.theme.v1";
@@ -1045,9 +1697,12 @@ function init() {
 
   initTheme();
   initNavigation();
+  initSupabase();
+  listenToAuthChanges();
   bindEvents();
   renderSavedList();
   resetSession();
+  updateHomeTelemetry();
 }
 
 init();
