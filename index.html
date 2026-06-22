@@ -52,12 +52,42 @@
         <nav class="nav-links">
           <a href="#home" class="nav-link active">Home</a>
           <a href="#practice" class="nav-link">Practice</a>
+          <a href="#dashboard" class="nav-link">Dashboard</a>
           <a href="#features" class="nav-link">Features</a>
           <a href="#leaderboard" class="nav-link">Leaderboard</a>
           <a href="#about" class="nav-link">About</a>
         </nav>
 
         <div class="topbar-actions" style="display: flex; align-items: center; gap: 12px;">
+          <!-- Supabase Auth Control -->
+          <div id="authContainer" class="auth-container">
+            <button id="googleSignInBtn" class="btn btn-primary btn-sm auth-btn" style="padding: 8px 14px; gap: 8px; font-size: 0.85rem; border-radius: 10px; display: flex; align-items: center; border: none; font-weight: 600;">
+              <svg class="google-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right: 6px;">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              Sign In
+            </button>
+            <div id="userProfileWidget" class="user-profile-widget" style="display: none; position: relative;">
+              <button id="userMenuTrigger" class="user-menu-trigger" aria-haspopup="true" aria-expanded="false" style="background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 6px 12px; border-radius: 12px; display: flex; align-items: center; gap: 8px; color: var(--text-color); cursor: pointer; transition: background 0.2s;">
+                <img id="userAvatar" class="user-avatar" src="" alt="User avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
+                <span id="usernameDisplay" class="user-display-name" style="font-size: 0.9rem; font-weight: 500;">Guest</span>
+                <span class="dropdown-chevron" style="font-size: 0.7rem; opacity: 0.7;">▼</span>
+              </button>
+              <div id="userDropdownMenu" class="user-dropdown-menu glass-panel" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); width: 220px; z-index: 100; border-radius: 16px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: none; flex-direction: column; gap: 6px; transform-origin: top right; transition: all 0.2s ease;">
+                <div class="user-menu-header" style="display: flex; flex-direction: column; padding: 4px 8px 8px;">
+                  <strong id="menuUsername" style="font-size: 0.95rem; font-family: var(--font-heading); color: var(--text-color);">Username</strong>
+                  <span id="menuEmail" class="menu-email" style="font-size: 0.75rem; color: var(--text-muted); word-break: break-all;">user@example.com</span>
+                </div>
+                <hr class="menu-divider" style="border: none; border-top: 1px solid var(--glass-border); margin: 4px 0;">
+                <a href="#dashboard" class="menu-item" id="goToDashboardBtn" style="padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); text-decoration: none; display: block; transition: background 0.2s;">Dashboard</a>
+                <button id="googleSignOutBtn" class="menu-item danger-item" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--danger-color, #ff4d4d); cursor: pointer; transition: background 0.2s;">Sign Out</button>
+              </div>
+            </div>
+          </div>
+          
           <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
             <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
             <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -117,38 +147,38 @@
             <div class="mock-analytics-card glass-panel">
               <span class="eyebrow">SESSION HISTORY</span>
               <h4 style="font-family: var(--font-heading);">Last 8 Test Runs</h4>
-              <div class="mock-chart-container">
+              <div class="mock-chart-container" id="homeChartContainer">
                 <div class="chart-bar-wrapper">
-                  <div class="chart-bar" data-height="45%"></div>
-                  <span class="chart-label">Run 1</span>
+                  <div class="chart-bar" style="height: 0%"></div>
+                  <span class="chart-label">-</span>
                 </div>
                 <div class="chart-bar-wrapper">
-                  <div class="chart-bar" data-height="55%"></div>
-                  <span class="chart-label">Run 2</span>
+                  <div class="chart-bar" style="height: 0%"></div>
+                  <span class="chart-label">-</span>
                 </div>
                 <div class="chart-bar-wrapper">
-                  <div class="chart-bar" data-height="50%"></div>
-                  <span class="chart-label">Run 3</span>
+                  <div class="chart-bar" style="height: 0%"></div>
+                  <span class="chart-label">-</span>
                 </div>
                 <div class="chart-bar-wrapper">
-                  <div class="chart-bar" data-height="70%"></div>
-                  <span class="chart-label">Run 4</span>
+                  <div class="chart-bar" style="height: 0%"></div>
+                  <span class="chart-label">-</span>
                 </div>
                 <div class="chart-bar-wrapper">
-                  <div class="chart-bar" data-height="65%"></div>
-                  <span class="chart-label">Run 5</span>
+                  <div class="chart-bar" style="height: 0%"></div>
+                  <span class="chart-label">-</span>
                 </div>
                 <div class="chart-bar-wrapper">
-                  <div class="chart-bar" data-height="85%"></div>
-                  <span class="chart-label">Run 6</span>
+                  <div class="chart-bar" style="height: 0%"></div>
+                  <span class="chart-label">-</span>
                 </div>
                 <div class="chart-bar-wrapper">
-                  <div class="chart-bar" data-height="80%"></div>
-                  <span class="chart-label">Run 7</span>
+                  <div class="chart-bar" style="height: 0%"></div>
+                  <span class="chart-label">-</span>
                 </div>
                 <div class="chart-bar-wrapper">
-                  <div class="chart-bar" data-height="95%"></div>
-                  <span class="chart-label">Run 8</span>
+                  <div class="chart-bar" style="height: 0%"></div>
+                  <span class="chart-label">-</span>
                 </div>
               </div>
             </div>
@@ -160,24 +190,24 @@
                 <div class="ring-card">
                   <svg viewBox="0 0 36 36" class="circular-chart">
                     <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    <path class="circle circle-primary" stroke-dasharray="98, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    <text x="18" y="20.35" class="ring-percentage">98%</text>
+                    <path id="homeAvgAccuracyRing" class="circle circle-primary" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <text id="homeAvgAccuracyText" x="18" y="20.35" class="ring-percentage">0%</text>
                   </svg>
                   <span class="chart-label">Avg. Accuracy</span>
                 </div>
                 <div class="ring-card">
                   <svg viewBox="0 0 36 36" class="circular-chart">
                     <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    <path class="circle circle-secondary" stroke-dasharray="85, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    <text x="18" y="20.35" class="ring-percentage">85</text>
+                    <path id="homePeakWpmRing" class="circle circle-secondary" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <text id="homePeakWpmText" x="18" y="20.35" class="ring-percentage">0</text>
                   </svg>
                   <span class="chart-label">Peak WPM</span>
                 </div>
                 <div class="ring-card">
                   <svg viewBox="0 0 36 36" class="circular-chart">
                     <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    <path class="circle circle-success" stroke-dasharray="92, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    <text x="18" y="20.35" class="ring-percentage">92%</text>
+                    <path id="homeStabilityRing" class="circle circle-success" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <text id="homeStabilityText" x="18" y="20.35" class="ring-percentage">0%</text>
                   </svg>
                   <span class="chart-label">Key Stability</span>
                 </div>
@@ -399,7 +429,111 @@
         </section>
       </section>
 
+      <!-- ====================================================================
+           2.5. DASHBOARD PAGE VIEW
+           ==================================================================== -->
+      <section id="dashboard" class="page-view">
+        <div class="dashboard-page-container">
+          <div class="section-header">
+            <span class="eyebrow">USER AREA</span>
+            <h3 class="section-title">Your Studio Dashboard</h3>
+            <p class="section-subtitle">Track your typing progress, analyze telemetry, and view your history.</p>
+          </div>
 
+          <div class="dashboard-layout-grid">
+            <!-- Left: Profile and Lifetime Stats -->
+            <div class="profile-stats-column">
+              <!-- Profile Card -->
+              <div class="profile-card glass-panel">
+                <div class="profile-header-info">
+                  <div class="profile-avatar-container">
+                    <img id="dbProfileAvatar" src="assets/keyboard-guide-light.png" alt="Profile avatar" class="db-profile-avatar">
+                  </div>
+                  <div class="profile-text-info">
+                    <h4 id="dbProfileName">Guest User</h4>
+                    <p id="dbProfileEmail" class="eyebrow">Not signed in</p>
+                  </div>
+                </div>
+                <div class="profile-status-badge anonymous-badge" id="dbAuthStatusBadge">
+                  Offline Mode
+                </div>
+              </div>
+
+              <!-- Lifetime Telemetry -->
+              <div class="lifetime-stats-card glass-panel">
+                <span class="eyebrow">LIFETIME TELEMETRY</span>
+                <h4 style="font-family: var(--font-heading); margin-bottom: 20px;">Performance Overview</h4>
+                <div class="lifetime-stats-grid">
+                  <div class="l-stat">
+                    <span class="l-stat-label">Peak WPM</span>
+                    <strong id="dbPeakWpm">0</strong>
+                  </div>
+                  <div class="l-stat">
+                    <span class="l-stat-label">Average WPM</span>
+                    <strong id="dbAvgWpm">0</strong>
+                  </div>
+                  <div class="l-stat">
+                    <span class="l-stat-label">Average Accuracy</span>
+                    <strong id="dbAvgAccuracy">100%</strong>
+                  </div>
+                  <div class="l-stat">
+                    <span class="l-stat-label">Races Completed</span>
+                    <strong id="dbTotalRaces">0</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Performance Graph & Typing History Log -->
+            <div class="detailed-analytics-column">
+              <!-- Bar Chart Card -->
+              <div class="glass-panel" style="padding: 24px;">
+                <span class="eyebrow">PROGRESS CURVE</span>
+                <h4 style="font-family: var(--font-heading); margin-bottom: 16px;">Speed in Last 8 Tests</h4>
+                <div class="mock-chart-container" id="dbChartContainer">
+                  <div class="chart-bar-wrapper"><div class="chart-bar" style="height: 0%;"></div><span class="chart-label">-</span></div>
+                  <div class="chart-bar-wrapper"><div class="chart-bar" style="height: 0%;"></div><span class="chart-label">-</span></div>
+                  <div class="chart-bar-wrapper"><div class="chart-bar" style="height: 0%;"></div><span class="chart-label">-</span></div>
+                  <div class="chart-bar-wrapper"><div class="chart-bar" style="height: 0%;"></div><span class="chart-label">-</span></div>
+                  <div class="chart-bar-wrapper"><div class="chart-bar" style="height: 0%;"></div><span class="chart-label">-</span></div>
+                  <div class="chart-bar-wrapper"><div class="chart-bar" style="height: 0%;"></div><span class="chart-label">-</span></div>
+                  <div class="chart-bar-wrapper"><div class="chart-bar" style="height: 0%;"></div><span class="chart-label">-</span></div>
+                  <div class="chart-bar-wrapper"><div class="chart-bar" style="height: 0%;"></div><span class="chart-label">-</span></div>
+                </div>
+              </div>
+
+              <!-- Typing History Table -->
+              <div class="glass-panel" style="padding: 24px; margin-top: 24px; display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <span class="eyebrow">RUN MATRIX</span>
+                    <h4 style="font-family: var(--font-heading);">Recent Typing History</h4>
+                  </div>
+                  <button id="clearHistoryBtn" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; cursor: pointer;">Clear Runs</button>
+                </div>
+                <div class="history-table-wrapper" style="overflow-x: auto; max-height: 350px;">
+                  <table class="leaderboard-table" id="dbHistoryTable">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Passage</th>
+                        <th>Speed</th>
+                        <th>Accuracy</th>
+                        <th>Errors</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dbHistoryBody">
+                      <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px 0;">No races completed yet. Go to Practice to start!</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- ====================================================================
            3. FEATURES PAGE VIEW
@@ -463,32 +597,38 @@
             <p class="section-subtitle">Real-time standings of global typing precision and raw speeds.</p>
           </div>
 
-          <div class="leaderboard-cards">
+          <!-- Auth Callout for Leaderboard -->
+          <div id="leaderboardAuthCallout" class="glass-panel" style="padding: 16px; margin: 20px auto 30px; text-align: center; display: none; align-items: center; justify-content: center; gap: 16px; border: 1px solid var(--glass-border); border-radius: 12px; max-width: 800px;">
+            <p style="margin: 0; font-size: 0.9rem; font-weight: 500;">Want to see your name on the board? Sign in with Google to upload your scores!</p>
+            <button id="leaderboardSignInBtn" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 10px; cursor: pointer;">Sign In</button>
+          </div>
+
+          <div class="leaderboard-cards" id="leaderboardCardsContainer">
             <!-- Rank 2 -->
-            <div class="top-player-card glass-panel rank-2">
+            <div class="top-player-card glass-panel rank-2" id="leaderboardRank2Card">
               <div class="rank-badge">2</div>
-              <div class="player-avatar">🥈</div>
-              <div class="player-name">Lovelace.Dev</div>
-              <div class="player-wpm">138 WPM</div>
-              <div class="player-accuracy">99.2% Accuracy</div>
+              <div class="player-avatar" id="leaderboardRank2Avatar">🥈</div>
+              <div class="player-name" id="leaderboardRank2Name">Lovelace.Dev</div>
+              <div class="player-wpm" id="leaderboardRank2Wpm">138 WPM</div>
+              <div class="player-accuracy" id="leaderboardRank2Accuracy">99.2% Accuracy</div>
             </div>
 
             <!-- Rank 1 -->
-            <div class="top-player-card glass-panel rank-1">
+            <div class="top-player-card glass-panel rank-1" id="leaderboardRank1Card">
               <div class="rank-badge">1</div>
-              <div class="player-avatar">👑</div>
-              <div class="player-name">FlowTypist_x0</div>
-              <div class="player-wpm">152 WPM</div>
-              <div class="player-accuracy">99.8% Accuracy</div>
+              <div class="player-avatar" id="leaderboardRank1Avatar">👑</div>
+              <div class="player-name" id="leaderboardRank1Name">FlowTypist_x0</div>
+              <div class="player-wpm" id="leaderboardRank1Wpm">152 WPM</div>
+              <div class="player-accuracy" id="leaderboardRank1Accuracy">99.8% Accuracy</div>
             </div>
 
             <!-- Rank 3 -->
-            <div class="top-player-card glass-panel rank-3">
+            <div class="top-player-card glass-panel rank-3" id="leaderboardRank3Card">
               <div class="rank-badge">3</div>
-              <div class="player-avatar">🥉</div>
-              <div class="player-name">Woz_KeyStroke</div>
-              <div class="player-wpm">124 WPM</div>
-              <div class="player-accuracy">98.5% Accuracy</div>
+              <div class="player-avatar" id="leaderboardRank3Avatar">🥉</div>
+              <div class="player-name" id="leaderboardRank3Name">Woz_KeyStroke</div>
+              <div class="player-wpm" id="leaderboardRank3Wpm">124 WPM</div>
+              <div class="player-accuracy" id="leaderboardRank3Accuracy">98.5% Accuracy</div>
             </div>
           </div>
 
@@ -503,42 +643,9 @@
                   <th>Platform Key</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="leaderboardTableBody">
                 <tr>
-                  <td class="table-rank">#4</td>
-                  <td>
-                    <div class="table-user">
-                      <span class="table-avatar">💻</span>
-                      <span>neerajtomar</span>
-                    </div>
-                  </td>
-                  <td class="table-wpm">118 WPM</td>
-                  <td>98.2%</td>
-                  <td style="color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.8rem;">sp_9A4f2...</td>
-                </tr>
-                <tr>
-                  <td class="table-rank">#5</td>
-                  <td>
-                    <div class="table-user">
-                      <span class="table-avatar">⚡</span>
-                      <span>antigravity</span>
-                    </div>
-                  </td>
-                  <td class="table-wpm">112 WPM</td>
-                  <td>99.0%</td>
-                  <td style="color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.8rem;">sp_ff620...</td>
-                </tr>
-                <tr>
-                  <td class="table-rank">#6</td>
-                  <td>
-                    <div class="table-user">
-                      <span class="table-avatar">🚀</span>
-                      <span>keybr_fan</span>
-                    </div>
-                  </td>
-                  <td class="table-wpm">105 WPM</td>
-                  <td>97.6%</td>
-                  <td style="color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.8rem;">sp_441ba...</td>
+                  <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px 0;">Loading leaderboards...</td>
                 </tr>
               </tbody>
             </table>
@@ -684,6 +791,10 @@
         <p>Custom texts stay on this device in browser storage. Built for high-fidelity performance.</p>
       </footer>
     </main>
+
+    <!-- Supabase CDN and Configuration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js?v=2.0"></script>
 
     <!-- Visual animations and typing integrations -->
     <script src="3d-effects.js?v=2.0"></script>
