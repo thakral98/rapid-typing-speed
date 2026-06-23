@@ -22,10 +22,6 @@ let waterRipples = [];
 let lastWaterRipplePos = null;
 let isDarkMode = false;
 
-function isMobileDevice() {
-  return window.innerWidth <= 768 || ('ontouchstart' in window || navigator.maxTouchPoints > 0);
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize Hero Keyboard Guide (pure CSS 3D + GSAP)
   initHeroKeyboard();
@@ -34,14 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof THREE === 'undefined') {
     console.warn('Three.js not loaded. Disabling WebGL effects.');
     setupFallbackEffects();
-    return;
-  }
-
-  // Check if we are on a mobile device to bypass heavy WebGL renders
-  if (isMobileDevice()) {
-    console.log('Mobile device detected. Enabling CSS animations and static fallbacks instead of WebGL.');
-    setupMobileFallbacks();
-    setupScrollAnimations();
     return;
   }
 
@@ -981,93 +969,5 @@ function setupFallbackEffects() {
         </div>
       </div>
     `;
-  }
-}
-
-function setupMobileFallbacks() {
-  // 1. Orbiting Letter Sphere Fallback (HTML/CSS Floating Constellation)
-  const universeContainer = document.getElementById('universe-canvas-container');
-  if (universeContainer) {
-    universeContainer.innerHTML = '';
-    
-    const wrapper = document.createElement('div');
-    wrapper.className = 'mobile-letters-fallback';
-    wrapper.style.cssText = 'position: relative; width: 100%; height: 100%; overflow: hidden; pointer-events: none;';
-    
-    const chars = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 ! ? @ # $ * &'.split(' ');
-    
-    for (let i = 0; i < 28; i++) {
-      const span = document.createElement('span');
-      span.textContent = chars[Math.floor(Math.random() * chars.length)];
-      span.className = 'floating-letter';
-      
-      const top = Math.random() * 80 + 10;
-      const left = Math.random() * 80 + 10;
-      const fontSize = 12 + Math.random() * 28;
-      const delay = Math.random() * 5;
-      const duration = 6 + Math.random() * 8;
-      const opacity = 0.2 + Math.random() * 0.55;
-      
-      const isAltColor = Math.random() > 0.5;
-      span.style.cssText = `
-        position: absolute;
-        top: ${top}%;
-        left: ${left}%;
-        font-size: ${fontSize}px;
-        font-family: var(--font-heading);
-        font-weight: 800;
-        opacity: ${opacity};
-        animation: floatMobileLetter ${duration}s ease-in-out ${delay}s infinite alternate;
-        color: ${isAltColor ? 'var(--primary-color)' : 'var(--secondary-color)'};
-        pointer-events: none;
-      `;
-      wrapper.appendChild(span);
-    }
-    universeContainer.appendChild(wrapper);
-  }
-
-  // 2. Infinite Typing Tunnel Fallback (HTML/CSS Typographic Void)
-  const tunnelContainer = document.getElementById('tunnel-container');
-  if (tunnelContainer) {
-    tunnelContainer.innerHTML = '';
-    
-    const wrapper = document.createElement('div');
-    wrapper.className = 'mobile-tunnel-fallback';
-    wrapper.style.cssText = 'position: relative; width: 100%; height: 100%; overflow: hidden; pointer-events: none;';
-    
-    const words = [
-      'SpeedType', 'FlowState', 'Studio', 'Accuracy', 'Speed', 'Keyboard',
-      'Rhythm', 'Focus', 'WPM', 'Keystroke', 'Training', 'SaaS', 'WebGL',
-      'Performance', 'Engine', 'AntiCheat', 'Analytics', 'FocusMode'
-    ];
-    
-    for (let i = 0; i < 18; i++) {
-      const span = document.createElement('span');
-      span.textContent = words[i % words.length];
-      span.className = 'floating-word';
-      
-      const top = Math.random() * 80 + 10;
-      const left = Math.random() * 80 + 10;
-      const fontSize = 14 + Math.random() * 18;
-      const delay = Math.random() * 4;
-      const duration = 5 + Math.random() * 7;
-      const opacity = 0.15 + Math.random() * 0.45;
-      
-      span.style.cssText = `
-        position: absolute;
-        top: ${top}%;
-        left: ${left}%;
-        font-size: ${fontSize}px;
-        font-family: 'Orbitron', var(--font-heading), sans-serif;
-        font-weight: 700;
-        opacity: ${opacity};
-        animation: floatMobileWord ${duration}s ease-in-out ${delay}s infinite alternate;
-        color: var(--primary-color);
-        text-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
-        pointer-events: none;
-      `;
-      wrapper.appendChild(span);
-    }
-    tunnelContainer.appendChild(wrapper);
   }
 }
