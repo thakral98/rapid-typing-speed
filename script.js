@@ -2,7 +2,7 @@ const DEFAULT_PASSAGES = [
   {
     id: "home-row",
     title: "Home Row Practice",
-    text: "as sa ad da af fa ag ga ah ha aj ja ak ka al la sd ds sf fs sg gs sh hs sj js sk ks sl ls df fd dg gd dh hd dj jd dk kd dl ld fg gf fh hf fj jf fk kf fl lf gh hg gj jg gk kg gl lg asd sdf dfg fgh ghj hjk jkl lkj kjh jhg hgf gfd fds dsa saf afg agh ahj ajk akl sla slk skj sjh shg asd sda das afd fda dag gah haj ajl lkj sdf dfs fsd sdg dgh ghk hkj kjl jla las ask skd kdf dfg fgj asdf sdfg dfgh fghj ghjk hjkl lkjh kjhg jhgf hgfd gfds fdsa safg afgh fghk ghkl askl sklj kljh ljhg adfg dfgh fghj ghjk shjk hjka jkas kasd sdfg dfgs fgsh gshj ahjk hjkl jkla klas asdf sdaf dafg afgh lkja kjas jasd asdg fghk ghkj hkjl kjla sdfh dfhj fhjk hjkl aghj ghjk hjka jkal slkj lkjh kjhg jhgf asdfg sdfgh dfghj fghjk ghjkl lkjhg kjhgf jhgfd hgfds gfdsa safgh afghj fghjk ghjkl hjkla jklas klasd lasdf asdfh sdfhj dfhjk fhjkl hjkla jklad aghjk ghjkl hjkls jklsa skljh kljhg ljhgf jhgfd adfgh dfghj fghjk ghjkl shjkl hjkla jklaf klafd asdfh sdfhj dfhjk fhjkl aghjk ghjka hjkas jkasd sdfgh dfghk fghkl ghklj ahjkl hjkla jklas klasd slkjh lkjhg kjhgf jhgfa"
+    text: "as sa ad da af fa ag ga ah ha aj ja ak ka al la sd ds sf fs sg gs sh hs sj js sk ks sl ls df fd dg gd dh hd dj jd dk kd dl ld fg gf fh hf fj jf fk kf fl lf gh hg gj jg gk kg gl lg asd sdf dfg fgh ghj hjk jkl lkj kjh jhg hgf gfd fds dsa saf afg agh ahj ajk akl sla slk skj sjh shg asd sda das afd fda dag gah haj ajl lkj sdf dfs fsd sdg dgh ghk hkj kjl jla las ask skd kdf dfg fgj asdf sdfg dfgh fghj ghjk hjkl lkjh kjhg jhgf hgfd gfds fdsa safg afgh fghk ghkl askl sklj kljh ljhg adfg dfgh fghj ghjk shjk hjka jkas kasd sdfg dfgs fgsh gshj ahjk hjkl jkla klas asdf sdaf dafg afgh lkja kjas jasd asdg fghk ghkj hkjl kjla sdfh dfhj fhjk hjkl aghj ghjk hjka jkal slkj lkjh kjhg jhgf asdfg sdfgh dfghj fghjk ghjkl lkjhg kjhgf jhgfd hgfds gfdsa safgh afghj fghjk ghjkl hjkla jklas klasd lasdf asdfh sdfhj dfhjk fhjkl hjkla jklad aghjk ghjkl hjkls jklsa skljh kljhg ljhgf jhgfd adfgh dfghj fghjk ghjkl shjkl hjkla jklaf klafd asdfh s"
   },
   {
     id: "top-row",
@@ -17,7 +17,7 @@ const DEFAULT_PASSAGES = [
   {
     id: "extreme-left",
     title: "Extreme Left Practice",
-    text: "qw wq qa aq qs sq qz zq qx xq wa aw ws sw wz zw wx xw as sa az za ax xa sz zs sx xs zx xz qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qaw aws wsz szx zxa xaq qsa saz sax qaz qax qzx zxa wax was waz wax wsx szx zxa asq sqw qwa was saz azx zxs sxq qwas wasz wasx wazx aszx qaws awsz wszx szxa qasz aszx szxq zxqa qwaz wazx azxq zxqw qwax waxs axsz xszq qwsz wszx szxq zxqw wasz aszx szxw zxwa qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qw qa qs qz qx wa ws wz wx as az ax sz sx zx qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qwas wasz aszx szxq zxqa qwasz waszx aszxq szxqw zxqwa"
+    text: "qw wq qa aq qs sq qz zq qx xq wa aw ws sw wz zw wx xw as sa az za ax xa sz zs sx xs zx xz qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qwas wasz wasx wazx aszx qaws awsz wszx szxa qasz aszx szxq zxqa qwaz wazx azxq zxqw qwax waxs axsz xszq qwsz wszx szxq zxqw wasz aszx szxw zxwa qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qw qa qs qz qx wa ws wz wx as az ax sz sx zx qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qwas wasz aszx szxq zxqa qwasz waszx aszxq szxqw zxqwa"
   },
   {
     id: "extreme-right",
@@ -374,6 +374,7 @@ function updateModeButtons() {
   });
 }
 
+// Function signature remains clean, utilizing active settings
 function resetSession(options = {}) {
   const source = getActiveSource();
   state.currentText = buildPracticeText(source.text);
@@ -443,7 +444,6 @@ function getActiveElapsedMs() {
   return Math.max(0, end - state.startedAt - state.pausedTotalMs);
 }
 
-// Fixed calculation error in WPM counting
 function getRemainingSeconds() {
   return Math.max(0, state.durationSeconds - Math.floor(getActiveElapsedSeconds()));
 }
@@ -574,6 +574,7 @@ function countCorrectChars(typed, target) {
   return correct;
 }
 
+// Fixed index check
 function countErrors(typed, target) {
   let errors = 0;
   for (let index = 0; index < typed.length; index += 1) {
@@ -663,7 +664,7 @@ function blockTypingKey(event) {
   event.stopPropagation();
 }
 
-// Keyboard Cap Flashing System (correct is blue/cyan, incorrect is red flash)
+// Keyboard Cap Flashing System
 function flashKeycap(keyChar, isCorrect) {
   const keyName = keyNameForChar(keyChar);
   const keyCap = els.keyCaps.find(key => key.dataset.key === keyName);
@@ -690,15 +691,13 @@ function appendTypingCharacter(char, effectKey) {
   els.typingInput.value = `${els.typingInput.value}${char}`.slice(0, state.currentText.length);
   lockTypingCaret();
   
-  // Flash correct/incorrect color glow on keycap
   flashKeycap(char, isCorrect);
-  
   handleTyping(effectKey);
 }
 
 function focusTypingInput() {
   const activePage = document.querySelector('.page-view.active');
-  if (!activePage || activePage.id !== 'practice') return; // Only focus on practice page
+  if (!activePage || activePage.id !== 'practice') return; 
   if (els.typingInput.disabled) return;
 
   try {
@@ -717,7 +716,7 @@ function lockTypingCaret() {
   try {
     els.typingInput.setSelectionRange(end, end);
   } catch {
-    // Some browsers refuse selection changes during blur/disable transitions.
+    // Selection adjustment during view transition fallback
   }
 }
 
@@ -788,25 +787,14 @@ function displayKeyForEffect(key) {
 }
 
 const FINGER_MAP = {
-  // Left Hand Pinky
   "1": "lh-pinky", "Q": "lh-pinky", "A": "lh-pinky", "Z": "lh-pinky",
-  // Left Hand Ring
   "2": "lh-ring", "W": "lh-ring", "S": "lh-ring", "X": "lh-ring",
-  // Left Hand Middle
   "3": "lh-middle", "E": "lh-middle", "D": "lh-middle", "C": "lh-middle",
-  // Left Hand Index
   "4": "lh-index", "5": "lh-index", "R": "lh-index", "T": "lh-index", "F": "lh-index", "G": "lh-index", "V": "lh-index", "B": "lh-index",
-  
-  // Right Hand Index
   "6": "rh-index", "7": "rh-index", "Y": "rh-index", "U": "rh-index", "H": "rh-index", "J": "rh-index", "N": "rh-index", "M": "rh-index",
-  // Right Hand Middle
   "8": "rh-middle", "I": "rh-middle", "K": "rh-middle", ",": "rh-middle", ";": "rh-middle",
-  // Right Hand Ring
   "9": "rh-ring", "O": "rh-ring", "L": "rh-ring", ".": "rh-ring", ":": "rh-ring",
-  // Right Hand Pinky
   "0": "rh-pinky", "-": "rh-pinky", "P": "rh-pinky", "'": "rh-pinky", "\"": "rh-pinky", "?": "rh-pinky", "!": "rh-pinky", "ENTER": "rh-pinky",
-  
-  // Thumbs
   "SPACE": "rh-thumb"
 };
 
@@ -818,7 +806,6 @@ function updateKeyboard() {
     key.classList.toggle("is-next", key.dataset.key === keyName);
   });
 
-  // Highlight active finger
   const activeFingerId = FINGER_MAP[keyName];
   document.querySelectorAll(".hand-finger").forEach((finger) => {
     finger.classList.toggle("active-finger", finger.id === activeFingerId);
@@ -837,6 +824,7 @@ function selectPassage(id) {
   resetSession({ message: "Ready" });
 }
 
+// Removes a user-saved custom passage
 function deleteCustomPassage(id) {
   state.customPassages = state.customPassages.filter((passage) => passage.id !== id);
   if (state.activeId === id) {
@@ -1057,7 +1045,7 @@ async function signInWithGoogle() {
     const { error } = await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'https://thakral98.github.io/rapid-typing-speed/'
+        redirectTo: window.location.origin
       }
     });
     if (error) throw error;
@@ -1070,7 +1058,7 @@ async function signInWithGoogle() {
 async function signOut() {
   if (!supabaseClient) return;
 
-  // 1. Instantly perform client-side sign out and update UI (No waiting!)
+  // 1. Instantly perform client-side sign out and update UI (optimistic update)
   state.currentUser = null;
   updateAuthUI(null);
   if (els.userDropdownMenu) {
@@ -1101,6 +1089,21 @@ async function signOut() {
     console.error("Sign-out server error:", err);
   }
 }
+
+async function getRecentRuns() {
+  if (supabaseClient && state.currentUser) {
+    try {
+      const { data, error } = await supabaseClient
+        .from('typing_runs')
+        .select('*')
+        .eq('user_id', state.currentUser.id)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.error("Error retrieving runs from database:", err);
+    }
+  }
   
   try {
     const local = localStorage.getItem("speedtype.runs.v2");
@@ -1461,7 +1464,6 @@ function renderRankCard(player, avatarEl, nameEl, wpmEl, accuracyEl) {
 // --- Navigation Controller ---
 function initNavigation() {
   const navLinks = document.querySelectorAll('.nav-link');
-  const pageViews = document.querySelectorAll('.page-view');
   const startBtn = document.getElementById('start-training-btn');
   const drillModal = document.getElementById('drillSelectorModal');
   const closeDrillBtn = document.getElementById('closeDrillSelectorButton');
@@ -1529,7 +1531,6 @@ function initNavigation() {
     });
   });
 
-  // Explore Features button in Hero
   const exploreBtn = document.getElementById('explore-features-btn');
   if (exploreBtn) {
     exploreBtn.addEventListener('click', (e) => {
@@ -1558,11 +1559,9 @@ function switchPage(pageId) {
   if (activePage) {
     activePage.classList.add('active');
     
-    // Resume/focus if switching to practice page
     if (pageId === 'practice') {
       setTimeout(focusTypingInput, 100);
     } else {
-      // Pause test if leaving practice page
       if (state.startedAt && !state.paused && !state.finishedAt) {
         pauseSession("Auto paused");
       }
@@ -1691,7 +1690,6 @@ function applyTheme(theme) {
     document.documentElement.removeAttribute('data-theme');
   }
 
-  // Dispatch custom event to notify Three.js visual assets
   const event = new CustomEvent('themeChanged', { detail: { theme: theme } });
   window.dispatchEvent(event);
 }
@@ -1715,5 +1713,3 @@ function init() {
 }
 
 init();
-window.signOut = signOut;
-window.switchPage = switchPage;
