@@ -1071,10 +1071,32 @@ async function signOut() {
   if (!supabaseClient) return;
   try {
     const { error } = await supabaseClient.auth.signOut();
-    if (error) throw error;
-    if (els.userDropdownMenu) els.userDropdownMenu.style.display = 'none';
+    if (error) {
+      console.warn("Sign-out server error (performing local cleanup):", error);
+    }
   } catch (err) {
-    console.error("Sign-out error:", err);
+    console.error("Sign-out exception (performing local cleanup):", err);
+  } finally {
+    // Force client-side clean up of state and UI
+    state.currentUser = null;
+    updateAuthUI(null);
+    if (els.userDropdownMenu) {
+      els.userDropdownMenu.style.display = 'none';
+      const trigger = document.querySelector("#userMenuTrigger");
+      if (trigger) trigger.setAttribute("aria-expanded", "false");
+    }
+    
+    // Refresh active view telemetry to reflect logged-out state
+    const activeView = document.querySelector('.page-view.active');
+    if (activeView) {
+      if (activeView.id === 'dashboard') {
+        updateDashboardTelemetry();
+      } else if (activeView.id === 'leaderboard') {
+        updateLeaderboards();
+      } else if (activeView.id === 'home') {
+        updateHomeTelemetry();
+      }
+    }
   }
 }
 
