@@ -1070,7 +1070,7 @@ async function signInWithGoogle() {
 async function signOut() {
   if (!supabaseClient) return;
 
-  // 1. Instantly perform client-side sign out and update UI
+  // 1. Instantly perform client-side sign out and update UI (No waiting!)
   state.currentUser = null;
   updateAuthUI(null);
   if (els.userDropdownMenu) {
@@ -1101,21 +1101,6 @@ async function signOut() {
     console.error("Sign-out server error:", err);
   }
 }
-
-async function getRecentRuns() {
-  if (supabaseClient && state.currentUser) {
-    try {
-      const { data, error } = await supabaseClient
-        .from('typing_runs')
-        .select('*')
-        .eq('user_id', state.currentUser.id)
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      return data || [];
-    } catch (err) {
-      console.error("Error retrieving runs from database:", err);
-    }
-  }
   
   try {
     const local = localStorage.getItem("speedtype.runs.v2");
