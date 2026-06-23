@@ -1706,3 +1706,5 @@ function init() {
 }
 
 init();
+window.signOut = signOut;
+window.switchPage = switchPage;
