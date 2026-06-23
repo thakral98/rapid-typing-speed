@@ -1507,6 +1507,15 @@ select:disabled, input:disabled, textarea:disabled {
   position: relative;
 }
 
+.top-player-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+}
+
 .top-player-card.rank-1::after { background: var(--accent-color); }
 .top-player-card.rank-2::after { background: #C0C0C0; }
 .top-player-card.rank-3::after { background: #CD7F32; }
@@ -1904,14 +1913,6 @@ select:disabled, input:disabled, textarea:disabled {
 }
 
 @media (max-width: 768px) {
-  .app-shell {
-    padding: 0 16px;
-  }
-
-  .typing-panel, .stats-panel, .library-panel, .mock-analytics-card {
-    padding: 20px 16px;
-  }
-
   .topbar {
     flex-direction: column;
     gap: 16px;
@@ -1945,24 +1946,6 @@ select:disabled, input:disabled, textarea:disabled {
   .leaderboard-cards {
     grid-template-columns: 1fr;
   }
-
-  .accuracy-ring-container {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 16px;
-  }
-
-  .circular-chart {
-    width: 80px;
-    height: 80px;
-  }
-
-  .key-row span {
-    min-height: 32px;
-    font-size: 0.7rem;
-  }
-  .offset-one { padding: 0 8px; }
-  .offset-two { padding: 0 16px; }
 }
 
 /* ==========================================================================
@@ -2181,30 +2164,5 @@ select:disabled, input:disabled, textarea:disabled {
 @media (max-width: 1024px) {
   .dashboard-layout-grid {
     grid-template-columns: 1fr;
-  }
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-}
-
-/* Keyframes for Mobile CSS Fallback Animations */
-@keyframes floatMobileLetter {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-  100% {
-    transform: translateY(-20px) rotate(15deg);
-  }
-}
-
-@keyframes floatMobileWord {
-  0% {
-    transform: translateY(0) scale(0.95);
-    opacity: 0.25;
-  }
-  100% {
-    transform: translateY(-15px) scale(1.05);
-    opacity: 0.6;
   }
 }
