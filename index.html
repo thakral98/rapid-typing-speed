@@ -83,7 +83,13 @@
                 </div>
                 <hr class="menu-divider" style="border: none; border-top: 1px solid var(--glass-border); margin: 4px 0;">
                 <a href="#dashboard" class="menu-item" id="goToDashboardBtn" style="padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); text-decoration: none; display: block; transition: background 0.2s;">Dashboard</a>
-                <button id="googleSignOutBtn" class="menu-item danger-item" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--danger-color, #ff4d4d); cursor: pointer; transition: background 0.2s;">Sign Out</button>
+                <!-- <button id="googleSignOutBtn" class="menu-item danger-item" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--danger-color, #ff4d4d); cursor: pointer; transition: background 0.2s;">Sign Out</button> -->
+             <button id="googleSignOutBtn"
+        class="menu-item danger-item"
+        onclick="signOut()"
+        style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--danger-color, #ff4d4d); cursor: pointer; transition: background 0.2s;">
+    Sign Out
+</button>
               </div>
             </div>
           </div>
