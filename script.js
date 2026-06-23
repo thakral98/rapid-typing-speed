@@ -1069,34 +1069,36 @@ async function signInWithGoogle() {
 
 async function signOut() {
   if (!supabaseClient) return;
+
+  // 1. Instantly perform client-side sign out and update UI
+  state.currentUser = null;
+  updateAuthUI(null);
+  if (els.userDropdownMenu) {
+    els.userDropdownMenu.style.display = 'none';
+    const trigger = document.querySelector("#userMenuTrigger");
+    if (trigger) trigger.setAttribute("aria-expanded", "false");
+  }
+  
+  // Refresh active view telemetry to reflect logged-out state
+  const activeView = document.querySelector('.page-view.active');
+  if (activeView) {
+    if (activeView.id === 'dashboard') {
+      updateDashboardTelemetry();
+    } else if (activeView.id === 'leaderboard') {
+      updateLeaderboards();
+    } else if (activeView.id === 'home') {
+      updateHomeTelemetry();
+    }
+  }
+
+  // 2. Perform server-side sign out in the background (non-blocking)
   try {
     const { error } = await supabaseClient.auth.signOut();
     if (error) {
-      console.warn("Sign-out server error (performing local cleanup):", error);
+      console.warn("Sign-out server warning:", error);
     }
   } catch (err) {
-    console.error("Sign-out exception (performing local cleanup):", err);
-  } finally {
-    // Force client-side clean up of state and UI
-    state.currentUser = null;
-    updateAuthUI(null);
-    if (els.userDropdownMenu) {
-      els.userDropdownMenu.style.display = 'none';
-      const trigger = document.querySelector("#userMenuTrigger");
-      if (trigger) trigger.setAttribute("aria-expanded", "false");
-    }
-    
-    // Refresh active view telemetry to reflect logged-out state
-    const activeView = document.querySelector('.page-view.active');
-    if (activeView) {
-      if (activeView.id === 'dashboard') {
-        updateDashboardTelemetry();
-      } else if (activeView.id === 'leaderboard') {
-        updateLeaderboards();
-      } else if (activeView.id === 'home') {
-        updateHomeTelemetry();
-      }
-    }
+    console.error("Sign-out server error:", err);
   }
 }
 
