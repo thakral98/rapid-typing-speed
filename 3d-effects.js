@@ -1,11 +1,5 @@
 // SpeedType Studio 3D Effects Engine (Three.js & GSAP integrations)
 
-window.threeState = {
-  waterPaused: false,
-  spherePaused: false,
-  tunnelPaused: false
-};
-
 // References to Three.js elements for live theme updates
 let keyboardBaseMesh = null;
 let keyboardKeyMaterial = null;
@@ -77,123 +71,6 @@ function createLetterTexture(char) {
 }
 
 // --- 0. 3D INTERACTIVE WATER BACKGROUND ---
-// GLSL Shaders for Dark Mode Water Background
-const darkWaterVertexShader = `
-  varying vec2 vUv;
-  varying vec3 vWorldPosition;
-  void main() {
-    vUv = uv;
-    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-    vWorldPosition = worldPosition.xyz;
-    gl_Position = projectionMatrix * viewMatrix * worldPosition;
-  }
-`;
-
-const darkWaterFragmentShader = `
-  uniform vec3 uRipples[20];
-  uniform float uTime;
-  
-  varying vec2 vUv;
-  varying vec3 vWorldPosition;
-  
-  float caustics(vec2 uv, float time) {
-    vec2 p = uv * 3.5;
-    for(int i=0; i<4; i++) {
-      float t = time * (1.0 + float(i)*0.15);
-      p += sin(p.yx * 1.2 + vec2(t, t*0.9)) * 0.35;
-    }
-    return length(sin(p * 2.2)) * 0.45;
-  }
-  
-  vec2 getRippleGradient(vec2 pos, vec3 ripple) {
-    vec2 rPos = ripple.xy;
-    float age = ripple.z;
-    
-    float dist = distance(pos, rPos);
-    
-    // Wave parameters
-    float waveSpeed = 8.0;
-    float waveFreq = 5.0;
-    float baseAmp = 0.175;
-    float duration = 1.8;
-    
-    if (age <= 0.0 || age > duration || dist > 12.0) {
-      return vec2(0.0);
-    }
-    
-    float progress = age / duration;
-    float amp = baseAmp * (1.0 - progress) * (1.0 - progress);
-    
-    // Spatial decay
-    float spatialDecay = exp(-dist * 0.35);
-    
-    // Wave phase
-    float phase = dist * waveFreq - age * waveSpeed;
-    
-    // Displacement derivative with respect to distance
-    float cosPhase = cos(phase);
-    float sinPhase = sin(phase);
-    
-    float dH_ddist = amp * (waveFreq * cosPhase * spatialDecay - 0.35 * sinPhase * spatialDecay);
-    
-    vec2 dir = (pos - rPos) / (dist + 0.0001);
-    return dir * dH_ddist;
-  }
-  
-  vec2 ambientGrad(vec2 pos, float time) {
-    float amp1 = 0.0075;
-    float freq1 = 0.8;
-    float speed1 = 0.8;
-    
-    float amp2 = 0.005;
-    float freq2 = 1.4;
-    float speed2 = 1.2;
-    
-    float phase1 = pos.x * freq1 + pos.y * freq1 * 0.5 + time * speed1;
-    float phase2 = pos.y * freq2 - pos.x * freq2 * 0.3 - time * speed2;
-    
-    vec2 grad = vec2(0.0);
-    grad.x += cos(phase1) * amp1 * freq1 - sin(phase2) * amp2 * freq2 * 0.3;
-    grad.y += cos(phase1) * amp1 * freq1 * 0.5 + cos(phase2) * amp2 * freq2;
-    return grad;
-  }
-  
-  void main() {
-    vec2 totalGradient = vec2(0.0);
-    for (int i = 0; i < 20; i++) {
-      totalGradient += getRippleGradient(vWorldPosition.xy, uRipples[i]);
-    }
-    
-    totalGradient += ambientGrad(vWorldPosition.xy, uTime);
-    
-    vec3 normal = normalize(vec3(-totalGradient * 0.6, 1.0));
-    vec2 distortedUv = vUv + normal.xy * 0.07;
-    
-    float distToCenter = distance(distortedUv, vec2(0.5, 0.5));
-    
-    vec3 spaceVoid = vec3(0.0196, 0.0314, 0.0863);
-    vec3 deepBlue = vec3(0.0392, 0.0706, 0.1725);
-    vec3 gridCyan = vec3(0.0, 0.898, 1.0);
-    
-    vec3 bgGrad = mix(spaceVoid, deepBlue, 1.0 - clamp(distToCenter, 0.0, 1.0));
-    
-    vec3 lightPos = vec3(5.0, 5.0, 10.0);
-    vec3 viewDir = vec3(0.0, 0.0, 1.0);
-    vec3 lightDir = normalize(lightPos - vWorldPosition);
-    vec3 halfDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfDir), 0.0), 64.0);
-    
-    vec3 specColor = gridCyan * spec * 1.5;
-    
-    float causticVal = caustics(distortedUv * 6.0, uTime * 0.4);
-    vec3 causticColor = gridCyan * pow(causticVal, 2.2) * 0.22;
-    
-    vec3 finalColor = bgGrad + causticColor + specColor;
-    
-    gl_FragColor = vec4(finalColor, 0.85);
-  }
-`;
-
 // GLSL Shaders for Light Mode Water Background
 const lightWaterVertexShader = `
   varying vec2 vUv;
@@ -350,35 +227,31 @@ function initWaterBackground() {
   
   // 3. Materials
   
-  // Dark deep ocean custom shader material
-  const uRipplesArrayDark = [];
-  for (let i = 0; i < 20; i++) {
-    uRipplesArrayDark.push(new THREE.Vector3(0, 0, -999.0));
-  }
-
-  waterMaterialDark = new THREE.ShaderMaterial({
-    vertexShader: darkWaterVertexShader,
-    fragmentShader: darkWaterFragmentShader,
-    uniforms: {
-      uRipples: { value: uRipplesArrayDark },
-      uTime: { value: 0.0 }
-    },
+  // Dark deep ocean material (original)
+  waterMaterialDark = new THREE.MeshPhysicalMaterial({
+    color: 0x050816,
+    roughness: 0.12,
+    metalness: 0.05,
+    transmission: 0.0,
+    opacity: 0.4,
     transparent: true,
-    depthWrite: false,
-    depthTest: false
+    ior: 1.333,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.02,
+    side: THREE.DoubleSide
   });
 
   // Light Mode custom shader material
-  const uRipplesArrayLight = [];
+  const uRipplesArray = [];
   for (let i = 0; i < 20; i++) {
-    uRipplesArrayLight.push(new THREE.Vector3(0, 0, -999.0));
+    uRipplesArray.push(new THREE.Vector3(0, 0, -999.0));
   }
 
   lightWaterShaderMaterial = new THREE.ShaderMaterial({
     vertexShader: lightWaterVertexShader,
     fragmentShader: lightWaterFragmentShader,
     uniforms: {
-      uRipples: { value: uRipplesArrayLight },
+      uRipples: { value: uRipplesArray },
       uTime: { value: 0.0 }
     },
     transparent: true,
@@ -405,17 +278,9 @@ function initWaterBackground() {
   const mouse = new THREE.Vector2(-9999, -9999);
   const raycaster = new THREE.Raycaster();
   
-  let isRaycastQueued = false;
-  
   window.addEventListener('mousemove', (e) => {
-    if (!isRaycastQueued) {
-      isRaycastQueued = true;
-      requestAnimationFrame(() => {
-        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-        isRaycastQueued = false;
-      });
-    }
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
   });
 
   // Add click listener for larger ripples
@@ -464,50 +329,92 @@ function initWaterBackground() {
 
   function animate() {
     requestAnimationFrame(animate);
-    if (window.threeState && window.threeState.waterPaused) return;
     
     const time = clock.getElapsedTime();
 
-    if (mouse.x > -999) {
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObject(waterMesh);
-      if (intersects.length > 0) {
-        const point = intersects[0].point;
-        if (point.distanceTo(lastWaterRipplePos) > 0.4) {
-          waterRipples.push({
-            x: point.x,
-            y: point.y,
-            startTime: time,
-            duration: 1.8,
-            amplitude: isDarkMode ? 0.14 : 0.175,
-            maxRadius: isDarkMode ? 5.0 : 12.0
-          });
-          lastWaterRipplePos.copy(point);
-          const maxLen = isDarkMode ? 15 : 20;
-          if (waterRipples.length > maxLen) {
-            waterRipples.shift();
+    if (isDarkMode) {
+      // Raycast mouse position onto water plane to detect ripples
+      if (mouse.x > -999) {
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(waterMesh);
+        if (intersects.length > 0) {
+          const point = intersects[0].point;
+          if (point.distanceTo(lastWaterRipplePos) > 0.6) {
+            waterRipples.push({
+              x: point.x,
+              y: point.y,
+              startTime: time,
+              duration: 1.8,
+              amplitude: 0.14,
+              maxRadius: 5.0
+            });
+            lastWaterRipplePos.copy(point);
+            if (waterRipples.length > 15) {
+              waterRipples.shift();
+            }
           }
         }
       }
-    }
 
-    // Filter out expired ripples
-    waterRipples = waterRipples.filter(r => (time - r.startTime) < r.duration);
+      // Filter out expired ripples
+      waterRipples = waterRipples.filter(r => (time - r.startTime) < r.duration);
 
-    if (isDarkMode) {
-      // Prepare uniforms array
-      const uRipplesArray = waterMaterialDark.uniforms.uRipples.value;
-      for (let i = 0; i < 20; i++) {
-        if (i < waterRipples.length) {
-          const r = waterRipples[i];
-          uRipplesArray[i].set(r.x, r.y, time - r.startTime);
-        } else {
-          uRipplesArray[i].set(0.0, 0.0, -999.0);
-        }
+      // Deform geometry vertices in JS
+      const posAttr = geometry.attributes.position;
+      for (let i = 0; i < posAttr.count; i++) {
+        const vx = posAttr.getX(i);
+        const vy = posAttr.getY(i);
+        
+        let vz = Math.sin(vx * 0.4 + time * 1.0) * 0.04 + Math.cos(vy * 0.4 + time * 1.2) * 0.04;
+        
+        waterRipples.forEach(r => {
+          const dx = vx - r.x;
+          const dy = vy - r.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          const age = time - r.startTime;
+          const progress = age / r.duration;
+          
+          if (dist < r.maxRadius && progress < 1.0) {
+            const amplitude = r.amplitude * (1.0 - progress);
+            vz += Math.sin(dist * 5.0 - age * 10.0) * amplitude * Math.exp(-dist * 0.4);
+          }
+        });
+        
+        posAttr.setZ(i, vz);
       }
-      waterMaterialDark.uniforms.uTime.value = time;
+      
+      posAttr.needsUpdate = true;
+      geometry.computeVertexNormals();
     } else {
       // Light Mode: custom GPU shader
+      // Raycast mouse position onto water plane to detect ripples
+      if (mouse.x > -999) {
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(waterMesh);
+        if (intersects.length > 0) {
+          const point = intersects[0].point;
+          if (point.distanceTo(lastWaterRipplePos) > 0.4) {
+            waterRipples.push({
+              x: point.x,
+              y: point.y,
+              startTime: time,
+              duration: 1.8,
+              amplitude: 0.175,
+              maxRadius: 12.0
+            });
+            lastWaterRipplePos.copy(point);
+            if (waterRipples.length > 20) {
+              waterRipples.shift();
+            }
+          }
+        }
+      }
+
+      // Filter out expired ripples
+      waterRipples = waterRipples.filter(r => (time - r.startTime) < r.duration);
+
+      // Prepare uniforms array
       const uRipplesArray = lightWaterShaderMaterial.uniforms.uRipples.value;
       for (let i = 0; i < 20; i++) {
         if (i < waterRipples.length) {
@@ -517,6 +424,7 @@ function initWaterBackground() {
           uRipplesArray[i].set(0.0, 0.0, -999.0);
         }
       }
+      
       lightWaterShaderMaterial.uniforms.uTime.value = time;
     }
 
@@ -704,7 +612,6 @@ function initLetterSphere() {
 
   function animate() {
     requestAnimationFrame(animate);
-    if (window.threeState && window.threeState.spherePaused) return;
     const delta = clock.getDelta();
     const time = clock.getElapsedTime();
 
@@ -842,7 +749,6 @@ function initWordTunnel() {
 
   function animate() {
     requestAnimationFrame(animate);
-    if (window.threeState && window.threeState.tunnelPaused) return;
     const delta = clock.getDelta();
     
     scrollSpeedFactor += (1.0 - scrollSpeedFactor) * 0.05;
@@ -883,6 +789,10 @@ function updateThreeTheme(theme) {
     if (isDark) {
       // Dark deep ocean mode
       waterMesh.material = waterMaterialDark;
+      waterMaterialDark.color.setHex(0x050816);
+      waterMaterialDark.roughness = 0.12;
+      waterMaterialDark.transmission = 0.0;
+      waterMaterialDark.opacity = 0.4;
       
       waterAmbientLight.color.setHex(0x0a122c);
       waterAmbientLight.intensity = 0.3;
@@ -898,6 +808,16 @@ function updateThreeTheme(theme) {
       
       waterDirLight.color.setHex(0xffffff); // clean sun highlights
       waterDirLight.intensity = 2.2;        // Boosted for bright glistening sun reflections
+
+      // Reset Z-height of geometry vertices when transitioning to light mode
+      if (waterGeometry) {
+        const posAttr = waterGeometry.attributes.position;
+        for (let i = 0; i < posAttr.count; i++) {
+          posAttr.setZ(i, 0.0);
+        }
+        posAttr.needsUpdate = true;
+        waterGeometry.computeVertexNormals();
+      }
     }
   }
 
