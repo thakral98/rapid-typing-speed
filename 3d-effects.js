@@ -1,5 +1,11 @@
 // SpeedType Studio 3D Effects Engine (Three.js & GSAP integrations)
 
+window.threeState = {
+  waterPaused: false,
+  spherePaused: false,
+  tunnelPaused: false
+};
+
 // References to Three.js elements for live theme updates
 let keyboardBaseMesh = null;
 let keyboardKeyMaterial = null;
@@ -458,6 +464,7 @@ function initWaterBackground() {
 
   function animate() {
     requestAnimationFrame(animate);
+    if (window.threeState && window.threeState.waterPaused) return;
     
     const time = clock.getElapsedTime();
 
@@ -697,6 +704,7 @@ function initLetterSphere() {
 
   function animate() {
     requestAnimationFrame(animate);
+    if (window.threeState && window.threeState.spherePaused) return;
     const delta = clock.getDelta();
     const time = clock.getElapsedTime();
 
@@ -834,6 +842,7 @@ function initWordTunnel() {
 
   function animate() {
     requestAnimationFrame(animate);
+    if (window.threeState && window.threeState.tunnelPaused) return;
     const delta = clock.getDelta();
     
     scrollSpeedFactor += (1.0 - scrollSpeedFactor) * 0.05;
