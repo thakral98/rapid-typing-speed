@@ -285,7 +285,7 @@ body {
   text-shadow: 0 0 8px var(--primary-glow);
 }
 
-.topbar h1 {
+.topbar h1, .brand-title {
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 750;
