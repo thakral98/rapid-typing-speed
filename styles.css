@@ -991,23 +991,14 @@ select:disabled, input:disabled, textarea:disabled {
 }
 
 #typingInput {
-  min-height: 140px;
-  margin-top: 8px;
-  padding: 18px;
-  cursor: text;
-  caret-color: transparent;
-  color: var(--text-primary);
-  background: var(--typing-input-bg);
-  border: 1px solid var(--glass-border);
-  font-family: var(--font-mono);
-  font-size: 1.1rem;
-  line-height: 1.7;
-  user-select: none;
-}
-
-#typingInput:focus {
-  border-color: var(--secondary-color);
-  box-shadow: 0 0 12px var(--secondary-glow);
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
 }
 
 .action-row {
