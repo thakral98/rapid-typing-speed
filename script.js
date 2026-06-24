@@ -54,6 +54,7 @@ const state = {
   durationSeconds: SHORT_SESSION_SECONDS,
   customDurationSeconds: null,
   timedTestText: null,
+  timedTestsCache: {},
   startedAt: null,
   finishedAt: null,
   timerId: null,
@@ -303,6 +304,15 @@ function renderPassageSelect() {
     const option = document.createElement("option");
     option.value = "draft";
     option.textContent = state.draft.title;
+    option.selected = true;
+    els.passageSelect.appendChild(option);
+  }
+
+  if (state.activeId && state.activeId.startsWith("timed-test-")) {
+    const option = document.createElement("option");
+    option.value = state.activeId;
+    const minutes = Math.round(state.customDurationSeconds / 60) || 1;
+    option.textContent = `${minutes} Minute Test (Active)`;
     option.selected = true;
     els.passageSelect.appendChild(option);
   }
@@ -933,9 +943,26 @@ function pickRandomPassage() {
 
 async function loadTimedTest(minutes) {
   state.customDurationSeconds = minutes * 60;
-  state.timedTestText = null;
   state.activeId = `timed-test-${minutes}`;
   
+  if (state.timedTestsCache[minutes]) {
+    state.timedTestText = state.timedTestsCache[minutes];
+    resetSession({ message: "Ready" });
+    if (typeof switchPage === "function") {
+      switchPage('practice');
+    }
+    if (els.timedDropdownMenu) {
+      els.timedDropdownMenu.style.display = "none";
+      els.timedDropdownMenu.classList.remove("active");
+      if (els.timedMenuTrigger) {
+        els.timedMenuTrigger.setAttribute("aria-expanded", "false");
+      }
+    }
+    focusTypingInput();
+    return;
+  }
+  
+  state.timedTestText = null;
   if (els.targetText) {
     els.targetText.innerHTML = `
       <div class="loading-state" style="text-align: center; padding: 40px; color: var(--text-secondary); font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%;">
@@ -983,6 +1010,7 @@ async function loadTimedTest(minutes) {
     fetchedText = getLocalFallbackText(minutes);
   }
 
+  state.timedTestsCache[minutes] = fetchedText;
   state.timedTestText = fetchedText;
   resetSession({ message: "Ready" });
   
@@ -1428,7 +1456,7 @@ async function updateHomeTelemetry() {
 }
 
 async function updateDashboardTelemetry() {
-  const runs = state.currentUser ? await getRecentRuns() : [];
+  const runs = await getRecentRuns();
   const stats = calculateTelemetryStats(runs);
   
   if (els.dbPeakWpm) els.dbPeakWpm.textContent = String(stats.peakWpm);
@@ -1640,8 +1668,10 @@ function initNavigation() {
 
   navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (!href) return; // Skip dropdown triggers or non-anchor elements
       e.preventDefault();
-      const targetPageId = link.getAttribute('href').substring(1);
+      const targetPageId = href.substring(1);
       if (targetPageId === 'practice') {
         openDrillSelector();
       } else {
@@ -1655,7 +1685,7 @@ function initNavigation() {
   footerLinks.forEach(link => {
     link.addEventListener('click', (e) => {
       const href = link.getAttribute('href');
-      if (href.startsWith('#')) {
+      if (href && href.startsWith('#')) {
         e.preventDefault();
         const targetPageId = href.substring(1);
         if (targetPageId === 'practice') {
@@ -1906,7 +1936,13 @@ function init() {
   bindEvents();
   renderSavedList();
   resetSession();
-  updateHomeTelemetry();
+  
+  const hash = window.location.hash.substring(1);
+  if (hash && document.getElementById(hash)) {
+    switchPage(hash);
+  } else {
+    switchPage('home');
+  }
 }
 
 init();
