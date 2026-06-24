@@ -2,7 +2,7 @@ const DEFAULT_PASSAGES = [
   {
     id: "home-row",
     title: "Home Row Practice",
-    text: "as sa ad da af fa ag ga ah ha aj ja ak ka al la sd ds sf fs sg gs sh hs sj js sk ks sl ls df fd dg gd dh hd dj jd dk kd dl ld fg gf fh hf fj jf fk kf fl lf gh hg gj jg gk kg gl lg asd sdf dfg fgh ghj hjk jkl lkj kjh jhg hgf gfd fds dsa saf afg agh ahj ajk akl sla slk skj sjh shg asd sda das afd fda dag gah haj ajl lkj sdf dfs fsd sdg dgh ghk hkj kjl jla las ask skd kdf dfg fgj asdf sdfg dfgh fghj ghjk hjkl lkjh kjhg jhgf hgfd gfds fdsa safg afgh fghk ghkl askl sklj kljh ljhg adfg dfgh fghj ghjk shjk hjka jkas kasd sdfg dfgs fgsh gshj ahjk hjkl jkla klas asdf sdaf dafg afgh lkja kjas jasd asdg fghk ghkj hkjl kjla sdfh dfhj fhjk hjkl aghj ghjk hjka jkal slkj lkjh kjhg jhgf asdfg sdfgh dfghj fghjk ghjkl lkjhg kjhgf jhgfd hgfds gfdsa safgh afghj fghjk ghjkl hjkla jklas klasd lasdf asdfh sdfhj dfhjk fhjkl hjkla jklad aghjk ghjkl hjkls jklsa skljh kljhg ljhgf jhgfd adfgh dfghj fghjk ghjkl shjkl hjkla jklaf klafd asdfh s"
+    text: "as sa ad da af fa ag ga ah ha aj ja ak ka al la sd ds sf fs sg gs sh hs sj js sk ks sl ls df fd dg gd dh hd dj jd dk kd dl ld fg gf fh hf fj jf fk kf fl lf gh hg gj jg gk kg gl lg asd sdf dfg fgh ghj hjk jkl lkj kjh jhg hgf gfd fds dsa saf afg agh ahj ajk akl sla slk skj sjh shg asd sda das afd fda dag gah haj ajl lkj sdf dfs fsd sdg dgh ghk hkj kjl jla las ask skd kdf dfg fgj asdf sdfg dfgh fghj ghjk hjkl lkjh kjhg jhgf hgfd gfds fdsa safg afgh fghk ghkl askl sklj kljh ljhg adfg dfgh fghj ghjk shjk hjka jkas kasd sdfg dfgs fgsh gshj ahjk hjkl jkla klas asdf sdaf dafg afgh lkja kjas jasd asdg fghk ghkj hkjl kjla sdfh dfhj fhjk hjkl aghj ghjk hjka jkal slkj lkjh kjhg jhgf asdfg sdfgh dfghj fghjk ghjkl lkjhg kjhgf jhgfd hgfds gfdsa safgh afghj fghjk ghjkl hjkla jklas klasd lasdf asdfh sdfhj dfhjk fhjkl hjkla jklad aghjk ghjkl hjkls jklsa skljh kljhg ljhgf jhgfd adfgh dfghj fghjk ghjkl shjkl hjkla jklaf klafd asdfh sdfhj dfhjk fhjkl aghjk ghjka hjkas jkasd sdfgh dfghk fghkl ghklj ahjkl hjkla jklas klasd slkjh lkjhg kjhgf jhgfa"
   },
   {
     id: "top-row",
@@ -17,12 +17,12 @@ const DEFAULT_PASSAGES = [
   {
     id: "extreme-left",
     title: "Extreme Left Practice",
-    text: "qw wq qa aq qs sq qz zq qx xq wa aw ws sw wz zw wx xw as sa az za ax xa sz zs sx xs zx xz qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qwas wasz wasx wazx aszx qaws awsz wszx szxa qasz aszx szxq zxqa qwaz wazx azxq zxqw qwax waxs axsz xszq qwsz wszx szxq zxqw wasz aszx szxw zxwa qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qw qa qs qz qx wa ws wz wx as az ax sz sx zx qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qwas wasz aszx szxq zxqa qwasz waszx aszxq szxqw zxqwa"
+    text: "qw wq qa aq qs sq qz zq qx xq wa aw ws sw wz zw wx xw as sa az za ax xa sz zs sx xs zx xz qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qwas wasz aszx szxq zxqa qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qw qa qs qz qx wa ws wz wx as az ax sz sx zx qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qwas wasz aszx szxq zxqa qwasz waszx aszxq szxqw zxqwa"
   },
   {
     id: "extreme-right",
     title: "Extreme Right Practice",
-    text: "op po ok ko ol lo on no om mo pk kp pl lp pn np pm mp kl lk kn nk km mk ln nl lm ml nm mn opk pkl kln lnm nmo mol lok kop opl plk lkn knm nmp mpo pol olk lkp kpn pnm nml mlk lko kop opn pnk nkl klm lmn mno nop opkl pkln klnm lnmo nmop mopl oplk plkn lknm knmo nmol molk olkp lkpn kpnm pnml nmlk mlko lkop kopn opnk pnkl nklm klmn lmno mnop opkm pkmn kmnl mnlo nlop lopk opkln pklnm klnmo lnmop nmopl moplk oplkn plknm lknmo knmop nmopk mopkl opkln pklnm klnmp lnmpk nmpol mpolk polkn olknm lknmp knmpl nmplo mplok plokn loknp oknpl knplm nplmo plmok lmokp mokpl okpln kplnm plnmo lnmok opkln pklnm klnmo lnmop nmopl moplk oplkn plknm lknmo knmop nmopk mopkl opklm pklmn klmno lmnop mnopk nopkl opnkl pnklo nklom klomp lompk ompkl oplmn plmno lmnop mnopl noplm oplmk plmko lmkop mkopl koplm oplkn plkno lknop knopl noplk polkm olkmp lkmpo kmpol mpolk op ol ok on om pk pl pn pm kl kn km ln lm nm opk pkl kln lnm nmo opl plk lkn knm nmp opkl pkln klnm lnmo nmop opkln pklnm klnmo lnmop nmopl"
+    text: "op po ok ko ol lo on no om mo pk kp pl lp pn np pm mp kl lk kn nk km mk ln nl lm ml nm mn opk pkl kln lnm nmo mol lok kop opl plk lkn knm nmp mpo pol olk lkp kpn pnm nml mlk lko kop opn pnk nkl klm lmn mno nop opkl pkln klnm lnmo nmop mopl oplk plkn lknm knmo nmol molk olkp lkpn kpnm pnml nmlk mlko lkop kopn opnk pnkl nklm klmn lmno mnop opkm pkmn kmnl mnlo nlop lopk opkln pklnm klnmo llopk opkln pklnm klnmo lnmop nmopl moplk oplkn plknm lknmo knmop nmopk mopkl opklm pklmn klmno lmnop mnopk nopkl opnkl pnklo nklom klomp lompk ompkl oplmn plmno lmnop mnopl noplm oplmk plmko lmkop mkopl koplm oplkn plkno lknop knopl noplk polkm olkmp lkmpo kmpol mpolk op ol ok on om pk pl pn pm kl kn km ln lm nm opk pkl kln lnm nmo opl plk lkn knm nmp opkl pkln klnm lnmo nmop opkln pklnm klnmo lnmop nmopl"
   },
   {
     id: "mid",
@@ -374,6 +374,7 @@ function updateModeButtons() {
   });
 }
 
+// Reset session defaults
 function resetSession(options = {}) {
   const source = getActiveSource();
   state.currentText = buildPracticeText(source.text);
@@ -460,6 +461,7 @@ function clearSessionTimers() {
   state.inactivityTimerId = null;
 }
 
+// Timer management
 function startCountdown() {
   clearInterval(state.timerId);
   state.timerId = setInterval(tickTimer, 250);
@@ -561,8 +563,7 @@ function showIdleModal() {
   els.resumeModalButton.focus();
 }
 
-// ... Continues in Part 2
-// ... Continued from Part 1
+// Modal helper
 function hideIdleModal() {
   els.idleModal.classList.remove("active");
 }
@@ -664,6 +665,7 @@ function blockTypingKey(event) {
   event.stopPropagation();
 }
 
+// Flash keycap on virtual keyboard
 function flashKeycap(keyChar, isCorrect) {
   const keyName = keyNameForChar(keyChar);
   const keyCap = els.keyCaps.find(key => key.dataset.key === keyName);
@@ -690,13 +692,15 @@ function appendTypingCharacter(char, effectKey) {
   els.typingInput.value = `${els.typingInput.value}${char}`.slice(0, state.currentText.length);
   lockTypingCaret();
   
+  // Flash correct/incorrect color glow on keycap
   flashKeycap(char, isCorrect);
+  
   handleTyping(effectKey);
 }
 
 function focusTypingInput() {
   const activePage = document.querySelector('.page-view.active');
-  if (!activePage || activePage.id !== 'practice') return; 
+  if (!activePage || activePage.id !== 'practice') return; // Only focus on practice page
   if (els.typingInput.disabled) return;
 
   try {
@@ -715,7 +719,7 @@ function lockTypingCaret() {
   try {
     els.typingInput.setSelectionRange(end, end);
   } catch {
-    // Selection edge case handle
+    // Some browsers refuse selection changes during blur/disable transitions.
   }
 }
 
@@ -786,14 +790,25 @@ function displayKeyForEffect(key) {
 }
 
 const FINGER_MAP = {
+  // Left Hand Pinky
   "1": "lh-pinky", "Q": "lh-pinky", "A": "lh-pinky", "Z": "lh-pinky",
+  // Left Hand Ring
   "2": "lh-ring", "W": "lh-ring", "S": "lh-ring", "X": "lh-ring",
+  // Left Hand Middle
   "3": "lh-middle", "E": "lh-middle", "D": "lh-middle", "C": "lh-middle",
+  // Left Hand Index
   "4": "lh-index", "5": "lh-index", "R": "lh-index", "T": "lh-index", "F": "lh-index", "G": "lh-index", "V": "lh-index", "B": "lh-index",
+  
+  // Right Hand Index
   "6": "rh-index", "7": "rh-index", "Y": "rh-index", "U": "rh-index", "H": "rh-index", "J": "rh-index", "N": "rh-index", "M": "rh-index",
+  // Right Hand Middle
   "8": "rh-middle", "I": "rh-middle", "K": "rh-middle", ",": "rh-middle", ";": "rh-middle",
+  // Right Hand Ring
   "9": "rh-ring", "O": "rh-ring", "L": "rh-ring", ".": "rh-ring", ":": "rh-ring",
+  // Right Hand Pinky
   "0": "rh-pinky", "-": "rh-pinky", "P": "rh-pinky", "'": "rh-pinky", "\"": "rh-pinky", "?": "rh-pinky", "!": "rh-pinky", "ENTER": "rh-pinky",
+  
+  // Thumbs
   "SPACE": "rh-thumb"
 };
 
@@ -805,6 +820,7 @@ function updateKeyboard() {
     key.classList.toggle("is-next", key.dataset.key === keyName);
   });
 
+  // Highlight active finger
   const activeFingerId = FINGER_MAP[keyName];
   document.querySelectorAll(".hand-finger").forEach((finger) => {
     finger.classList.toggle("active-finger", finger.id === activeFingerId);
@@ -887,8 +903,6 @@ function pickRandomPassage() {
   resetSession({ message: "Ready" });
 }
 
-// ... Continues in Part 3
-// ... Continued from Part 2
 // --- Supabase, Telemetry, and Leaderboard Integrations ---
 let supabaseClient = null;
 
@@ -953,6 +967,39 @@ function initSupabase() {
   }
 }
 
+async function syncLocalRunsToCloud(userId) {
+  if (!supabaseClient) return;
+  try {
+    const local = localStorage.getItem("speedtype.runs.v2");
+    if (!local) return;
+    const runs = JSON.parse(local);
+    if (!runs || runs.length === 0) return;
+
+    console.log(`Syncing ${runs.length} local runs to cloud for user ${userId}...`);
+    
+    const runsToInsert = runs.map(run => ({
+      user_id: userId,
+      wpm: parseInt(run.wpm),
+      accuracy: parseFloat(run.accuracy),
+      errors: parseInt(run.errors),
+      mode: run.mode || 'words',
+      passage_title: run.passage_title || 'Unknown Passage',
+      created_at: run.created_at || new Date().toISOString()
+    }));
+
+    const { error } = await supabaseClient
+      .from('typing_runs')
+      .insert(runsToInsert);
+
+    if (error) throw error;
+
+    console.log("Local runs successfully synced to cloud.");
+    localStorage.removeItem("speedtype.runs.v2");
+  } catch (err) {
+    console.error("Failed to sync local runs to cloud:", err);
+  }
+}
+
 function listenToAuthChanges() {
   if (!supabaseClient) {
     updateAuthUI(null);
@@ -966,6 +1013,9 @@ function listenToAuthChanges() {
     if (user) {
       state.currentUser = user;
       updateAuthUI(user);
+      
+      // Sync offline guest runs to cloud database
+      await syncLocalRunsToCloud(user.id);
       
       try {
         const username = user.user_metadata.full_name || user.user_metadata.name || user.email.split('@')[0] || 'User';
@@ -1061,6 +1111,7 @@ async function signInWithGoogle() {
 async function signOut() {
   if (!supabaseClient) return;
 
+  // 1. Instantly perform client-side sign out and update UI
   state.currentUser = null;
   updateAuthUI(null);
   if (els.userDropdownMenu) {
@@ -1069,6 +1120,7 @@ async function signOut() {
     if (trigger) trigger.setAttribute("aria-expanded", "false");
   }
   
+  // Refresh active view telemetry to reflect logged-out state
   const activeView = document.querySelector('.page-view.active');
   if (activeView) {
     if (activeView.id === 'dashboard') {
@@ -1080,6 +1132,7 @@ async function signOut() {
     }
   }
 
+  // 2. Perform server-side sign out in the background (non-blocking)
   try {
     const { error } = await supabaseClient.auth.signOut();
     if (error) {
@@ -1272,7 +1325,7 @@ async function updateHomeTelemetry() {
 }
 
 async function updateDashboardTelemetry() {
-  const runs = await getRecentRuns();
+  const runs = state.currentUser ? await getRecentRuns() : [];
   const stats = calculateTelemetryStats(runs);
   
   if (els.dbPeakWpm) els.dbPeakWpm.textContent = String(stats.peakWpm);
@@ -1464,6 +1517,7 @@ function renderRankCard(player, avatarEl, nameEl, wpmEl, accuracyEl) {
 // --- Navigation Controller ---
 function initNavigation() {
   const navLinks = document.querySelectorAll('.nav-link');
+  const pageViews = document.querySelectorAll('.page-view');
   const startBtn = document.getElementById('start-training-btn');
   const drillModal = document.getElementById('drillSelectorModal');
   const closeDrillBtn = document.getElementById('closeDrillSelectorButton');
@@ -1493,6 +1547,7 @@ function initNavigation() {
     });
   });
 
+  // Handle footer links
   const footerLinks = document.querySelectorAll('.footer-link');
   footerLinks.forEach(link => {
     link.addEventListener('click', (e) => {
@@ -1530,6 +1585,7 @@ function initNavigation() {
     });
   });
 
+  // Explore Features button in Hero
   const exploreBtn = document.getElementById('explore-features-btn');
   if (exploreBtn) {
     exploreBtn.addEventListener('click', (e) => {
@@ -1558,9 +1614,11 @@ function switchPage(pageId) {
   if (activePage) {
     activePage.classList.add('active');
     
+    // Resume/focus if switching to practice page
     if (pageId === 'practice') {
       setTimeout(focusTypingInput, 100);
     } else {
+      // Pause test if leaving practice page
       if (state.startedAt && !state.paused && !state.finishedAt) {
         pauseSession("Auto paused");
       }
@@ -1689,6 +1747,7 @@ function applyTheme(theme) {
     document.documentElement.removeAttribute('data-theme');
   }
 
+  // Dispatch custom event to notify Three.js visual assets
   const event = new CustomEvent('themeChanged', { detail: { theme: theme } });
   window.dispatchEvent(event);
 }
