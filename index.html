@@ -3,23 +3,23 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>SpeedType Studio – Free Online Typing Test & WPM Practice</title>
-    <meta name="description" content="Improve your typing speed and accuracy with SpeedType Studio. Practice typing tests, track WPM, and analyze your performance with real-time analytics.">
+    <title>SpeedType Studio – Free Typing Speed Test, WPM & Accuracy Checker</title>
+    <meta name="description" content="Improve your typing speed and accuracy with SpeedType Studio. Practice free online typing tests, track WPM and accuracy, and analyze your statistics in real time.">
     <link rel="stylesheet" href="styles.css?v=2.0">
     <link rel="canonical" href="https://thakral98.github.io/rapid-typing-speed/" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://thakral98.github.io/rapid-typing-speed/">
-    <meta property="og:title" content="SpeedType Studio – Free Online Typing Test & WPM Practice">
-    <meta property="og:description" content="Improve your typing speed and accuracy with SpeedType Studio. Practice typing tests, track WPM, and analyze your performance with real-time analytics.">
+    <meta property="og:title" content="SpeedType Studio – Free Typing Speed Test, WPM & Accuracy Checker">
+    <meta property="og:description" content="Improve your typing speed and accuracy with SpeedType Studio. Practice free online typing tests, track WPM and accuracy, and analyze your statistics in real time.">
     <meta property="og:image" content="https://thakral98.github.io/rapid-typing-speed/assets/keyboard-dark.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://thakral98.github.io/rapid-typing-speed/">
-    <meta property="twitter:title" content="SpeedType Studio – Free Online Typing Test & WPM Practice">
-    <meta property="twitter:description" content="Improve your typing speed and accuracy with SpeedType Studio. Practice typing tests, track WPM, and analyze your performance with real-time analytics.">
+    <meta property="twitter:title" content="SpeedType Studio – Free Typing Speed Test, WPM & Accuracy Checker">
+    <meta property="twitter:description" content="Improve your typing speed and accuracy with SpeedType Studio. Practice free online typing tests, track WPM and accuracy, and analyze your statistics in real time.">
     <meta property="twitter:image" content="https://thakral98.github.io/rapid-typing-speed/assets/keyboard-dark.png">
 
     <!-- Structured Data / JSON-LD Schema -->
@@ -29,12 +29,52 @@
       "@type": "WebSite",
       "name": "SpeedType Studio",
       "url": "https://thakral98.github.io/rapid-typing-speed/",
-      "description": "Improve your typing speed and accuracy with SpeedType Studio. Practice typing tests, track WPM, and analyze your performance with real-time stats.",
+      "description": "Improve your typing speed and accuracy with SpeedType Studio. Practice free online typing tests, track WPM and accuracy, and analyze your statistics in real time.",
       "potentialAction": {
         "@type": "SearchAction",
         "target": "https://thakral98.github.io/rapid-typing-speed/?q={search_term_string}",
         "query-input": "required name=search_term_string"
       }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is SpeedType Studio free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, SpeedType Studio is a 100% free online typing practice tool. You can practice as much as you want, save custom text templates, and track your telemetry history without any subscriptions or hidden fees."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is WPM calculated on this site?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "WPM is calculated as (Correct Characters Typed / 5) / (Elapsed Time in Minutes). Accuracy is calculated as (Correct Keys / Total Keys Pressed) * 100. This follows standard touch typing evaluation formulas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use SpeedType Studio on mobile?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! The application features a hidden focus input mechanism that fully supports mobile virtual keyboards. Simply tap on the typing box to bring up your phone's keyboard and start practicing on the go."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I improve my typing speed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The best way to improve is through daily practice and focus on accuracy first. Keep your eyes on the screen instead of your keyboard, use all ten fingers placed in the standard Home Row position, and utilize custom typing drills to build muscle memory."
+          }
+        }
+      ]
     }
     </script>
     <!-- Three.js & GSAP CDNs -->
@@ -76,7 +116,7 @@
           </svg>
           <div class="brand-copy">
             <p class="eyebrow">SpeedType Studio</p>
-            <h1>SpeedType Studio</h1>
+            <span class="brand-title">SpeedType Studio</span>
           </div>
         </a>
         
@@ -133,9 +173,9 @@
         <!-- Hero Section -->
         <div class="hero-section">
           <div class="hero-content">
-            <span class="hero-badge">VISIONARY TYPING PLATFORM</span>
-            <h2 class="hero-title">Master Typing.<br>Enter Flow State.</h2>
-            <p class="hero-subtitle">Train speed, accuracy, and absolute focus with a premium, immersive typing environment designed for modern developers and writers.</p>
+            <span class="hero-badge">FREE ONLINE TYPING SPEED TEST</span>
+            <h1 class="hero-title">Free Typing Test<br>Check WPM & Accuracy</h1>
+            <p class="hero-subtitle">Measure your typing speed and accuracy, practice with customized developer and writer texts, and track your Net WPM statistics in real time.</p>
             <div class="hero-actions">
               <a href="#practice" id="start-training-btn" class="btn btn-primary">
                 Start Training
@@ -158,9 +198,9 @@
         <!-- 3D Typing Universe -->
         <div class="universe-section">
           <div class="section-header">
-            <span class="eyebrow">IMMERSION SPACE</span>
+            <span class="eyebrow">3D TYPING ENVIRONMENT</span>
             <h3 class="section-title">The 3D Typing Universe</h3>
-            <p class="section-subtitle">A floating constellation of letters reacting dynamically to your presence. Feel the gravity of rhythm.</p>
+            <p class="section-subtitle">A floating constellation of letters reacting dynamically to your presence. Feel the rhythm of your keys.</p>
           </div>
           <div class="universe-canvas-container" id="universe-canvas-container">
             <!-- Three.js letter-sphere canvas loaded here -->
@@ -170,9 +210,9 @@
         <!-- Live Performance Visualization -->
         <div class="dashboard-section">
           <div class="section-header">
-            <span class="eyebrow">REAL-TIME TELEMETRY</span>
+            <span class="eyebrow">REAL-TIME STATS</span>
             <h3 class="section-title">Live Performance Dashboard</h3>
-            <p class="section-subtitle">Track typing telemetry through futuristic 3D graphs, response speeds, and accuracy rates.</p>
+            <p class="section-subtitle">Track typing speed and errors through graphical visualizers, WPM telemetry, and accuracy indicators.</p>
           </div>
           <div class="dashboard-grid">
             <div class="mock-analytics-card glass-panel">
@@ -216,7 +256,7 @@
             
             <div class="mock-analytics-card glass-panel">
               <span class="eyebrow">METRIC TARGETS</span>
-              <h4 style="font-family: var(--font-heading);">Flow Precision Indexes</h4>
+              <h4 style="font-family: var(--font-heading);">Accuracy & Speed Metrics</h4>
               <div class="accuracy-ring-container">
                 <div class="ring-card">
                   <svg viewBox="0 0 36 36" class="circular-chart">
@@ -281,12 +321,84 @@
         <!-- Infinite Typing Tunnel -->
         <div class="tunnel-section">
           <div class="section-header">
-            <span class="eyebrow">THE VOID</span>
+            <span class="eyebrow">TYPING RUN TUNNEL</span>
             <h3 class="section-title">Infinite Typing Tunnel</h3>
-            <p class="section-subtitle">Travel through a data tunnel made of flying words. Scroll to accelerate through the flow state.</p>
+            <p class="section-subtitle">Travel through a data tunnel made of flying words. Scroll to accelerate through the typing flow state.</p>
           </div>
           <div class="tunnel-container" id="tunnel-container">
             <!-- Three.js flying word tunnel loaded here -->
+          </div>
+        </div>
+
+        <!-- SEO Informational Content Hub -->
+        <div class="seo-content-section glass-panel" style="margin-top: 48px; padding: 48px 32px; display: flex; flex-direction: column; gap: 40px; border: 1px solid var(--glass-border);">
+          <div class="section-header" style="text-align: left; max-width: 100%;">
+            <span class="eyebrow" style="color: var(--primary-color);">TYPING EDUCATION CENTER</span>
+            <h2 class="section-title" style="font-size: 2.2rem; font-family: var(--font-heading); background: linear-gradient(135deg, var(--text-primary) 30%, var(--primary-color) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Understanding Typing Speed & Accuracy</h2>
+            <p class="section-subtitle" style="text-align: left; margin-left: 0; max-width: 800px;">Learn how typing statistics are calculated, what makes a fast typist, and how to improve your performance using SpeedType Studio.</p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px;">
+            <div class="seo-card" style="display: flex; flex-direction: column; gap: 12px;">
+              <h3 style="font-family: var(--font-heading); color: var(--primary-color); font-size: 1.25rem;">What is WPM (Words Per Minute)?</h3>
+              <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Words Per Minute (WPM) is the standard metric used to measure typing speed. To keep measurements fair across different words, one "word" is standardized as exactly <strong>5 characters</strong> (including spaces and punctuation). Your raw WPM is calculated by taking the total number of characters typed, dividing by 5, and then dividing by the time elapsed in minutes.</p>
+            </div>
+
+            <div class="seo-card" style="display: flex; flex-direction: column; gap: 12px;">
+              <h3 style="font-family: var(--font-heading); color: var(--primary-color); font-size: 1.25rem;">Net WPM vs. Raw WPM</h3>
+              <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Raw WPM represents your absolute speed, counting all characters you typed, regardless of typos. Net WPM is a more accurate representation of typing efficiency, as it subtracts uncorrected errors. SpeedType Studio focuses on helping you achieve a high **Net WPM** by locking inputs on errors or encouraging correction, ensuring your speed translates to real-world productivity.</p>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid var(--glass-border); padding-top: 32px;">
+            <h3 style="font-family: var(--font-heading); color: var(--primary-color); font-size: 1.4rem; margin-bottom: 16px;">What is a Good Typing Speed?</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px;">Typing speeds vary widely depending on profession and practice. Here is a general breakdown of typing speed tiers:</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+              <div class="speed-tier-card" style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); padding: 16px; border-radius: 12px; text-align: center;">
+                <strong style="display: block; font-size: 1.5rem; color: var(--text-muted); font-family: var(--font-heading);">40 WPM</strong>
+                <span style="font-weight: 600; color: var(--text-secondary); display: block; margin: 4px 0;">Average</span>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">The speed of a typical casual computer user.</p>
+              </div>
+              <div class="speed-tier-card" style="background: rgba(0, 229, 255, 0.05); border: 1px solid rgba(0, 229, 255, 0.2); padding: 16px; border-radius: 12px; text-align: center;">
+                <strong style="display: block; font-size: 1.5rem; color: var(--primary-color); font-family: var(--font-heading);">60 WPM</strong>
+                <span style="font-weight: 600; color: var(--primary-color); display: block; margin: 4px 0;">Good / Professional</span>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Required speed for office jobs, developers, and writers.</p>
+              </div>
+              <div class="speed-tier-card" style="background: rgba(123, 97, 255, 0.05); border: 1px solid rgba(123, 97, 255, 0.2); padding: 16px; border-radius: 12px; text-align: center;">
+                <strong style="display: block; font-size: 1.5rem; color: var(--secondary-color); font-family: var(--font-heading);">80+ WPM</strong>
+                <span style="font-weight: 600; color: var(--secondary-color); display: block; margin: 4px 0;">Excellent / Advanced</span>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Indicates a touch typist with strong muscle memory.</p>
+              </div>
+              <div class="speed-tier-card" style="background: rgba(0, 255, 157, 0.05); border: 1px solid rgba(0, 255, 157, 0.2); padding: 16px; border-radius: 12px; text-align: center;">
+                <strong style="display: block; font-size: 1.5rem; color: var(--success-color); font-family: var(--font-heading);">120+ WPM</strong>
+                <span style="font-weight: 600; color: var(--success-color); display: block; margin: 4px 0;">Expert / Competitive</span>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Elite speed tier achieved by professional transcriptionists and gamers.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid var(--glass-border); padding-top: 32px;">
+            <h3 style="font-family: var(--font-heading); color: var(--primary-color); font-size: 1.4rem; margin-bottom: 24px;">Frequently Asked Questions (FAQ)</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <div class="faq-item" style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 16px;">
+                <strong style="color: var(--text-primary); font-size: 1.05rem; display: block; margin-bottom: 6px;">Is SpeedType Studio free to use?</strong>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">Yes, SpeedType Studio is a 100% free online typing practice tool. You can practice as much as you want, save custom text templates, and track your history without any subscriptions or hidden fees.</p>
+              </div>
+              <div class="faq-item" style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 16px;">
+                <strong style="color: var(--text-primary); font-size: 1.05rem; display: block; margin-bottom: 6px;">How is WPM calculated on this site?</strong>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">WPM is calculated as: <code>(Correct Characters Typed / 5) / (Elapsed Time in Minutes)</code>. Accuracy is calculated as: <code>(Correct Keys / Total Keys Pressed) * 100</code>. This follows standard touch typing evaluation formulas.</p>
+              </div>
+              <div class="faq-item" style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 16px;">
+                <strong style="color: var(--text-primary); font-size: 1.05rem; display: block; margin-bottom: 6px;">Can I use SpeedType Studio on mobile?</strong>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">Yes! The application features a hidden focus input mechanism that fully supports mobile virtual keyboards. Simply tap on the typing box to bring up your phone's keyboard and start practicing on the go.</p>
+              </div>
+              <div class="faq-item" style="padding-bottom: 8px;">
+                <strong style="color: var(--text-primary); font-size: 1.05rem; display: block; margin-bottom: 6px;">How can I improve my typing speed?</strong>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">The best way to improve is through daily practice and focus on accuracy first. Keep your eyes on the screen instead of your keyboard, use all ten fingers placed in the standard Home Row position, and utilize custom typing drills (such as top row, bottom row, or custom code samples) to build muscle memory.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -492,7 +604,7 @@
 
               <!-- Lifetime Telemetry -->
               <div class="lifetime-stats-card glass-panel">
-                <span class="eyebrow">LIFETIME TELEMETRY</span>
+                <span class="eyebrow">LIFETIME STATISTICS</span>
                 <h4 style="font-family: var(--font-heading); margin-bottom: 20px;">Performance Overview</h4>
                 <div class="lifetime-stats-grid">
                   <div class="l-stat">
@@ -537,7 +649,7 @@
               <div class="glass-panel" style="padding: 24px; margin-top: 24px; display: flex; flex-direction: column; gap: 16px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div>
-                    <span class="eyebrow">RUN MATRIX</span>
+                    <span class="eyebrow">TEST RUN MATRIX</span>
                     <h4 style="font-family: var(--font-heading);">Recent Typing History</h4>
                   </div>
                   <button id="clearHistoryBtn" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; cursor: pointer;">Clear Runs</button>
