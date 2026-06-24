@@ -77,10 +77,24 @@
       ]
     }
     </script>
-    <!-- Three.js & GSAP CDNs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Preconnect to Google Fonts to optimize performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- External scripts loaded with defer to improve LCP and INP -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="config.js?v=2.0" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+    <script src="3d-effects.js?v=2.0" defer></script>
+
+    <!-- SpeedType Studio Modular Scripts -->
+    <script src="typing.js" defer></script>
+    <script src="auth.js" defer></script>
+    <script src="dashboard.js" defer></script>
+    <script src="leaderboard.js" defer></script>
+    <script src="animations.js" defer></script>
   </head>
   <body>
     <!-- 3D Water Ripple Background Container -->
@@ -147,7 +161,7 @@
                 <span id="usernameDisplay" class="user-display-name" style="font-size: 0.9rem; font-weight: 500;">Guest</span>
                 <span class="dropdown-chevron" style="font-size: 0.7rem; opacity: 0.7;">▼</span>
               </button>
-                       <div id="userDropdownMenu" class="user-dropdown-menu glass-panel" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); width: 220px; z-index: 100; border-radius: 16px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: none; flex-direction: column; gap: 6px; transform-origin: top right; transition: all 0.2s ease;">
+              <div id="userDropdownMenu" class="user-dropdown-menu glass-panel" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); width: 220px; z-index: 100; border-radius: 16px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); flex-direction: column; gap: 6px; transform-origin: top right; transition: all 0.2s ease;">
                 <div class="user-menu-header" style="display: flex; flex-direction: column; padding: 4px 8px 8px;">
                   <strong id="menuUsername" style="font-size: 0.95rem; font-family: var(--font-heading); color: var(--text-color);">Username</strong>
                   <span id="menuEmail" class="menu-email" style="font-size: 0.75rem; color: var(--text-muted); word-break: break-all;">user@example.com</span>
@@ -174,7 +188,7 @@
         <div class="hero-section">
           <div class="hero-content">
             <span class="hero-badge">FREE ONLINE TYPING SPEED TEST</span>
-            <h1 class="hero-title">Free Typing Test<br>Check WPM & Accuracy</h1>
+            <h1 class="hero-title">Free Online Typing Speed Test – Check Your WPM and Accuracy</h1>
             <p class="hero-subtitle">Measure your typing speed and accuracy, practice with customized developer and writer texts, and track your Net WPM statistics in real time.</p>
             <div class="hero-actions">
               <a href="#practice" id="start-training-btn" class="btn btn-primary">
@@ -603,7 +617,7 @@
               </div>
 
               <!-- Lifetime Telemetry -->
-              <div class="lifetime-stats-card glass-panel">
+              <div class="lifetime-stats-card glass-panel" id="dbLifetimeStatsCard">
                 <span class="eyebrow">LIFETIME STATISTICS</span>
                 <h4 style="font-family: var(--font-heading); margin-bottom: 20px;">Performance Overview</h4>
                 <div class="lifetime-stats-grid">
@@ -628,7 +642,7 @@
             </div>
 
             <!-- Right: Performance Graph & Typing History Log -->
-            <div class="detailed-analytics-column">
+            <div class="detailed-analytics-column" id="dbDetailedAnalyticsColumn">
               <!-- Bar Chart Card -->
               <div class="glass-panel" style="padding: 24px;">
                 <span class="eyebrow">PROGRESS CURVE</span>
@@ -673,6 +687,19 @@
                   </table>
                 </div>
               </div>
+            </div>
+            
+            <!-- Dashboard Empty State -->
+            <div class="empty-state-card glass-panel" id="dbEmptyStateCard" style="display: none;">
+              <div class="empty-state-icon-wrapper">
+                <div class="empty-state-pulse"></div>
+                <span class="empty-state-icon">⚡</span>
+              </div>
+              <h3>Initiate Telemetry Calibration</h3>
+              <p>Your performance dashboard is currently in standby mode. Complete a practice drill or custom typing run to synchronize and analyze your typing velocity, accuracy, and keystroke metrics.</p>
+              <a href="#practice" class="btn btn-primary" onclick="switchPage('practice')">
+                Launch Practice Session
+              </a>
             </div>
           </div>
         </div>
@@ -934,13 +961,5 @@
         <p>Custom texts stay on this device in browser storage. Built for high-fidelity performance.</p>
       </footer>
     </main>
-
-        <!-- Supabase CDN and Configuration -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="config.js?v=2.0"></script>
-
-    <!-- Visual animations and typing integrations -->
-    <script src="3d-effects.js?v=2.0"></script>
-    <script src="script.js?v=2.1"></script>
   </body>
 </html>
