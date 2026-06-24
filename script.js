@@ -2,7 +2,7 @@ const DEFAULT_PASSAGES = [
   {
     id: "home-row",
     title: "Home Row Practice",
-    text: "as sa ad da af fa ag ga ah ha aj ja ak ka al la sd ds sf fs sg gs sh hs sj js sk ks sl ls df fd dg gd dh hd dj jd dk kd dl ld fg gf fh hf fj jf fk kf fl lf gh hg gj jg gk kg gl lg asd sdf dfg fgh ghj hjk jkl lkj kjh jhg hgf gfd fds dsa saf afg agh ahj ajk akl sla slk skj sjh shg asd sda das afd fda dag gah haj ajl lkj sdf dfs fsd sdg dgh ghk hkj kjl jla las ask skd kdf dfg fgj asdf sdfg dfgh fghj ghjk hjkl lkjh kjhg jhgf hgfd gfds fdsa safg afgh fghk ghkl askl sklj kljh ljhg adfg dfgh fghj ghjk shjk hjka jkas kasd sdfg dfgs fgsh gshj ahjk hjkl jkla klas asdf sdaf dafg afgh lkja kjas jasd asdg fghk ghkj hkjl kjla sdfh dfhj fhjk hjkl aghj ghjk hjka jkal slkj lkjh kjhg jhgf asdfg sdfgh dfghj fghjk ghjkl lkjhg kjhgf jhgfd hgfds gfdsa safgh afghj fghjk ghjkl hjkla jklas klasd lasdf asdfh sdfhj dfhjk fhjkl hjkla jklad aghjk ghjkl hjkls jklsa skljh kljhg ljhgf jhgfd adfgh dfghj fghjk ghjkl shjkl hjkla jklaf klafd asdfh s"
+    text: "as sa ad da af fa ag ga ah ha aj ja ak ka al la sd ds sf fs sg gs sh hs sj js sk ks sl ls df fd dg gd dh hd dj jd dk kd dl ld fg gf fh hf fj jf fk kf fl lf gh hg gj jg gk kg gl lg asd sdf dfg fgh ghj hjk jkl lkj kjh jhg hgf gfd fds dsa saf afg agh ahj ajk akl sla slk skj sjh shg asd sda das afd fda dag gah haj ajl lkj sdf dfs fsd sdg dgh ghk hkj kjl jla las ask skd kdf dfg fgj asdf sdfg dfgh fghj ghjk hjkl lkjh kjhg jhgf hgfd gfds fdsa safg afgh fghk ghkl askl sklj kljh ljhg adfg dfgh fghj ghjk shjk hjka jkas kasd sdfg dfgs fgsh gshj ahjk hjkl jkla klas asdf sdaf dafg afgh lkja kjas jasd asdg fghk ghkj hkjl kjla sdfh dfhj fhjk hjkl grid ghjk hjka jkal slkj lkjh kjhg jhgf asdfg sdfgh dfghj fghjk ghjkl lkjhg kjhgf jhgfd hgfds gfdsa safgh afghj fghjk ghjkl hjkla jklas klasd lasdf asdfh sdfhj dfhjk fhjkl hjkla jklad aghjk ghjkl hjkls jklsa skljh kljhg ljhgf jhgfd adfgh dfghj fghjk ghjkl shjkl hjkla jklaf klafd asdfh sdfhj dfhjk fhjkl aghjk ghjka hjkas jkasd sdfgh dfghk fghkl ghklj ahjkl hjkla jklas klasd slkjh lkjhg kjhgf jhgfa"
   },
   {
     id: "top-row",
@@ -17,12 +17,12 @@ const DEFAULT_PASSAGES = [
   {
     id: "extreme-left",
     title: "Extreme Left Practice",
-    text: "qw wq qa aq qs sq qz zq qx xq wa aw ws sw wz zw wx xw as sa az za ax xa sz zs sx xs zx xz qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qwas wasz wasx wazx aszx qaws awsz wszx szxa qasz aszx szxq zxqa qwaz wazx azxq zxqw qwax waxs axsz xszq qwsz wszx szxq zxqw wasz aszx szxw zxwa qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qw qa qs qz qx wa ws wz wx as az ax sz sx zx qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qwas wasz aszx szxq zxqa qwasz waszx aszxq szxqw zxqwa"
+    text: "qw wq qa aq qs sq qz zq qx xq wa aw ws sw wz zw wx xw as sa az za ax xa sz zs sx xs zx xz qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qwas wasz aszx szxq zxqa qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qwasz waszx aszxq szxqw zxqwa qawsz awszx wszxq szxqa zxqaw qwasx wasxz asxzq sxzqw xzqwa qwazx wazxq azxqw zxqwa xqwas qwaxs waxsz axszq xszqw szqwa qwszx wszxq szxqw zxqwa xqwas qw qa qs qz qx wa ws wz wx as az ax sz sx zx qwa qas qaz qax qws wsz wzx wxa asz asx azx zxa zxs sxa qwas wasz aszx szxq zxqa qwasz waszx aszxq szxqw zxqwa"
   },
   {
     id: "extreme-right",
     title: "Extreme Right Practice",
-    text: "op po ok ko ol lo on no om mo pk kp pl lp pn np pm mp kl lk kn nk km mk ln nl lm ml nm mn opk pkl kln lnm nmo mol lok kop opl plk lkn knm nmp mpo pol olk lkp kpn pnm nml mlk lko kop opn pnk nkl klm lmn mno nop opkl pkln klnm lnmo nmop mopl oplk plkn lknm knmo nmol molk olkp lkpn kpnm pnml nmlk mlko lkop kopn opnk pnkl nklm klmn lmno mnop opkm pkmn kmnl mnlo nlop lopk opkln pklnm klnmo lnmop nmopl moplk oplkn plknm lknmo knmop nmopk mopkl opkln pklnm klnmp lnmpk nmpol mpolk polkn olknm lknmp knmpl nmplo mplok plokn loknp oknpl knplm nplmo plmok lmokp mokpl okpln kplnm plnmo lnmok opkln pklnm klnmo lnmop nmopl moplk oplkn plknm lknmo knmop nmopk mopkl opklm pklmn klmno lmnop mnopk nopkl opnkl pnklo nklom klomp lompk ompkl oplmn plmno lmnop mnopl noplm oplmk plmko lmkop mkopl koplm oplkn plkno lknop knopl noplk polkm olkmp lkmpo kmpol mpolk op ol ok on om pk pl pn pm kl kn km ln lm nm opk pkl kln lnm nmo opl plk lkn knm nmp opkl pkln klnm lnmo nmop opkln pklnm klnmo lnmop nmopl"
+    text: "op po ok ko ol lo on no om mo pk kp pl lp pn np pm mp kl lk kn nk km mk ln nl lm ml nm mn opk pkl kln lnm nmo mol lok kop opl plk lkn knm nmp mpo pol olk lkp kpn pnm nml mlk lko kop opn pnk nkl klm lmn mno nop opkl pkln klnm lnmo nmop mopl oplk plkn lknm knmo nmol molk olkp lkpn kpnm pnml nmlk mlko lkop kopn opnk pnkl nklm klmn lmno mnop opkm pkmn kmnl mnlo nlop lopk opkln pklnm klnmo lnmop nmopl moplk oplkn plknm lknmo knmop nmopk mopkl opklm pklmn klmno lmnop mnopk nopkl opnkl pnklo nklom klomp lompk ompkl oplmn plmno lmnop mnopl noplm oplmk plmko lmkop mkopl koplm oplkn plkno lknop knopl noplk polkm olkmp lkmpo kmpol mpolk op ol ok on om pk pl pn pm kl kn km ln lm nm opk pkl kln lnm nmo opl plk lkn knm nmp opkl pkln klnm lnmo nmop opkln pklnm klnmo lnmop nmopl"
   },
   {
     id: "mid",
@@ -52,6 +52,8 @@ const state = {
   draft: null,
   currentText: "",
   durationSeconds: SHORT_SESSION_SECONDS,
+  customDurationSeconds: null,
+  timedTestText: null,
   startedAt: null,
   finishedAt: null,
   timerId: null,
@@ -92,6 +94,9 @@ const els = {
   restartModalButton: document.querySelector("#restartModalButton"),
   keystrokeEffects: document.querySelector("#keystrokeEffects"),
   keyCaps: Array.from(document.querySelectorAll("[data-key]")),
+  timedMenuTrigger: document.querySelector("#timedMenuTrigger"),
+  timedDropdownMenu: document.querySelector("#timedDropdownMenu"),
+  timedTestButtons: Array.from(document.querySelectorAll(".timed-test-btn")),
 
   googleSignInBtn: document.querySelector("#googleSignInBtn"),
   userProfileWidget: document.querySelector("#userProfileWidget"),
@@ -215,7 +220,26 @@ function allPassages() {
 
 function getActiveSource() {
   if (state.draft) return state.draft;
+  if (state.activeId && state.activeId.startsWith("timed-test-")) {
+    const minutes = Math.round(state.customDurationSeconds / 60) || 1;
+    return {
+      id: state.activeId,
+      title: `${minutes} Minute Speed Test`,
+      text: state.timedTestText || getLocalFallbackText(minutes)
+    };
+  }
   return allPassages().find((item) => item.id === state.activeId) || DEFAULT_PASSAGES[0];
+}
+
+function getLocalFallbackText(minutes) {
+  const texts = {
+    1: "The concept of the flow state, often referred to as being in the zone, is a mental state in which a person performing an activity is fully immersed in a feeling of energized focus, full involvement, and enjoyment in the process of the activity. In essence, flow is characterized by the complete absorption in what one does, and a resulting loss in one's sense of space and time. Developing speed and accuracy in touch typing is one of the most practical ways to experience this cognitive state when working with computers. By converting thoughts directly into keystrokes without conscious awareness of the individual movements, the keyboard becomes an extension of the mind. This allows ideas to flow seamlessly onto the screen, enhancing productivity and enabling deeper focus on creative and analytical tasks. Continuous practice of short typing exercises reinforces key-hand synchronization, builds muscle memory, and reduces the friction between thinking and writing.",
+    2: "To type effectively is to master the art of coordination. Touch typing is not merely about hitting keys quickly; it is a complex motor skill that relies heavily on muscle memory. When you first learn to type, your brain must consciously locate each character, plan the finger movement, and execute the keystroke. This cognitive overhead slows you down and causes fatigue. However, with deliberate practice, the path from thought to action becomes automated. The visual feedback loop is replaced by kinesthetic memory, where your fingers know exactly how far to travel to actuate each key. This automaticity is the foundation of typing efficiency, allowing you to focus your attention on the content of your writing rather than the mechanics of the keyboard. Furthermore, proper posture, wrist positioning, and ergonomic hand movements are essential to prevent repetitive strain injuries. Keeping your wrists slightly elevated, your back straight, and your fingers curved over the home row ensures that you can maintain high speeds for hours without physical discomfort. Ultimately, typing proficiency is a vital asset in the digital age, enabling seamless communication, faster software development, and efficient data processing across all fields.",
+    3: "In the realm of computer science and software engineering, typing speed is often dismissed as a secondary skill. Many argue that a developer spends more time thinking, designing architecture, and reading code than actually writing it. While this is true, typing speed remains a significant bottleneck in a developer's productivity. When you are debugging a complex problem or writing a block of logic, any delay in expressing your thoughts in code can disrupt your train of thought. A fast, accurate typist can write shell commands, draft documentation, write tests, and navigate files with minimal friction, keeping their mind focused entirely on the logic of the problem. This efficiency gain is even more pronounced when using modern development tools, keyboard shortcuts, and code editors like Vim or Emacs, where keystrokes are the primary medium of navigation. Beyond software development, fast typing is crucial for authors, journalists, and administrators who must process vast amounts of written information daily. By reducing the time spent on inputting text, professionals can allocate more cognitive energy to refining their ideas, editing their structure, and conducting research. Therefore, investing time in deliberate typing practice is a highly effective way to compound your productivity over your entire career, saving thousands of hours and keeping you in a state of productive flow.",
+    4: "For decades, keyboard design has been dominated by the QWERTY layout, which was originally patented by Christopher Sholes in 1878 for early mechanical typewriters. The layout was structured to prevent the physical type bars from clashing when keys in close proximity were pressed in rapid succession. Consequently, QWERTY intentionally separates common letter pairs and places frequently used letters in hard-to-reach positions, making it inherently inefficient for modern electronic keyboards where jamming is no longer an issue. Despite its ergonomic shortcomings, QWERTY remains the global standard due to path dependency; millions of people already know how to use it, and manufacturers continue to produce it. In response to this inefficiency, several alternative layouts have been developed over the years. The most famous alternative is the Dvorak Simplified Keyboard, patented in 1936, which places all vowels and the most common consonants on the home row, allowing typists to perform over seventy percent of their keystrokes with minimal finger movement. Another popular modern alternative is Colemak, which retains many of QWERTY's hotkeys while optimizing finger travel distance and hand alternation. While switching layouts requires a significant investment of time and temporary drop in speed, many who make the transition report increased typing comfort, reduced fatigue, and ultimately higher accuracy and speed. Regardless of the layout you choose, the core principles of touch typing remain the same: maintain consistent positioning, focus on accuracy first, and let speed develop naturally as a byproduct of precise movement.",
+    5: "The human brain is a marvel of adaptation, and the acquisition of typing skills is a perfect demonstration of neuroplasticity. When you first interact with a keyboard, the primary motor cortex must coordinate new, highly precise movements. Each keystroke requires the activation of specific muscle groups in the fingers, hands, and forearms. As practice continues, the brain begins to reorganize itself, strengthening the neural pathways responsible for these movements. Over time, the repetition of typing actions leads to the formation of motor schemas, which are stored in the cerebellum and basal ganglia. These subcortical structures are responsible for executing automated sequences of movement without conscious thought. This is why experienced typists can write complete sentences while holding a conversation; the motor execution has been completely offloaded to these automatic processing centers, leaving the prefrontal cortex free to engage in high-level planning and creative thinking. Additionally, the tactile feedback of key actuation plays a vital role in this learning process. The physical sensation of a key bottoming out and resetting provides immediate confirmation of a successful keystroke, allowing the brain to fine-tune its motor commands in real time. This sensory-motor integration is what makes mechanical keyboards so popular among enthusiasts, as the distinct tactile bump and audible click provide clearer feedback than flat, membrane keys. To maximize your typing potential, it is essential to practice under varied conditions, using different types of prose, code snippets, and random word sequences. This forces the brain to remain flexible and prevents the motor schemas from becoming overly rigid. By challenging yourself with timed tests of varying lengths, you can push the boundaries of your speed while maintaining the high accuracy required for professional work."
+  };
+  return texts[minutes] || texts[1];
 }
 
 function normalizeParagraph(text) {
@@ -377,7 +401,11 @@ function updateModeButtons() {
 function resetSession(options = {}) {
   const source = getActiveSource();
   state.currentText = buildPracticeText(source.text);
-  state.durationSeconds = getSessionDurationSeconds(state.currentText);
+  if (state.customDurationSeconds !== null) {
+    state.durationSeconds = state.customDurationSeconds;
+  } else {
+    state.durationSeconds = getSessionDurationSeconds(state.currentText);
+  }
   state.startedAt = null;
   state.finishedAt = null;
   state.paused = false;
@@ -443,6 +471,7 @@ function getActiveElapsedMs() {
   return Math.max(0, end - state.startedAt - state.pausedTotalMs);
 }
 
+// Fixed calculation error in WPM counting
 function getRemainingSeconds() {
   return Math.max(0, state.durationSeconds - Math.floor(getActiveElapsedSeconds()));
 }
@@ -561,8 +590,6 @@ function showIdleModal() {
   els.resumeModalButton.focus();
 }
 
-// ... Continues in Part 2
-// ... Continued from Part 1
 function hideIdleModal() {
   els.idleModal.classList.remove("active");
 }
@@ -610,34 +637,17 @@ function handleTyping(effectKey = null) {
   }
 }
 
-function handleTypingInputFallback(event) {
-  const currentLength = els.typingInput.value.length;
-  const targetLength = state.currentText.length;
-  
-  if (currentLength > targetLength) {
-    els.typingInput.value = els.typingInput.value.slice(0, targetLength);
-  }
-
-  // Handle deletions (Backspace on virtual keyboards)
-  if (event && event.inputType === "deleteContentBackward") {
-    removeLastCharacter();
-    return;
-  }
-
-  // Append new characters
-  const addedChar = els.typingInput.value[currentLength - 1] || "";
-  if (addedChar) {
-    flashKeycap(addedChar, addedChar === state.currentText[currentLength - 1]);
-  }
-
+function handleTypingInputFallback() {
+  els.typingInput.value = els.typingInput.value.slice(0, state.currentText.length);
+  lockTypingCaret();
   handleTyping();
 }
 
 function handlePracticeKeydown(event) {
   if (shouldLetNativeControlHandle(event)) return;
 
-  // Let browser hotkeys like CMD+R, CMD+T, F12, F5 pass through
-  if (event.metaKey || event.ctrlKey || event.altKey || event.key === "F12" || event.key === "F5") {
+  if (event.metaKey || event.ctrlKey || event.altKey) {
+    blockTypingKey(event);
     return;
   }
 
@@ -648,13 +658,6 @@ function handlePracticeKeydown(event) {
 
   if (state.paused || state.finishedAt || els.typingInput.disabled) {
     blockTypingKey(event);
-    return;
-  }
-
-  // Handle Backspace deletion
-  if (event.key === "Backspace") {
-    blockTypingKey(event);
-    removeLastCharacter();
     return;
   }
 
@@ -673,21 +676,8 @@ function handlePracticeKeydown(event) {
   blockTypingKey(event);
 }
 
-function removeLastCharacter() {
-  if (els.typingInput.value.length === 0) return;
-  els.typingInput.value = els.typingInput.value.slice(0, -1);
-  handleTyping();
-}
-
 function shouldLetNativeControlHandle(event) {
   const target = event.target;
-  const activePage = document.querySelector('.page-view.active');
-  
-  // Only capture keypresses when the user is actively on the practice page
-  if (!activePage || activePage.id !== 'practice') return true;
-
-  // Never capture standard Tab key navigation
-  if (event.key === "Tab") return true;
 
   if (!target || typeof target.closest !== "function") return false;
   if (target === els.typingInput) return false;
@@ -701,6 +691,7 @@ function blockTypingKey(event) {
   event.stopPropagation();
 }
 
+// Keyboard Cap Flashing System (correct is blue/cyan, incorrect is red flash)
 function flashKeycap(keyChar, isCorrect) {
   const keyName = keyNameForChar(keyChar);
   const keyCap = els.keyCaps.find(key => key.dataset.key === keyName);
@@ -727,13 +718,15 @@ function appendTypingCharacter(char, effectKey) {
   els.typingInput.value = `${els.typingInput.value}${char}`.slice(0, state.currentText.length);
   lockTypingCaret();
   
+  // Flash correct/incorrect color glow on keycap
   flashKeycap(char, isCorrect);
+  
   handleTyping(effectKey);
 }
 
 function focusTypingInput() {
   const activePage = document.querySelector('.page-view.active');
-  if (!activePage || activePage.id !== 'practice') return; 
+  if (!activePage || activePage.id !== 'practice') return; // Only focus on practice page
   if (els.typingInput.disabled) return;
 
   try {
@@ -752,7 +745,7 @@ function lockTypingCaret() {
   try {
     els.typingInput.setSelectionRange(end, end);
   } catch {
-    // Selection edge case handle
+    // Some browsers refuse selection changes during blur/disable transitions.
   }
 }
 
@@ -823,14 +816,25 @@ function displayKeyForEffect(key) {
 }
 
 const FINGER_MAP = {
+  // Left Hand Pinky
   "1": "lh-pinky", "Q": "lh-pinky", "A": "lh-pinky", "Z": "lh-pinky",
+  // Left Hand Ring
   "2": "lh-ring", "W": "lh-ring", "S": "lh-ring", "X": "lh-ring",
+  // Left Hand Middle
   "3": "lh-middle", "E": "lh-middle", "D": "lh-middle", "C": "lh-middle",
+  // Left Hand Index
   "4": "lh-index", "5": "lh-index", "R": "lh-index", "T": "lh-index", "F": "lh-index", "G": "lh-index", "V": "lh-index", "B": "lh-index",
+  
+  // Right Hand Index
   "6": "rh-index", "7": "rh-index", "Y": "rh-index", "U": "rh-index", "H": "rh-index", "J": "rh-index", "N": "rh-index", "M": "rh-index",
+  // Right Hand Middle
   "8": "rh-middle", "I": "rh-middle", "K": "rh-middle", ",": "rh-middle", ";": "rh-middle",
+  // Right Hand Ring
   "9": "rh-ring", "O": "rh-ring", "L": "rh-ring", ".": "rh-ring", ":": "rh-ring",
+  // Right Hand Pinky
   "0": "rh-pinky", "-": "rh-pinky", "P": "rh-pinky", "'": "rh-pinky", "\"": "rh-pinky", "?": "rh-pinky", "!": "rh-pinky", "ENTER": "rh-pinky",
+  
+  // Thumbs
   "SPACE": "rh-thumb"
 };
 
@@ -842,6 +846,7 @@ function updateKeyboard() {
     key.classList.toggle("is-next", key.dataset.key === keyName);
   });
 
+  // Highlight active finger
   const activeFingerId = FINGER_MAP[keyName];
   document.querySelectorAll(".hand-finger").forEach((finger) => {
     finger.classList.toggle("active-finger", finger.id === activeFingerId);
@@ -856,6 +861,8 @@ function keyNameForChar(char) {
 
 function selectPassage(id) {
   state.draft = null;
+  state.customDurationSeconds = null;
+  state.timedTestText = null;
   state.activeId = id;
   resetSession({ message: "Ready" });
 }
@@ -924,8 +931,76 @@ function pickRandomPassage() {
   resetSession({ message: "Ready" });
 }
 
-// ... Continues in Part 3
-// ... Continued from Part 2
+async function loadTimedTest(minutes) {
+  state.customDurationSeconds = minutes * 60;
+  state.timedTestText = null;
+  state.activeId = `timed-test-${minutes}`;
+  
+  if (els.targetText) {
+    els.targetText.innerHTML = `
+      <div class="loading-state" style="text-align: center; padding: 40px; color: var(--text-secondary); font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%;">
+        <div class="spinner" style="width: 32px; height: 32px; border: 3px solid var(--glass-border); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1.5s linear infinite; margin: 0 auto;"></div>
+        <span style="font-family: var(--font-heading); font-weight: 500;">Fetching ${minutes} Minute Test from Supabase...</span>
+      </div>
+    `;
+  }
+  
+  if (els.typingInput) {
+    els.typingInput.value = "";
+    els.typingInput.disabled = true;
+  }
+  if (els.sessionState) {
+    els.sessionState.textContent = "Loading...";
+  }
+
+  let fetchedText = null;
+
+  if (supabaseClient) {
+    try {
+      console.log(`Querying public.typing_tests for duration_minutes: ${minutes}`);
+      const { data, error } = await supabaseClient
+        .from('typing_tests')
+        .select('passage_text')
+        .eq('duration_minutes', minutes)
+        .maybeSingle();
+      
+      if (error) throw error;
+      if (data && data.passage_text) {
+        fetchedText = data.passage_text;
+        console.log(`Successfully fetched ${minutes}m test from Supabase.`);
+      } else {
+        console.warn(`No typing test record found in Supabase for ${minutes}m.`);
+      }
+    } catch (err) {
+      console.error("Error fetching timed test from Supabase:", err);
+    }
+  } else {
+    console.log("Supabase is not initialized. Using local offline fallback.");
+  }
+
+  if (!fetchedText) {
+    console.log("Using local offline fallback for timed test.");
+    fetchedText = getLocalFallbackText(minutes);
+  }
+
+  state.timedTestText = fetchedText;
+  resetSession({ message: "Ready" });
+  
+  if (typeof switchPage === "function") {
+    switchPage('practice');
+  }
+  
+  if (els.timedDropdownMenu) {
+    els.timedDropdownMenu.style.display = "none";
+    els.timedDropdownMenu.classList.remove("active");
+    if (els.timedMenuTrigger) {
+      els.timedMenuTrigger.setAttribute("aria-expanded", "false");
+    }
+  }
+  
+  focusTypingInput();
+}
+
 // --- Supabase, Telemetry, and Leaderboard Integrations ---
 let supabaseClient = null;
 
@@ -990,6 +1065,40 @@ function initSupabase() {
   }
 }
 
+async function syncLocalRunsToCloud(userId) {
+  if (!supabaseClient) return;
+  try {
+    const local = localStorage.getItem("speedtype.runs.v2");
+    if (!local) return;
+    const runs = JSON.parse(local);
+    if (!runs || runs.length === 0) return;
+
+    console.log(`Syncing ${runs.length} local runs to cloud for user ${userId}...`);
+    
+    const runsToInsert = runs.map(run => ({
+      user_id: userId,
+      wpm: parseInt(run.wpm),
+      accuracy: parseFloat(run.accuracy),
+      errors: parseInt(run.errors),
+      mode: run.mode || 'words',
+      passage_title: run.passage_title || 'Unknown Passage',
+      created_at: run.created_at || new Date().toISOString()
+    }));
+
+    const { error } = await supabaseClient
+      .from('typing_runs')
+      .insert(runsToInsert);
+
+    if (error) throw error;
+
+    console.log("Local runs successfully synced to cloud.");
+    localStorage.removeItem("speedtype.runs.v2");
+  } catch (err) {
+    console.error("Failed to sync local runs to cloud:", err);
+    alert("Supabase Sync Error: " + (err.message || err));
+  }
+}
+
 function listenToAuthChanges() {
   if (!supabaseClient) {
     updateAuthUI(null);
@@ -1004,11 +1113,14 @@ function listenToAuthChanges() {
       state.currentUser = user;
       updateAuthUI(user);
       
+      // Sync offline guest runs to cloud database
+      await syncLocalRunsToCloud(user.id);
+      
       try {
         const username = user.user_metadata.full_name || user.user_metadata.name || user.email.split('@')[0] || 'User';
         const avatar_url = user.user_metadata.avatar_url || '';
         
-        await supabaseClient
+        const { error } = await supabaseClient
           .from('profiles')
           .upsert({
             id: user.id,
@@ -1016,8 +1128,10 @@ function listenToAuthChanges() {
             avatar_url: avatar_url,
             updated_at: new Date().toISOString()
           });
+        if (error) throw error;
       } catch (err) {
         console.error("Error syncing profile metadata:", err);
+        alert("Supabase Profile Sync Error: " + (err.message || err));
       }
     } else {
       state.currentUser = null;
@@ -1098,6 +1212,7 @@ async function signInWithGoogle() {
 async function signOut() {
   if (!supabaseClient) return;
 
+  // 1. Instantly perform client-side sign out and update UI
   state.currentUser = null;
   updateAuthUI(null);
   if (els.userDropdownMenu) {
@@ -1106,6 +1221,7 @@ async function signOut() {
     if (trigger) trigger.setAttribute("aria-expanded", "false");
   }
   
+  // Refresh active view telemetry to reflect logged-out state
   const activeView = document.querySelector('.page-view.active');
   if (activeView) {
     if (activeView.id === 'dashboard') {
@@ -1117,6 +1233,7 @@ async function signOut() {
     }
   }
 
+  // 2. Perform server-side sign out in the background (non-blocking)
   try {
     const { error } = await supabaseClient.auth.signOut();
     if (error) {
@@ -1139,6 +1256,7 @@ async function getRecentRuns() {
       return data || [];
     } catch (err) {
       console.error("Error retrieving runs from database:", err);
+      alert("Supabase Retrieve Error: " + (err.message || err));
     }
   }
   
@@ -1171,6 +1289,7 @@ async function saveRun(wpm, accuracy, errors) {
       console.log("Run saved to database.");
     } catch (err) {
       console.error("Error saving run to database, using local storage:", err);
+      alert("Supabase Save Run Error: " + (err.message || err));
       saveRunToLocal(wpm, accuracy, errors, mode, passageTitle);
     }
   } else {
@@ -1301,29 +1420,20 @@ async function updateHomeTelemetry() {
   const runs = await getRecentRuns();
   const stats = calculateTelemetryStats(runs);
   
-  const hasRuns = runs && runs.length > 0;
-  
-  setSvgRingValue(els.homeAvgAccuracyRing, els.homeAvgAccuracyText, hasRuns ? stats.avgAccuracy : 0, 100, true);
-  if (!hasRuns && els.homeAvgAccuracyText) els.homeAvgAccuracyText.textContent = "—";
-  
-  setSvgRingValue(els.homePeakWpmRing, els.homePeakWpmText, hasRuns ? stats.peakWpm : 0, 150, false);
-  if (!hasRuns && els.homePeakWpmText) els.homePeakWpmText.textContent = "—";
-  
-  setSvgRingValue(els.homeStabilityRing, els.homeStabilityText, hasRuns ? stats.stability : 0, 100, true);
-  if (!hasRuns && els.homeStabilityText) els.homeStabilityText.textContent = "—";
+  setSvgRingValue(els.homeAvgAccuracyRing, els.homeAvgAccuracyText, stats.avgAccuracy, 100, true);
+  setSvgRingValue(els.homePeakWpmRing, els.homePeakWpmText, stats.peakWpm, 150, false);
+  setSvgRingValue(els.homeStabilityRing, els.homeStabilityText, stats.stability, 100, true);
   
   updateBarChart(els.homeChartContainer, runs);
 }
 
 async function updateDashboardTelemetry() {
-  const runs = await getRecentRuns();
+  const runs = state.currentUser ? await getRecentRuns() : [];
   const stats = calculateTelemetryStats(runs);
   
-  const hasRuns = runs && runs.length > 0;
-  
-  if (els.dbPeakWpm) els.dbPeakWpm.textContent = hasRuns ? String(stats.peakWpm) : "—";
-  if (els.dbAvgWpm) els.dbAvgWpm.textContent = hasRuns ? String(stats.avgWpm) : "—";
-  if (els.dbAvgAccuracy) els.dbAvgAccuracy.textContent = hasRuns ? `${stats.avgAccuracy}%` : "—";
+  if (els.dbPeakWpm) els.dbPeakWpm.textContent = String(stats.peakWpm);
+  if (els.dbAvgWpm) els.dbAvgWpm.textContent = String(stats.avgWpm);
+  if (els.dbAvgAccuracy) els.dbAvgAccuracy.textContent = `${stats.avgAccuracy}%`;
   if (els.dbTotalRaces) els.dbTotalRaces.textContent = String(stats.totalRaces);
   
   updateBarChart(els.dbChartContainer, runs);
@@ -1331,12 +1441,9 @@ async function updateDashboardTelemetry() {
   if (els.dbHistoryBody) {
     els.dbHistoryBody.innerHTML = "";
     
-    if (!hasRuns) {
+    if (runs.length === 0) {
       const row = document.createElement("tr");
-      row.innerHTML = `<td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px 0;">
-        <p style="margin-bottom: 12px;">No tests completed yet.</p>
-        <a href="#practice" class="btn btn-primary btn-sm" style="display: inline-block; padding: 6px 14px; text-decoration: none; border-radius: 8px; font-size: 0.85rem;" onclick="switchPage('practice')">Take Your First Test</a>
-      </td>`;
+      row.innerHTML = `<td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px 0;">No races completed yet. Go to Practice to start!</td>`;
       els.dbHistoryBody.appendChild(row);
     } else {
       runs.forEach(run => {
@@ -1381,8 +1488,7 @@ async function updateLeaderboards() {
 
   if (supabaseClient) {
     try {
-      const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve({ timeout: true }), 1500));
-      const queryPromise = supabaseClient
+      const { data, error } = await supabaseClient
         .from('typing_runs')
         .select(`
           id,
@@ -1398,37 +1504,30 @@ async function updateLeaderboards() {
         `)
         .order('wpm', { ascending: false });
         
-      const result = await Promise.race([queryPromise, timeoutPromise]);
+      if (error) throw error;
       
-      if (result && result.timeout) {
-        console.warn("Leaderboard request to Supabase timed out. Falling back to mock data.");
-      } else {
-        const { data, error } = result;
-        if (error) throw error;
+      if (data) {
+        const seenUsers = new Set();
+        const topRuns = [];
+        data.forEach(run => {
+          if (run.user_id && !seenUsers.has(run.user_id)) {
+            seenUsers.add(run.user_id);
+            topRuns.push(run);
+          }
+        });
         
-        if (data) {
-          const seenUsers = new Set();
-          const topRuns = [];
-          data.forEach(run => {
-            if (run.user_id && !seenUsers.has(run.user_id)) {
-              seenUsers.add(run.user_id);
-              topRuns.push(run);
-            }
-          });
-          
-          boardData = topRuns.map((run, index) => {
-            const profile = run.profiles || {};
-            return {
-              rank: index + 1,
-              username: profile.username || "Anonymous Typist",
-              avatar_url: profile.avatar_url || "👤",
-              wpm: run.wpm,
-              accuracy: run.accuracy,
-              platform_key: `sp_${run.user_id.substring(0, 8)}...`
-            };
-          });
-          isSupabaseLoaded = true;
-        }
+        boardData = topRuns.map((run, index) => {
+          const profile = run.profiles || {};
+          return {
+            rank: index + 1,
+            username: profile.username || "Anonymous Typist",
+            avatar_url: profile.avatar_url || "👤",
+            wpm: run.wpm,
+            accuracy: run.accuracy,
+            platform_key: `sp_${run.user_id.substring(0, 8)}...`
+          };
+        });
+        isSupabaseLoaded = true;
       }
     } catch (err) {
       console.error("Error loading leaderboards from database:", err);
@@ -1521,6 +1620,7 @@ function renderRankCard(player, avatarEl, nameEl, wpmEl, accuracyEl) {
 // --- Navigation Controller ---
 function initNavigation() {
   const navLinks = document.querySelectorAll('.nav-link');
+  const pageViews = document.querySelectorAll('.page-view');
   const startBtn = document.getElementById('start-training-btn');
   const drillModal = document.getElementById('drillSelectorModal');
   const closeDrillBtn = document.getElementById('closeDrillSelectorButton');
@@ -1550,6 +1650,7 @@ function initNavigation() {
     });
   });
 
+  // Handle footer links
   const footerLinks = document.querySelectorAll('.footer-link');
   footerLinks.forEach(link => {
     link.addEventListener('click', (e) => {
@@ -1587,6 +1688,7 @@ function initNavigation() {
     });
   });
 
+  // Explore Features button in Hero
   const exploreBtn = document.getElementById('explore-features-btn');
   if (exploreBtn) {
     exploreBtn.addEventListener('click', (e) => {
@@ -1615,9 +1717,11 @@ function switchPage(pageId) {
   if (activePage) {
     activePage.classList.add('active');
     
+    // Resume/focus if switching to practice page
     if (pageId === 'practice') {
       setTimeout(focusTypingInput, 100);
     } else {
+      // Pause test if leaving practice page
       if (state.startedAt && !state.paused && !state.finishedAt) {
         pauseSession("Auto paused");
       }
@@ -1634,7 +1738,7 @@ function switchPage(pageId) {
 }
 
 function bindEvents() {
-  document.addEventListener("keydown", handlePracticeKeydown, false);
+  document.addEventListener("keydown", handlePracticeKeydown, true);
   els.targetText.addEventListener("click", focusTypingInput);
   els.typingInput.addEventListener("beforeinput", blockTypingKey);
   els.typingInput.addEventListener("paste", blockTypingKey);
@@ -1683,8 +1787,44 @@ function bindEvents() {
   els.modeButtons.forEach((button) => {
     button.addEventListener("click", () => {
       state.activeMode = button.dataset.mode;
+      state.customDurationSeconds = null;
+      state.timedTestText = null;
       resetSession({ message: "Mode changed" });
       focusTypingInput();
+    });
+  });
+
+  // Timed tests dropdown trigger
+  if (els.timedMenuTrigger && els.timedDropdownMenu) {
+    els.timedMenuTrigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Toggle dropdown menu
+      const isVisible = els.timedDropdownMenu.classList.contains("active");
+      if (isVisible) {
+        els.timedDropdownMenu.style.display = "none";
+        els.timedDropdownMenu.classList.remove("active");
+      } else {
+        els.timedDropdownMenu.style.display = "flex";
+        els.timedDropdownMenu.classList.add("active");
+      }
+      els.timedMenuTrigger.setAttribute("aria-expanded", String(!isVisible));
+    });
+
+    document.addEventListener("click", (e) => {
+      // Close dropdown when clicking outside
+      if (els.timedDropdownMenu.classList.contains("active") && !e.target.closest(".nav-dropdown")) {
+        els.timedDropdownMenu.style.display = "none";
+        els.timedDropdownMenu.classList.remove("active");
+        els.timedMenuTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
+  // Timed test button options
+  els.timedTestButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const minutes = parseInt(button.dataset.duration);
+      loadTimedTest(minutes);
     });
   });
 
@@ -1746,6 +1886,7 @@ function applyTheme(theme) {
     document.documentElement.removeAttribute('data-theme');
   }
 
+  // Dispatch custom event to notify Three.js visual assets
   const event = new CustomEvent('themeChanged', { detail: { theme: theme } });
   window.dispatchEvent(event);
 }
