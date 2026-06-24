@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>SpeedType Studio – Free Online Typing Test & WPM Practice</title>
+    <title>SpeedType Studio – Free Online Typing Test & WPM Practice</title>
     <meta name="description" content="Improve your typing speed and accuracy with SpeedType Studio. Practice typing tests, track WPM, and analyze your performance with real-time analytics.">
     <link rel="stylesheet" href="styles.css?v=2.0">
     <link rel="canonical" href="https://thakral98.github.io/rapid-typing-speed/" />
@@ -37,6 +37,7 @@
       }
     }
     </script>
+    
     <!-- Three.js & GSAP CDNs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -83,6 +84,18 @@
         <nav class="nav-links">
           <a href="#home" class="nav-link active">Home</a>
           <a href="#practice" class="nav-link">Practice</a>
+          <div class="nav-dropdown" style="position: relative;">
+            <button id="timedMenuTrigger" class="nav-link nav-dropdown-trigger" style="background: none; border: none; font-family: inherit; font-size: inherit; font-weight: inherit; color: inherit; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 8px 18px;">
+              Timed Tests <span class="dropdown-chevron" style="font-size: 0.7rem; opacity: 0.7;">▼</span>
+            </button>
+            <div id="timedDropdownMenu" class="user-dropdown-menu glass-panel" style="display: none; position: absolute; left: 50%; transform: translateX(-50%); top: calc(100% + 8px); width: 180px; z-index: 100; border-radius: 16px; padding: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); flex-direction: column; gap: 4px;">
+              <button class="timed-test-btn menu-item" data-duration="1" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); cursor: pointer; transition: background 0.2s;">1 Minute Test</button>
+              <button class="timed-test-btn menu-item" data-duration="2" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); cursor: pointer; transition: background 0.2s;">2 Minute Test</button>
+              <button class="timed-test-btn menu-item" data-duration="3" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); cursor: pointer; transition: background 0.2s;">3 Minute Test</button>
+              <button class="timed-test-btn menu-item" data-duration="4" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); cursor: pointer; transition: background 0.2s;">4 Minute Test</button>
+              <button class="timed-test-btn menu-item" data-duration="5" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); cursor: pointer; transition: background 0.2s;">5 Minute Test</button>
+            </div>
+          </div>
           <a href="#dashboard" class="nav-link">Dashboard</a>
           <a href="#features" class="nav-link">Features</a>
           <a href="#leaderboard" class="nav-link">Leaderboard</a>
@@ -107,7 +120,7 @@
                 <span id="usernameDisplay" class="user-display-name" style="font-size: 0.9rem; font-weight: 500;">Guest</span>
                 <span class="dropdown-chevron" style="font-size: 0.7rem; opacity: 0.7;">▼</span>
               </button>
-                       <div id="userDropdownMenu" class="user-dropdown-menu glass-panel" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); width: 220px; z-index: 100; border-radius: 16px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: none; flex-direction: column; gap: 6px; transform-origin: top right; transition: all 0.2s ease;">
+              <div id="userDropdownMenu" class="user-dropdown-menu glass-panel" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); width: 220px; z-index: 100; border-radius: 16px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: none; flex-direction: column; gap: 6px; transform-origin: top right; transition: all 0.2s ease;">
                 <div class="user-menu-header" style="display: flex; flex-direction: column; padding: 4px 8px 8px;">
                   <strong id="menuUsername" style="font-size: 0.95rem; font-family: var(--font-heading); color: var(--text-color);">Username</strong>
                   <span id="menuEmail" class="menu-email" style="font-size: 0.75rem; color: var(--text-muted); word-break: break-all;">user@example.com</span>
@@ -135,7 +148,7 @@
           <div class="hero-content">
             <span class="hero-badge">VISIONARY TYPING PLATFORM</span>
             <h2 class="hero-title">Master Typing.<br>Enter Flow State.</h2>
-            <p class="hero-subtitle">Train speed, accuracy, and absolute focus with a premium, immersive typing environment designed for modern developers and writers.</p>
+            <p class="hero-subtitle">Improve your typing speed and accuracy with our free online typing test and typing practice drills. Track your WPM (Words Per Minute), reduce typos, and enter a flow state designed for writers and developers.</p>
             <div class="hero-actions">
               <a href="#practice" id="start-training-btn" class="btn btn-primary">
                 Start Training
@@ -823,12 +836,12 @@
       </footer>
     </main>
 
-        <!-- Supabase CDN and Configuration -->
+    <!-- Supabase CDN and Configuration -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js?v=2.0"></script>
 
     <!-- Visual animations and typing integrations -->
     <script src="3d-effects.js?v=2.0"></script>
-    <script src="script.js?v=2.1"></script>
+    <script src="script.js?v=2.2"></script>
   </body>
 </html>
