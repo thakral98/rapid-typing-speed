@@ -610,17 +610,34 @@ function handleTyping(effectKey = null) {
   }
 }
 
-function handleTypingInputFallback() {
-  els.typingInput.value = els.typingInput.value.slice(0, state.currentText.length);
-  lockTypingCaret();
+function handleTypingInputFallback(event) {
+  const currentLength = els.typingInput.value.length;
+  const targetLength = state.currentText.length;
+  
+  if (currentLength > targetLength) {
+    els.typingInput.value = els.typingInput.value.slice(0, targetLength);
+  }
+
+  // Handle deletions (Backspace on virtual keyboards)
+  if (event && event.inputType === "deleteContentBackward") {
+    removeLastCharacter();
+    return;
+  }
+
+  // Append new characters
+  const addedChar = els.typingInput.value[currentLength - 1] || "";
+  if (addedChar) {
+    flashKeycap(addedChar, addedChar === state.currentText[currentLength - 1]);
+  }
+
   handleTyping();
 }
 
 function handlePracticeKeydown(event) {
   if (shouldLetNativeControlHandle(event)) return;
 
-  if (event.metaKey || event.ctrlKey || event.altKey) {
-    blockTypingKey(event);
+  // Let browser hotkeys like CMD+R, CMD+T, F12, F5 pass through
+  if (event.metaKey || event.ctrlKey || event.altKey || event.key === "F12" || event.key === "F5") {
     return;
   }
 
@@ -631,6 +648,13 @@ function handlePracticeKeydown(event) {
 
   if (state.paused || state.finishedAt || els.typingInput.disabled) {
     blockTypingKey(event);
+    return;
+  }
+
+  // Handle Backspace deletion
+  if (event.key === "Backspace") {
+    blockTypingKey(event);
+    removeLastCharacter();
     return;
   }
 
@@ -649,8 +673,21 @@ function handlePracticeKeydown(event) {
   blockTypingKey(event);
 }
 
+function removeLastCharacter() {
+  if (els.typingInput.value.length === 0) return;
+  els.typingInput.value = els.typingInput.value.slice(0, -1);
+  handleTyping();
+}
+
 function shouldLetNativeControlHandle(event) {
   const target = event.target;
+  const activePage = document.querySelector('.page-view.active');
+  
+  // Only capture keypresses when the user is actively on the practice page
+  if (!activePage || activePage.id !== 'practice') return true;
+
+  // Never capture standard Tab key navigation
+  if (event.key === "Tab") return true;
 
   if (!target || typeof target.closest !== "function") return false;
   if (target === els.typingInput) return false;
@@ -1577,7 +1614,7 @@ function switchPage(pageId) {
 }
 
 function bindEvents() {
-  document.addEventListener("keydown", handlePracticeKeydown, true);
+  document.addEventListener("keydown", handlePracticeKeydown, false);
   els.targetText.addEventListener("click", focusTypingInput);
   els.typingInput.addEventListener("beforeinput", blockTypingKey);
   els.typingInput.addEventListener("paste", blockTypingKey);
