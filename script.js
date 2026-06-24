@@ -1301,9 +1301,16 @@ async function updateHomeTelemetry() {
   const runs = await getRecentRuns();
   const stats = calculateTelemetryStats(runs);
   
-  setSvgRingValue(els.homeAvgAccuracyRing, els.homeAvgAccuracyText, stats.avgAccuracy, 100, true);
-  setSvgRingValue(els.homePeakWpmRing, els.homePeakWpmText, stats.peakWpm, 150, false);
-  setSvgRingValue(els.homeStabilityRing, els.homeStabilityText, stats.stability, 100, true);
+  const hasRuns = runs && runs.length > 0;
+  
+  setSvgRingValue(els.homeAvgAccuracyRing, els.homeAvgAccuracyText, hasRuns ? stats.avgAccuracy : 0, 100, true);
+  if (!hasRuns && els.homeAvgAccuracyText) els.homeAvgAccuracyText.textContent = "—";
+  
+  setSvgRingValue(els.homePeakWpmRing, els.homePeakWpmText, hasRuns ? stats.peakWpm : 0, 150, false);
+  if (!hasRuns && els.homePeakWpmText) els.homePeakWpmText.textContent = "—";
+  
+  setSvgRingValue(els.homeStabilityRing, els.homeStabilityText, hasRuns ? stats.stability : 0, 100, true);
+  if (!hasRuns && els.homeStabilityText) els.homeStabilityText.textContent = "—";
   
   updateBarChart(els.homeChartContainer, runs);
 }
@@ -1312,9 +1319,11 @@ async function updateDashboardTelemetry() {
   const runs = await getRecentRuns();
   const stats = calculateTelemetryStats(runs);
   
-  if (els.dbPeakWpm) els.dbPeakWpm.textContent = String(stats.peakWpm);
-  if (els.dbAvgWpm) els.dbAvgWpm.textContent = String(stats.avgWpm);
-  if (els.dbAvgAccuracy) els.dbAvgAccuracy.textContent = `${stats.avgAccuracy}%`;
+  const hasRuns = runs && runs.length > 0;
+  
+  if (els.dbPeakWpm) els.dbPeakWpm.textContent = hasRuns ? String(stats.peakWpm) : "—";
+  if (els.dbAvgWpm) els.dbAvgWpm.textContent = hasRuns ? String(stats.avgWpm) : "—";
+  if (els.dbAvgAccuracy) els.dbAvgAccuracy.textContent = hasRuns ? `${stats.avgAccuracy}%` : "—";
   if (els.dbTotalRaces) els.dbTotalRaces.textContent = String(stats.totalRaces);
   
   updateBarChart(els.dbChartContainer, runs);
@@ -1322,9 +1331,12 @@ async function updateDashboardTelemetry() {
   if (els.dbHistoryBody) {
     els.dbHistoryBody.innerHTML = "";
     
-    if (runs.length === 0) {
+    if (!hasRuns) {
       const row = document.createElement("tr");
-      row.innerHTML = `<td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px 0;">No races completed yet. Go to Practice to start!</td>`;
+      row.innerHTML = `<td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px 0;">
+        <p style="margin-bottom: 12px;">No tests completed yet.</p>
+        <a href="#practice" class="btn btn-primary btn-sm" style="display: inline-block; padding: 6px 14px; text-decoration: none; border-radius: 8px; font-size: 0.85rem;" onclick="switchPage('practice')">Take Your First Test</a>
+      </td>`;
       els.dbHistoryBody.appendChild(row);
     } else {
       runs.forEach(run => {
@@ -1369,7 +1381,8 @@ async function updateLeaderboards() {
 
   if (supabaseClient) {
     try {
-      const { data, error } = await supabaseClient
+      const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve({ timeout: true }), 1500));
+      const queryPromise = supabaseClient
         .from('typing_runs')
         .select(`
           id,
@@ -1385,30 +1398,37 @@ async function updateLeaderboards() {
         `)
         .order('wpm', { ascending: false });
         
-      if (error) throw error;
+      const result = await Promise.race([queryPromise, timeoutPromise]);
       
-      if (data) {
-        const seenUsers = new Set();
-        const topRuns = [];
-        data.forEach(run => {
-          if (run.user_id && !seenUsers.has(run.user_id)) {
-            seenUsers.add(run.user_id);
-            topRuns.push(run);
-          }
-        });
+      if (result && result.timeout) {
+        console.warn("Leaderboard request to Supabase timed out. Falling back to mock data.");
+      } else {
+        const { data, error } = result;
+        if (error) throw error;
         
-        boardData = topRuns.map((run, index) => {
-          const profile = run.profiles || {};
-          return {
-            rank: index + 1,
-            username: profile.username || "Anonymous Typist",
-            avatar_url: profile.avatar_url || "👤",
-            wpm: run.wpm,
-            accuracy: run.accuracy,
-            platform_key: `sp_${run.user_id.substring(0, 8)}...`
-          };
-        });
-        isSupabaseLoaded = true;
+        if (data) {
+          const seenUsers = new Set();
+          const topRuns = [];
+          data.forEach(run => {
+            if (run.user_id && !seenUsers.has(run.user_id)) {
+              seenUsers.add(run.user_id);
+              topRuns.push(run);
+            }
+          });
+          
+          boardData = topRuns.map((run, index) => {
+            const profile = run.profiles || {};
+            return {
+              rank: index + 1,
+              username: profile.username || "Anonymous Typist",
+              avatar_url: profile.avatar_url || "👤",
+              wpm: run.wpm,
+              accuracy: run.accuracy,
+              platform_key: `sp_${run.user_id.substring(0, 8)}...`
+            };
+          });
+          isSupabaseLoaded = true;
+        }
       }
     } catch (err) {
       console.error("Error loading leaderboards from database:", err);
