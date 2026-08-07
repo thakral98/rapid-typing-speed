@@ -1,11 +1,15 @@
-// SpeedType Studio Supabase & API Configuration Template
-// Insert your Supabase credentials below to connect your project.
-// If left blank, the application will automatically fall back to local offline mode.
+// SpeedType Studio Firebase Configuration
+// Connected to the rapid-fast-typing-17189 Firebase project.
 
-const SUPABASE_CONFIG = {
-  url: "https://idgrwpqvyzrjvwzgvrrs.supabase.co", // Example: "https://your-project-id.supabase.co"
-  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkZ3J3cHF2eXpyanZ3emd2cnJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MTU4MTYsImV4cCI6MjA5NzI5MTgxNn0.Jf_xhp9-81hHGO94_9bN9JNwvy71CNT_hFuClhAfBxo" // Example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDqULnMgyNRxJdlmvhxM1MUGBvWsyHW934",
+  authDomain: "rapid-fast-typing-17189.firebaseapp.com",
+  projectId: "rapid-fast-typing-17189",
+  storageBucket: "rapid-fast-typing-17189.firebasestorage.app",
+  messagingSenderId: "292814561388",
+  appId: "1:292814561388:web:8cdd8acdb97cb12a03b849",
+  measurementId: "G-QHV1EW4TX0"
 };
 
 // Export configuration globally for script.js
-window.SUPABASE_CONFIG = SUPABASE_CONFIG;
+window.FIREBASE_CONFIG = FIREBASE_CONFIG;
