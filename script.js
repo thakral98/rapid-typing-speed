@@ -967,7 +967,7 @@ async function loadTimedTest(minutes) {
     els.targetText.innerHTML = `
       <div class="loading-state" style="text-align: center; padding: 40px; color: var(--text-secondary); font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%;">
         <div class="spinner" style="width: 32px; height: 32px; border: 3px solid var(--glass-border); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1.5s linear infinite; margin: 0 auto;"></div>
-        <span style="font-family: var(--font-heading); font-weight: 500;">Fetching ${minutes} Minute Test from Supabase...</span>
+        <span style="font-family: var(--font-heading); font-weight: 500;">Fetching ${minutes} Minute Test from Firebase...</span>
       </div>
     `;
   }
@@ -982,27 +982,31 @@ async function loadTimedTest(minutes) {
 
   let fetchedText = null;
 
-  if (supabaseClient) {
+  if (firestoreDb) {
     try {
-      console.log(`Querying public.typing_tests for duration_minutes: ${minutes}`);
-      const { data, error } = await supabaseClient
-        .from('typing_tests')
-        .select('passage_text')
-        .eq('duration_minutes', minutes)
-        .maybeSingle();
-      
-      if (error) throw error;
-      if (data && data.passage_text) {
-        fetchedText = data.passage_text;
-        console.log(`Successfully fetched ${minutes}m test from Supabase.`);
+      console.log(`Querying typing_tests for duration_minutes: ${minutes}`);
+      const querySnap = await firestoreDb
+        .collection('typing_tests')
+        .where('duration_minutes', '==', minutes)
+        .limit(1)
+        .get();
+
+      if (!querySnap.empty) {
+        const data = querySnap.docs[0].data();
+        if (data && data.passage_text) {
+          fetchedText = data.passage_text;
+          console.log(`Successfully fetched ${minutes}m test from Firebase.`);
+        } else {
+          console.warn(`No typing test record found in Firebase for ${minutes}m.`);
+        }
       } else {
-        console.warn(`No typing test record found in Supabase for ${minutes}m.`);
+        console.warn(`No typing test record found in Firebase for ${minutes}m.`);
       }
     } catch (err) {
-      console.error("Error fetching timed test from Supabase:", err);
+      console.error("Error fetching timed test from Firebase:", err);
     }
   } else {
-    console.log("Supabase is not initialized. Using local offline fallback.");
+    console.log("Firebase is not initialized. Using local offline fallback.");
   }
 
   if (!fetchedText) {
@@ -1029,8 +1033,9 @@ async function loadTimedTest(minutes) {
   focusTypingInput();
 }
 
-// --- Supabase, Telemetry, and Leaderboard Integrations ---
-let supabaseClient = null;
+// --- Firebase, Telemetry, and Leaderboard Integrations ---
+let firestoreDb = null;
+let firebaseAuth = null;
 
 const MOCK_LEADERBOARD = [
   {
@@ -1075,26 +1080,27 @@ const MOCK_LEADERBOARD = [
   }
 ];
 
-function initSupabase() {
-  if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONFIG.anonKey) {
+function initFirebase() {
+  if (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey && window.FIREBASE_CONFIG.projectId) {
     try {
-      const { createClient } = supabase;
-      if (typeof createClient === 'function') {
-        supabaseClient = createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
-        console.log("Supabase successfully initialized.");
+      if (typeof firebase !== 'undefined' && typeof firebase.initializeApp === 'function') {
+        firebase.initializeApp(window.FIREBASE_CONFIG);
+        firestoreDb = firebase.firestore();
+        firebaseAuth = firebase.auth();
+        console.log("Firebase successfully initialized.");
       } else {
-        console.warn("Supabase library loaded but createClient is not a function. Running in offline fallback.");
+        console.warn("Firebase library loaded but initializeApp is not a function. Running in offline fallback.");
       }
     } catch (err) {
-      console.error("Failed to initialize Supabase:", err);
+      console.error("Failed to initialize Firebase:", err);
     }
   } else {
-    console.log("Supabase config is empty or invalid. Running in offline fallback.");
+    console.log("Firebase config is empty or invalid. Running in offline fallback.");
   }
 }
 
 async function syncLocalRunsToCloud(userId) {
-  if (!supabaseClient) return;
+  if (!firestoreDb) return;
   try {
     const local = localStorage.getItem("speedtype.runs.v2");
     if (!local) return;
@@ -1102,64 +1108,73 @@ async function syncLocalRunsToCloud(userId) {
     if (!runs || runs.length === 0) return;
 
     console.log(`Syncing ${runs.length} local runs to cloud for user ${userId}...`);
-    
-    const runsToInsert = runs.map(run => ({
-      user_id: userId,
-      wpm: parseInt(run.wpm),
-      accuracy: parseFloat(run.accuracy),
-      errors: parseInt(run.errors),
-      mode: run.mode || 'words',
-      passage_title: run.passage_title || 'Unknown Passage',
-      created_at: run.created_at || new Date().toISOString()
-    }));
 
-    const { error } = await supabaseClient
-      .from('typing_runs')
-      .insert(runsToInsert);
-
-    if (error) throw error;
+    const batch = firestoreDb.batch();
+    const runsCollection = firestoreDb.collection('typing_runs');
+    runs.forEach(run => {
+      const docRef = runsCollection.doc();
+      batch.set(docRef, {
+        user_id: userId,
+        wpm: parseInt(run.wpm),
+        accuracy: parseFloat(run.accuracy),
+        errors: parseInt(run.errors),
+        mode: run.mode || 'words',
+        passage_title: run.passage_title || 'Unknown Passage',
+        created_at: run.created_at || new Date().toISOString()
+      });
+    });
+    await batch.commit();
 
     console.log("Local runs successfully synced to cloud.");
     localStorage.removeItem("speedtype.runs.v2");
   } catch (err) {
     console.error("Failed to sync local runs to cloud:", err);
-    alert("Supabase Sync Error: " + (err.message || err));
+    alert("Firebase Sync Error: " + (err.message || err));
   }
 }
 
 function listenToAuthChanges() {
-  if (!supabaseClient) {
+  if (!firebaseAuth) {
     updateAuthUI(null);
     return;
   }
 
-  supabaseClient.auth.onAuthStateChange(async (event, session) => {
-    console.log("Auth state change event:", event);
-    const user = session ? session.user : null;
-    
+  firebaseAuth.onAuthStateChanged(async (user) => {
+    console.log("Auth state change event:", user ? "SIGNED_IN" : "SIGNED_OUT");
+
     if (user) {
-      state.currentUser = user;
-      updateAuthUI(user);
-      
+      // Normalize Firebase user object to the shape the rest of the app expects
+      const normalizedUser = {
+        id: user.uid,
+        email: user.email,
+        user_metadata: {
+          full_name: user.displayName || '',
+          name: user.displayName || '',
+          avatar_url: user.photoURL || ''
+        }
+      };
+      state.currentUser = normalizedUser;
+      updateAuthUI(normalizedUser);
+
       // Sync offline guest runs to cloud database
-      await syncLocalRunsToCloud(user.id);
-      
+      await syncLocalRunsToCloud(user.uid);
+
       try {
-        const username = user.user_metadata.full_name || user.user_metadata.name || user.email.split('@')[0] || 'User';
-        const avatar_url = user.user_metadata.avatar_url || '';
-        
-        const { error } = await supabaseClient
-          .from('profiles')
-          .upsert({
-            id: user.id,
+        const username = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+        const avatar_url = user.photoURL || '';
+
+        await firestoreDb
+          .collection('profiles')
+          .doc(user.uid)
+          .set({
+            id: user.uid,
             username: username,
             avatar_url: avatar_url,
             updated_at: new Date().toISOString()
-          });
-        if (error) throw error;
+          }, { merge: true });
       } catch (err) {
         console.error("Error syncing profile metadata:", err);
-        alert("Supabase Profile Sync Error: " + (err.message || err));
+        alert("Firebase Profile Sync Error: " + (err.message || err));
       }
     } else {
       state.currentUser = null;
@@ -1216,21 +1231,14 @@ function updateAuthUI(user) {
 }
 
 async function signInWithGoogle() {
-  if (!supabaseClient) {
-    alert("Supabase is not configured. Google Sign-In is unavailable.");
+  if (!firebaseAuth) {
+    alert("Firebase is not configured. Google Sign-In is unavailable.");
     return;
   }
   try {
-    const { error } = await supabaseClient.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: window.location.origin + window.location.pathname,
-        queryParams: {
-          prompt: 'select_account'
-        }
-      }
-    });
-    if (error) throw error;
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    await firebaseAuth.signInWithPopup(provider);
   } catch (err) {
     console.error("Google sign-in error:", err);
     alert("Sign-in failed: " + err.message);
@@ -1238,7 +1246,7 @@ async function signInWithGoogle() {
 }
 
 async function signOut() {
-  if (!supabaseClient) return;
+  if (!firebaseAuth) return;
 
   // 1. Instantly perform client-side sign out and update UI
   state.currentUser = null;
@@ -1263,28 +1271,24 @@ async function signOut() {
 
   // 2. Perform server-side sign out in the background (non-blocking)
   try {
-    const { error } = await supabaseClient.auth.signOut();
-    if (error) {
-      console.warn("Sign-out server warning:", error);
-    }
+    await firebaseAuth.signOut();
   } catch (err) {
     console.error("Sign-out server error:", err);
   }
 }
 
 async function getRecentRuns() {
-  if (supabaseClient && state.currentUser) {
+  if (firestoreDb && state.currentUser) {
     try {
-      const { data, error } = await supabaseClient
-        .from('typing_runs')
-        .select('*')
-        .eq('user_id', state.currentUser.id)
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      return data || [];
+      const querySnap = await firestoreDb
+        .collection('typing_runs')
+        .where('user_id', '==', state.currentUser.id)
+        .orderBy('created_at', 'desc')
+        .get();
+      return querySnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     } catch (err) {
       console.error("Error retrieving runs from database:", err);
-      alert("Supabase Retrieve Error: " + (err.message || err));
+      alert("Firebase Retrieve Error: " + (err.message || err));
     }
   }
   
@@ -1301,23 +1305,23 @@ async function saveRun(wpm, accuracy, errors) {
   const mode = state.activeMode;
   const passageTitle = getActiveSource().title;
   
-  if (supabaseClient && state.currentUser) {
+  if (firestoreDb && state.currentUser) {
     try {
-      const { error } = await supabaseClient
-        .from('typing_runs')
-        .insert({
+      await firestoreDb
+        .collection('typing_runs')
+        .add({
           user_id: state.currentUser.id,
           wpm: parseInt(wpm),
           accuracy: parseFloat(accuracy),
           errors: parseInt(errors),
           mode: mode,
-          passage_title: passageTitle
+          passage_title: passageTitle,
+          created_at: new Date().toISOString()
         });
-      if (error) throw error;
       console.log("Run saved to database.");
     } catch (err) {
       console.error("Error saving run to database, using local storage:", err);
-      alert("Supabase Save Run Error: " + (err.message || err));
+      alert("Firebase Save Run Error: " + (err.message || err));
       saveRunToLocal(wpm, accuracy, errors, mode, passageTitle);
     }
   } else {
@@ -1352,15 +1356,15 @@ function saveRunToLocal(wpm, accuracy, errors, mode, passageTitle) {
 
 async function clearRunsHistory() {
   if (confirm("Are you sure you want to clear your entire typing history? This action cannot be undone.")) {
-    if (supabaseClient && state.currentUser) {
+    if (firestoreDb && state.currentUser) {
       try {
-        const { error } = await supabaseClient
-          .from('typing_runs')
-          .delete()
-          .eq('user_id', state.currentUser.id);
-        if (error) {
-          console.warn("Could not delete from database. Cleared local fallback storage instead.", error);
-        }
+        const querySnap = await firestoreDb
+          .collection('typing_runs')
+          .where('user_id', '==', state.currentUser.id)
+          .get();
+        const batch = firestoreDb.batch();
+        querySnap.docs.forEach(doc => batch.delete(doc.ref));
+        await batch.commit();
       } catch (err) {
         console.error("Error clearing database runs:", err);
       }
@@ -1506,35 +1510,24 @@ async function updateLeaderboards() {
   }
   
   let boardData = [];
-  let isSupabaseLoaded = false;
-  
-  if (supabaseClient && state.currentUser) {
+  let isFirebaseLoaded = false;
+
+  if (firestoreDb && state.currentUser) {
     if (els.leaderboardAuthCallout) els.leaderboardAuthCallout.style.display = 'none';
   } else {
     if (els.leaderboardAuthCallout) els.leaderboardAuthCallout.style.display = 'flex';
   }
 
-  if (supabaseClient) {
+  if (firestoreDb) {
     try {
-      const { data, error } = await supabaseClient
-        .from('typing_runs')
-        .select(`
-          id,
-          wpm,
-          accuracy,
-          errors,
-          created_at,
-          user_id,
-          profiles:user_id (
-            username,
-            avatar_url
-          )
-        `)
-        .order('wpm', { ascending: false });
-        
-      if (error) throw error;
-      
-      if (data) {
+      const querySnap = await firestoreDb
+        .collection('typing_runs')
+        .orderBy('wpm', 'desc')
+        .get();
+
+      const data = querySnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      if (data.length > 0) {
         const seenUsers = new Set();
         const topRuns = [];
         data.forEach(run => {
@@ -1543,9 +1536,21 @@ async function updateLeaderboards() {
             topRuns.push(run);
           }
         });
-        
+
+        // Firestore has no joins - fetch each unique user's profile doc separately
+        const profileMap = {};
+        await Promise.all(Array.from(seenUsers).map(async (uid) => {
+          try {
+            const profileDoc = await firestoreDb.collection('profiles').doc(uid).get();
+            profileMap[uid] = profileDoc.exists ? profileDoc.data() : {};
+          } catch (profileErr) {
+            console.error(`Error loading profile for ${uid}:`, profileErr);
+            profileMap[uid] = {};
+          }
+        }));
+
         boardData = topRuns.map((run, index) => {
-          const profile = run.profiles || {};
+          const profile = profileMap[run.user_id] || {};
           return {
             rank: index + 1,
             username: profile.username || "Anonymous Typist",
@@ -1555,14 +1560,14 @@ async function updateLeaderboards() {
             platform_key: `sp_${run.user_id.substring(0, 8)}...`
           };
         });
-        isSupabaseLoaded = true;
+        isFirebaseLoaded = true;
       }
     } catch (err) {
       console.error("Error loading leaderboards from database:", err);
     }
   }
-  
-  if (!isSupabaseLoaded) {
+
+  if (!isFirebaseLoaded) {
     boardData = MOCK_LEADERBOARD;
   }
   
@@ -1931,7 +1936,7 @@ function init() {
 
   initTheme();
   initNavigation();
-  initSupabase();
+  initFirebase();
   listenToAuthChanges();
   bindEvents();
   renderSavedList();
