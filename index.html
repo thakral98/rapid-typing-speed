@@ -103,7 +103,7 @@
         </nav>
 
         <div class="topbar-actions" style="display: flex; align-items: center; gap: 12px;">
-          <!-- Supabase Auth Control -->
+          <!-- Firebase Auth Control -->
           <div id="authContainer" class="auth-container">
             <button id="googleSignInBtn" class="btn btn-primary btn-sm auth-btn" style="padding: 8px 14px; gap: 8px; font-size: 0.85rem; border-radius: 10px; display: flex; align-items: center; border: none; font-weight: 600;">
               <svg class="google-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right: 6px;">
@@ -848,8 +848,10 @@
       </footer>
     </main>
 
-    <!-- Supabase CDN and Configuration -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Firebase CDN and Configuration -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="config.js?v=2.0"></script>
 
     <!-- Visual animations and typing integrations -->
