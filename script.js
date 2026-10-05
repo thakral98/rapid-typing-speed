@@ -222,14 +222,35 @@ function allPassages() {
 function getActiveSource() {
   if (state.draft) return state.draft;
   if (state.activeId && state.activeId.startsWith("timed-test-")) {
-    const minutes = Math.round(state.customDurationSeconds / 60) || 1;
+    const minutes = (state.customDurationSeconds || 60) / 60;
     return {
       id: state.activeId,
-      title: `${minutes} Minute Speed Test`,
+      title: `${formatDurationLabel(state.customDurationSeconds || 60)} Speed Test`,
       text: state.timedTestText || getLocalFallbackText(minutes)
     };
   }
   return allPassages().find((item) => item.id === state.activeId) || DEFAULT_PASSAGES[0];
+}
+
+function formatDurationLabel(seconds) {
+  if (seconds < 60) return `${Math.round(seconds)} Second`;
+  const m = Math.round(seconds / 60);
+  return `${m} Minute`;
+}
+
+function showToast(message) {
+  let toast = document.getElementById('stToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'stToast';
+    toast.className = 'st-toast glass-panel';
+    toast.setAttribute('role', 'status');
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.classList.remove('show'), 3200);
 }
 
 function getLocalFallbackText(minutes) {
@@ -240,7 +261,8 @@ function getLocalFallbackText(minutes) {
     4: "For decades, keyboard design has been dominated by the QWERTY layout, which was originally patented by Christopher Sholes in 1878 for early mechanical typewriters. The layout was structured to prevent the physical type bars from clashing when keys in close proximity were pressed in rapid succession. Consequently, QWERTY intentionally separates common letter pairs and places frequently used letters in hard-to-reach positions, making it inherently inefficient for modern electronic keyboards where jamming is no longer an issue. Despite its ergonomic shortcomings, QWERTY remains the global standard due to path dependency; millions of people already know how to use it, and manufacturers continue to produce it. In response to this inefficiency, several alternative layouts have been developed over the years. The most famous alternative is the Dvorak Simplified Keyboard, patented in 1936, which places all vowels and the most common consonants on the home row, allowing typists to perform over seventy percent of their keystrokes with minimal finger movement. Another popular modern alternative is Colemak, which retains many of QWERTY's hotkeys while optimizing finger travel distance and hand alternation. While switching layouts requires a significant investment of time and temporary drop in speed, many who make the transition report increased typing comfort, reduced fatigue, and ultimately higher accuracy and speed. Regardless of the layout you choose, the core principles of touch typing remain the same: maintain consistent positioning, focus on accuracy first, and let speed develop naturally as a byproduct of precise movement.",
     5: "The human brain is a marvel of adaptation, and the acquisition of typing skills is a perfect demonstration of neuroplasticity. When you first interact with a keyboard, the primary motor cortex must coordinate new, highly precise movements. Each keystroke requires the activation of specific muscle groups in the fingers, hands, and forearms. As practice continues, the brain begins to reorganize itself, strengthening the neural pathways responsible for these movements. Over time, the repetition of typing actions leads to the formation of motor schemas, which are stored in the cerebellum and basal ganglia. These subcortical structures are responsible for executing automated sequences of movement without conscious thought. This is why experienced typists can write complete sentences while holding a conversation; the motor execution has been completely offloaded to these automatic processing centers, leaving the prefrontal cortex free to engage in high-level planning and creative thinking. Additionally, the tactile feedback of key actuation plays a vital role in this learning process. The physical sensation of a key bottoming out and resetting provides immediate confirmation of a successful keystroke, allowing the brain to fine-tune its motor commands in real time. This sensory-motor integration is what makes mechanical keyboards so popular among enthusiasts, as the distinct tactile bump and audible click provide clearer feedback than flat, membrane keys. To maximize your typing potential, it is essential to practice under varied conditions, using different types of prose, code snippets, and random word sequences. This forces the brain to remain flexible and prevents the motor schemas from becoming overly rigid. By challenging yourself with timed tests of varying lengths, you can push the boundaries of your speed while maintaining the high accuracy required for professional work."
   };
-  return texts[minutes] || texts[1];
+  if (minutes > 5) return texts[5];
+  return texts[Math.ceil(minutes)] || texts[1];
 }
 
 function normalizeParagraph(text) {
@@ -311,8 +333,7 @@ function renderPassageSelect() {
   if (state.activeId && state.activeId.startsWith("timed-test-")) {
     const option = document.createElement("option");
     option.value = state.activeId;
-    const minutes = Math.round(state.customDurationSeconds / 60) || 1;
-    option.textContent = `${minutes} Minute Test (Active)`;
+    option.textContent = `${formatDurationLabel(state.customDurationSeconds || 60)} Test (Active)`;
     option.selected = true;
     els.passageSelect.appendChild(option);
   }
@@ -462,7 +483,7 @@ function updateStats() {
   els.errors.textContent = String(errorCount);
   els.time.textContent = formatTime(remainingSeconds);
   els.wordTotal.textContent = String(wordCount(state.currentText));
-  els.sessionLimit.textContent = `${Math.round(state.durationSeconds / 60)}m`;
+  els.sessionLimit.textContent = state.durationSeconds < 60 ? `${Math.round(state.durationSeconds)}s` : `${Math.round(state.durationSeconds / 60)}m`;
   els.progressText.textContent = `${progress}%`;
   els.progressBar.style.width = `${progress}%`;
 }
@@ -655,6 +676,10 @@ function handleTypingInputFallback() {
 
 function handlePracticeKeydown(event) {
   if (shouldLetNativeControlHandle(event)) return;
+
+  // Only react to typing while the Practice page is on screen
+  const visiblePage = document.querySelector('.page-view.active');
+  if (!visiblePage || visiblePage.id !== 'practice') return;
 
   if (event.metaKey || event.ctrlKey || event.altKey) {
     blockTypingKey(event);
@@ -951,6 +976,7 @@ async function loadTimedTest(minutes) {
     if (typeof switchPage === "function") {
       switchPage('practice');
     }
+    showToast(`${formatDurationLabel(minutes * 60)} test ready - start typing to begin the timer`);
     if (els.timedDropdownMenu) {
       els.timedDropdownMenu.style.display = "none";
       els.timedDropdownMenu.classList.remove("active");
@@ -967,7 +993,7 @@ async function loadTimedTest(minutes) {
     els.targetText.innerHTML = `
       <div class="loading-state" style="text-align: center; padding: 40px; color: var(--text-secondary); font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%;">
         <div class="spinner" style="width: 32px; height: 32px; border: 3px solid var(--glass-border); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1.5s linear infinite; margin: 0 auto;"></div>
-        <span style="font-family: var(--font-heading); font-weight: 500;">Fetching ${minutes} Minute Test from Firebase...</span>
+        <span style="font-family: var(--font-heading); font-weight: 500;">Loading your ${formatDurationLabel(minutes * 60).toLowerCase()} test...</span>
       </div>
     `;
   }
@@ -1021,6 +1047,7 @@ async function loadTimedTest(minutes) {
   if (typeof switchPage === "function") {
     switchPage('practice');
   }
+  showToast(`${formatDurationLabel(minutes * 60)} test ready - start typing to begin the timer`);
   
   if (els.timedDropdownMenu) {
     els.timedDropdownMenu.style.display = "none";
@@ -1330,6 +1357,30 @@ async function saveRun(wpm, accuracy, errors) {
   
   updateHomeTelemetry();
 }
+
+async function saveGameRun(wpm, accuracy, errors, title) {
+  const mode = "game";
+  if (firestoreDb && state.currentUser) {
+    try {
+      await firestoreDb.collection('typing_runs').add({
+        user_id: state.currentUser.id,
+        wpm: parseInt(wpm),
+        accuracy: parseFloat(accuracy),
+        errors: parseInt(errors),
+        mode: mode,
+        passage_title: title,
+        created_at: new Date().toISOString()
+      });
+    } catch (err) {
+      console.error("Error saving game run, using local storage:", err);
+      saveRunToLocal(wpm, accuracy, errors, mode, title);
+    }
+  } else {
+    saveRunToLocal(wpm, accuracy, errors, mode, title);
+  }
+  updateHomeTelemetry();
+}
+window.saveGameRun = saveGameRun;
 
 function saveRunToLocal(wpm, accuracy, errors, mode, passageTitle) {
   try {
@@ -1749,8 +1800,10 @@ function switchPage(pageId) {
   });
 
   const activePage = document.getElementById(pageId);
+  window.dispatchEvent(new CustomEvent('speedtype:pagechange', { detail: pageId }));
   if (activePage) {
     activePage.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     
     // Resume/focus if switching to practice page
     if (pageId === 'practice') {
@@ -1858,7 +1911,7 @@ function bindEvents() {
   // Timed test button options
   els.timedTestButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      const minutes = parseInt(button.dataset.duration);
+      const minutes = parseFloat(button.dataset.duration);
       loadTimedTest(minutes);
     });
   });
