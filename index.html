@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SpeedType Studio – Free Online Typing Test & WPM Practice</title>
     <meta name="description" content="Improve your typing speed and accuracy with SpeedType Studio. Practice typing tests, track WPM, and analyze your performance with real-time analytics.">
-    <link rel="stylesheet" href="styles.css?v=2.0">
+    <link rel="stylesheet" href="styles.css?v=2.1">
     <link rel="canonical" href="https://thakral98.github.io/rapid-typing-speed/" />
     
     <!-- Open Graph / Facebook -->
@@ -89,13 +89,16 @@
               Timed Tests <span class="dropdown-chevron" style="font-size: 0.7rem; opacity: 0.7;">▼</span>
             </button>
             <div id="timedDropdownMenu" class="user-dropdown-menu glass-panel" style="display: none; position: absolute; left: 50%; transform: translateX(-50%); top: calc(100% + 8px); width: 180px; z-index: 100; border-radius: 16px; padding: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); flex-direction: column; gap: 4px;">
+              <button class="timed-test-btn menu-item" data-duration="0.5" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); cursor: pointer; transition: background 0.2s;">30 Second Test</button>
               <button class="timed-test-btn menu-item" data-duration="1" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); cursor: pointer; transition: background 0.2s;">1 Minute Test</button>
               <button class="timed-test-btn menu-item" data-duration="2" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); cursor: pointer; transition: background 0.2s;">2 Minute Test</button>
               <button class="timed-test-btn menu-item" data-duration="3" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); cursor: pointer; transition: background 0.2s;">3 Minute Test</button>
               <button class="timed-test-btn menu-item" data-duration="4" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); cursor: pointer; transition: background 0.2s;">4 Minute Test</button>
               <button class="timed-test-btn menu-item" data-duration="5" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); cursor: pointer; transition: background 0.2s;">5 Minute Test</button>
+              <button class="timed-test-btn menu-item" data-duration="10" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text-color); cursor: pointer; transition: background 0.2s;">10 Minute Test</button>
             </div>
           </div>
+          <a href="#games" class="nav-link">Games</a>
           <a href="#dashboard" class="nav-link">Dashboard</a>
           <a href="#features" class="nav-link">Features</a>
           <a href="#leaderboard" class="nav-link">Leaderboard</a>
@@ -580,6 +583,100 @@
       <!-- ====================================================================
            3. FEATURES PAGE VIEW
            ==================================================================== -->
+      <!-- GAMES PAGE -->
+      <section id="games" class="page-view">
+        <div class="games-section">
+          <div class="section-header">
+            <span class="eyebrow">TYPING ARCADE</span>
+            <h3 class="section-title">Play Games. Type Faster.</h3>
+            <p class="section-subtitle">Every keystroke drives the action. Type correctly to move, and your real WPM and accuracy are tracked after every game.</p>
+          </div>
+
+          <div class="gm-grid" id="gmHub">
+            <button class="gm-card glass-panel" data-game="boat" type="button">
+              <span class="gm-card-icon">🚤</span>
+              <strong>Boat Race</strong>
+              <span>Speed across the water and beat three rival boats to the finish buoy.</span>
+              <em>Race · Accuracy</em>
+            </button>
+            <button class="gm-card glass-panel" data-game="car" type="button">
+              <span class="gm-card-icon">🏎️</span>
+              <strong>Car Race</strong>
+              <span>Floor the throttle with every correct key and outrun the grid.</span>
+              <em>Race · Speed</em>
+            </button>
+            <button class="gm-card glass-panel" data-game="bike" type="button">
+              <span class="gm-card-icon">🚴</span>
+              <strong>Bike Race</strong>
+              <span>Pedal hard down the dirt track. Mistakes slow your rhythm, so stay clean.</span>
+              <em>Race · Rhythm</em>
+            </button>
+            <button class="gm-card glass-panel" data-game="mountain" type="button">
+              <span class="gm-card-icon">🏔️</span>
+              <strong>Mountain Climb</strong>
+              <span>Climb to the summit before the storm catches you from behind.</span>
+              <em>Survival · Endurance</em>
+            </button>
+            <button class="gm-card glass-panel" data-game="rocket" type="button">
+              <span class="gm-card-icon">🚀</span>
+              <strong>Rocket Race</strong>
+              <span>Blast through space against rival ships. Fuel is your fingers.</span>
+              <em>Race · Speed</em>
+            </button>
+            <button class="gm-card glass-panel" data-game="meteor" type="button">
+              <span class="gm-card-icon">☄️</span>
+              <strong>Meteor Blast</strong>
+              <span>Type the falling words to destroy meteors before they hit the ground.</span>
+              <em>Arcade · Reflex</em>
+            </button>
+          </div>
+
+          <div class="gm-stage glass-panel" id="gmStage" hidden>
+            <div class="gm-toolbar">
+              <button class="btn btn-secondary" id="gmBack" type="button">← All Games</button>
+              <h4 id="gmTitle" class="gm-title">Game</h4>
+              <div class="gm-options">
+                <label>Difficulty
+                  <select id="gmDiff">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                  </select>
+                </label>
+                <label>Length
+                  <select id="gmLen">
+                    <option value="short">Short</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="long">Long</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div class="gm-canvas-wrap">
+              <canvas id="gmCanvas" width="960" height="360" aria-label="Game view"></canvas>
+              <div class="gm-overlay" id="gmOverlay"></div>
+            </div>
+
+            <div class="gm-hud">
+              <div class="gm-stat"><span>WPM</span><strong id="gmWpm">0</strong></div>
+              <div class="gm-stat"><span>Accuracy</span><strong id="gmAcc">100%</strong></div>
+              <div class="gm-stat"><span>Errors</span><strong id="gmErr">0</strong></div>
+              <div class="gm-stat"><span>Time</span><strong id="gmTime">0:00</strong></div>
+              <div class="gm-stat"><span id="gmExtraLabel">Position</span><strong id="gmExtra">-</strong></div>
+            </div>
+
+            <div class="gm-text" id="gmText" aria-live="off"></div>
+            <input id="gmInput" class="gm-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Click here and start typing...">
+            <div class="gm-actions">
+              <button class="btn btn-secondary" id="gmPause" type="button">Pause</button>
+              <button class="btn btn-secondary" id="gmRestart" type="button">Restart</button>
+              <span class="gm-hint">Wrong keys do not move you forward. Press Esc to pause.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="features" class="page-view">
         <div class="features-section">
           <div class="section-header">
@@ -839,6 +936,7 @@
           <div class="footer-links">
             <a href="#home" class="footer-link">Home</a>
             <a href="#practice" class="footer-link">Practice</a>
+            <a href="#games" class="footer-link">Games</a>
             <a href="#features" class="footer-link">Features</a>
             <a href="#leaderboard" class="footer-link">Leaderboard</a>
             <a href="#about" class="footer-link">About</a>
@@ -856,6 +954,7 @@
 
     <!-- Visual animations and typing integrations -->
     <script src="3d-effects.js?v=2.0"></script>
-    <script src="script.js?v=2.2"></script>
+    <script src="script.js?v=2.3"></script>
+    <script src="games.js?v=1.0"></script>
   </body>
 </html>
