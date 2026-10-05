@@ -2268,3 +2268,90 @@ select:disabled, input:disabled, textarea:disabled {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* ==========================================================================
+   TYPING ARCADE (Games page) + toast
+   Uses the existing theme variables so light/dark themes keep working.
+   ========================================================================== */
+.games-section { padding: 20px 0 60px; text-align: center; }
+.gm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.gm-card {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 28px 22px; cursor: pointer; text-align: center;
+  color: var(--text-primary); font-family: var(--font-body);
+  border: 1px solid var(--glass-border);
+}
+.gm-card:hover { transform: translateY(-6px); border-color: var(--primary-color); box-shadow: 0 14px 30px var(--primary-glow); }
+.gm-card strong { font-family: var(--font-heading); font-size: 1.1rem; }
+.gm-card span:not(.gm-card-icon) { color: var(--text-secondary); font-size: 0.92rem; line-height: 1.5; }
+.gm-card em { font-style: normal; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--primary-color); font-weight: 700; }
+.gm-card-icon { font-size: 3rem; line-height: 1; }
+
+.gm-stage { max-width: 1000px; margin: 0 auto; padding: 20px; text-align: left; }
+.gm-stage[hidden] { display: none; }
+.gm-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 14px; }
+.gm-title { font-family: var(--font-heading); font-size: 1.2rem; color: var(--text-primary); flex: 1; min-width: 140px; }
+.gm-options { display: flex; gap: 12px; flex-wrap: wrap; }
+.gm-options label { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+.gm-options select {
+  padding: 8px 10px; border-radius: 10px; font-family: var(--font-body); font-size: 0.9rem;
+  border: 1px solid var(--glass-border); background: var(--glass-bg-active); color: var(--text-primary);
+}
+.gm-canvas-wrap { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--glass-border); line-height: 0; }
+.gm-canvas-wrap canvas { width: 100%; height: auto; display: block; }
+.gm-overlay {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; padding: 20px; text-align: center; line-height: 1.4;
+  background: rgba(8, 15, 30, 0.62); color: #fff; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+.gm-overlay[hidden] { display: none; }
+.gm-overlay h4 { font-family: var(--font-heading); font-size: 1.6rem; }
+.gm-overlay p { max-width: 520px; font-size: 0.98rem; opacity: 0.92; }
+.gm-count { font-family: var(--font-heading); font-size: 5rem; font-weight: 900; text-shadow: 0 0 30px var(--primary-color); }
+.gm-result-grid { display: grid; grid-template-columns: repeat(3, minmax(90px, 1fr)); gap: 12px; margin: 6px 0; }
+.gm-result-grid div { background: rgba(255,255,255,0.12); border-radius: 12px; padding: 10px 14px; }
+.gm-result-grid span { display: block; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.8; }
+.gm-result-grid strong { font-family: var(--font-heading); font-size: 1.5rem; }
+.gm-overlay .gm-btn-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+.gm-hud { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 14px 0; }
+.gm-stat { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 10px 12px; text-align: center; }
+.gm-stat span { display: block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+.gm-stat strong { font-family: var(--font-heading); font-size: 1.3rem; color: var(--text-primary); }
+.gm-text {
+  font-family: var(--font-mono); font-size: 1.3rem; line-height: 1.9; padding: 14px 18px; min-height: 64px;
+  background: var(--glass-bg-active); border: 1px solid var(--glass-border); border-radius: 12px;
+  color: var(--text-muted); word-break: break-word; margin-bottom: 10px; user-select: none;
+}
+.gm-text .ok { color: var(--success-color); }
+.gm-text .cur { color: var(--text-primary); background: var(--primary-glow); border-bottom: 3px solid var(--primary-color); border-radius: 3px; }
+.gm-text .cur.bad { background: var(--error-glow); border-bottom-color: var(--error-color); }
+.gm-text .lock { color: var(--primary-color); font-weight: 700; }
+.gm-input {
+  width: 100%; padding: 12px 14px; border-radius: 12px; font-family: var(--font-mono); font-size: 1rem;
+  border: 1px solid var(--glass-border); background: var(--glass-bg-active); color: var(--text-primary);
+}
+.gm-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--primary-glow); }
+.gm-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.gm-hint { font-size: 0.82rem; color: var(--text-muted); }
+@media (max-width: 700px) {
+  .gm-hud { grid-template-columns: repeat(3, 1fr); }
+  .gm-text { font-size: 1.05rem; }
+  .gm-count { font-size: 3.5rem; }
+}
+
+.st-toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  z-index: 400; padding: 12px 20px; font-size: 0.92rem; font-weight: 500; color: var(--text-primary);
+  transition: opacity 0.3s ease, transform 0.3s ease; max-width: 90vw; text-align: center;
+}
+.st-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* Fix: keep the navbar (and the Timed Tests dropdown) above page content so its buttons receive clicks */
+.topbar { position: relative; z-index: 300; }
