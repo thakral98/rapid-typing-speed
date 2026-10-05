@@ -448,7 +448,7 @@ function initHeroKeyboard() {
 
   // 1. Perpetual Floating Animation using GSAP
   // Float up and down gently with a slight rotation oscillation
-  gsap.to(card, {
+  if (typeof gsap !== 'undefined') gsap.to(card, {
     y: "-=12",
     rotationZ: "+=0.8",
     duration: 4.5,
